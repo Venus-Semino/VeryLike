@@ -51,4 +51,4 @@ Menciona al menos:
 ## Diagrama
 
 
-![Diagrama del sistema]( <img width="511" height="361" alt="likeeeeee drawio" src="https://github.com/user-attachments/assets/9e4038d9-9690-4435-9d45-256b25be16aa" /> )
+![Diagrama del sistema] <img width="511" height="361" alt="likeeeeee drawio" src="https://github.com/user-attachments/assets/9e4038d9-9690-4435-9d45-256b25be16aa" /> 
