@@ -52,4 +52,4 @@ Menciona al menos:
 
 Un boceto de cómo se estructura tu sistema (draw.io, Mermaid o a mano escaneado)
 
-![Diagrama del sistema]( ./ruta/diagrama-nivel-1.png )
+![Diagrama del sistema]( "C:\Users\venus\Downloads\likeeeeee.drawio.png" )
