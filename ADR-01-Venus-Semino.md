@@ -1,4 +1,3 @@
-<img width="511" height="361" alt="likeeeeee drawio" src="https://github.com/user-attachments/assets/ebe469fa-f686-4228-8492-5445402219b8" />
 # ADR-01: Selección Arquitectónico para la plataforma web VeryLike
 
 | Campo  | Valor |
