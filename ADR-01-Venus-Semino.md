@@ -1,8 +1,8 @@
-# ADR-01: [Selección Arquitectónico para la plataforma web VeryLike]
+# ADR-01: Selección Arquitectónico para la plataforma web VeryLike
 
 | Campo  | Valor |
 |--------|-------|
-| Autor  | [Venus Semino] |
+| Autor  | Venus Semino |
 | Fecha  | 15/05/2026 |
 | Estado | `Propuesto`  |
 
@@ -50,6 +50,4 @@ Menciona al menos:
 
 ## Diagrama
 
-Un boceto de cómo se estructura tu sistema (draw.io, Mermaid o a mano escaneado)
-
-![Diagrama del sistema]( "C:\Users\venus\Downloads\likeeeeee.drawio.png" )
+![Diagrama del sistema]( C:\Users\venus\Downloads\likeeeeee.drawio.png )
