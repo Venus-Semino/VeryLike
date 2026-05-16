@@ -1,3 +1,4 @@
+<img width="511" height="361" alt="likeeeeee drawio" src="https://github.com/user-attachments/assets/ebe469fa-f686-4228-8492-5445402219b8" />
 # ADR-01: Selección Arquitectónico para la plataforma web VeryLike
 
 | Campo  | Valor |
@@ -50,4 +51,5 @@ Menciona al menos:
 
 ## Diagrama
 
-![Diagrama del sistema]( C:\Users\venus\Downloads\likeeeeee.drawio.png )
+
+![Diagrama del sistema]( <img width="511" height="361" alt="likeeeeee drawio" src="https://github.com/user-attachments/assets/9e4038d9-9690-4435-9d45-256b25be16aa" /> )
