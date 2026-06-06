@@ -45,6 +45,9 @@ VeryLike/
 ## 3. Vista de Procesos
 Representa el flujo y la interacción dinámica de la operación: **Guardar una película en la lista**.
 
+## Declaración de uso de IA
+En este documento fue emplementado el uso de inteligencia artificial para corroborar el sentido lógico durante la elaboración de la vista arqitectonica, como para mejorar aspectos de implementación de conocimientos durante la elaboración del proyecto
+
 ![Vista de Procesos](./Images/VistaProceso.png)
 
 ## 4. Vista de Despliegue
