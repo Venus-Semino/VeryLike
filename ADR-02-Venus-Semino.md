@@ -16,7 +16,7 @@ El sistema *VeryLike* requiere formalizar su estructura técnica para cumplir co
 ## 1. Vista Lógica
 Describe los módulos funcionales del sistema.
 
-
+![Vista Lógica](./Images/VistaLogica.png)
 
 * **Responsabilidades:**
     * **PeliculasController:** Gestiona el flujo de peticiones HTTP y la interacción con el usuario.
@@ -40,4 +40,14 @@ VeryLike/
 │   └── Peliculas/Index.cshtml   <-- Interfaz de usuario
 └── wwwroot/data/
     └── peliculas.json           <-- Almacenamiento físico de datos
+```
 
+## 3. Vista de Procesos
+Representa el flujo y la interacción dinámica de la operación: **Guardar una película en la lista**.
+
+![Vista de Procesos](./Images/VistaProceso.png)
+
+## 4. Vista de Despliegue
+Describe el entorno de ejecución necesario donde operará el sistema.
+
+![Vista de Despliegue](./Images/Vistadespliegue.png)
