@@ -40,3 +40,4 @@ VeryLike/
 │   └── Peliculas/Index.cshtml   <-- Interfaz de usuario
 └── wwwroot/data/
     └── peliculas.json           <-- Almacenamiento físico de datos
+
