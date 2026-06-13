@@ -8,29 +8,31 @@
 
 ## Contexto
 
-VeryLike es una plataforma web que unifica y almacena contenido cinematográfico (películas y series) de distintas plataformas de streaming en un solo lugar. Sirve como sistema de seguimiento para que el usuario pueda anotar lo que desea ver y, una vez consumido, otorgarle una calificación. 
+VeryLike está evolucionando de un proyecto escolar a una plataforma web robusta a larga escala. La visión actual integra múltiples dominios con necesidades técnicas muy distintas:
+1. **Catálogo dinámico:** Un registro estándar de películas/series (con datos como estudio, sinopsis, duración, etc.) y un catálogo exclusivo que crece según el historial del usuario.
+2. **Motor de Inteligencia Artificial:** Un sistema que busca automáticamente en qué plataforma de streaming se encuentra el contenido para redirigir al usuario.
+3. **Comunidad y Foro:** Un espacio con un enfoque artístico (tipo blog) donde los usuarios interactúan, hacen amigos, comparten fotos y otorgan calificaciones detalladas (del 1 al 5 con comentarios).
 
-Esta plataforma surge como solución a la fragmentación de catálogos, evitando que el usuario tenga que cambiar constantemente de aplicación para gestionar sus listas. Además, busca resolver la falta de interacción social integrando un foro y un sistema de calificaciones más amplio. La plataforma está enfocada en los amantes del cine que buscan centralizar su experiencia y compartirla con una comunidad.
+Esta evolución requiere una arquitectura que soporte alta concurrencia en el foro, procesamiento intensivo para la IA y transacciones rápidas para el catálogo, sin que un módulo afecte el rendimiento del otro.
 
 ---
 
 ## Decisión
 
-Para la fase inicial de este proyecto, decidí utilizar el patrón arquitectónico **MVC (Model-View-Controller)** implementado con **ASP.NET Core**.
+En esta fase de escalabilidad, decidí evolucionar el sistema hacia una **Arquitectura Basada en Microservicios**, complementada con un modelo **Cliente-Servidor**.
 
 ### ¿Por qué?
 
-Elegí esta opción porque permite separar de manera eficiente la lógica de negocio, los datos y la interfaz. Conforme el proyecto escale, las acciones del usuario van a cambiar o aumentar. Al usar MVC, puedo modificar la vista del usuario sin interferir en la lógica, y puedo alterar los modelos de datos sin romper las interfaces. 
-
-Esto es fundamental pensando en el futuro del proyecto a larga escala, ya que nos prepara para la **implementación de APIs externas** (como la búsqueda automática de portadas) y la integración de **servicios de Inteligencia Artificial** para la recomendación y búsqueda de plataformas, facilitando una futura transición hacia microservicios o el cambio de base de datos.
+Elegí esta opción porque resuelve el problema de la asimetría de recursos. El foro requiere muchísimas operaciones de lectura/escritura simultáneas (alta interacción social), mientras que la IA necesita poder de cómputo para buscar plataformas en tiempo real. 
+Al separar el sistema en microservicios independientes, garantizo que un pico de tráfico en la comunidad no colapse la capacidad del usuario para ver su catálogo. Además, el modelo Cliente-Servidor me permite aislar el Frontend (la vista visual y artística del foro) del Backend, abriendo la puerta a desarrollar una interfaz muy moderna e interactiva sin depender de la carga del servidor.
 
 ### Alternativas consideradas
 
 | Alternativa | Por qué la descarté |
 |-------------|---------------------|
-| **Arquitectura monolítica ("Clase Dios")** | Tener todos los procesos en una sola clase rompe con el Principio de Responsabilidad Única (SRP) que analizamos en la práctica del Ahorcado. Causa acoplamiento severo en el código y bloquea la capacidad del programa para escalar. |
-| **Patrón MVVM (Model-View-ViewModel)** | Se evaluó para la interfaz, pero se descartó porque requiere una sincronización constante y compleja en el lado del cliente (frontend). Para el flujo actual de VeryLike, el enrutamiento y las peticiones HTTP estándar de MVC son más que suficientes y no sobre-complican el sistema. |
-| **Archivos estáticos (HTML/JS sin backend)** | Se descartó porque no permitiría procesar de forma segura la lógica de las calificaciones de la comunidad, ni estructurar las listas dinámicas de los usuarios de forma segura y ordenada en el servidor. |
+| **Monolito en Capas (N-Tier extendido)** | Tener el catálogo, el foro de alta interacción y el procesamiento de IA en un solo servidor crearía un cuello de botella severo. Si la IA consume mucha memoria, toda la página (incluyendo el foro) se volvería lenta, rompiendo la experiencia del usuario. |
+| **Serverless (Funciones como Servicio)** | Se evaluó para reducir costos, pero se descartó porque los tiempos de "arranque en frío" (*cold starts*) afectarían negativamente la experiencia en tiempo real necesaria para el foro comunitario y el chat entre amigos. |
+| **Arquitectura Orientada a Eventos (Pura)** | Añadiría una complejidad innecesaria para las operaciones de registro básico del catálogo de películas. Aunque es útil para notificaciones, basar todo el sistema en eventos oscurecería el flujo de datos principal. |
 
 ---
 
@@ -38,17 +40,17 @@ Esto es fundamental pensando en el futuro del proyecto a larga escala, ya que no
 
 **Lo que gano:**
 
-- **Consecuencia técnica:** Puedo corregir o rediseñar las vistas (archivos `.cshtml`) cada vez que sea necesario para mejorar la UI/UX, sin alterar o romper por accidente las reglas de negocio con las que se guardan los datos o se calculan las calificaciones. 
-- **Consecuencia sobre el proceso/equipo:** Permite una organización estructurada del trabajo. Al estar las responsabilidades separadas en carpetas (`Models`, `Views`, `Controllers`), es muy rápido identificar qué archivo modificar al momento de agregar nuevas funciones, como el foro de la comunidad, manteniendo el código limpio.
+- **Una consecuencia técnica:** Escalabilidad independiente. Si la función de "Comunidad/Foro" se vuelve muy popular, puedo asignarle más servidores y memoria exclusivamente a ese microservicio, sin gastar recursos extra en el microservicio del catálogo.
+- **Una consecuencia sobre el proceso o el equipo:** Desarrollo en paralelo. Al usar Cliente-Servidor, puedo trabajar en la estética artística y visual del Frontend sin importar si la lógica de la IA en el Backend todavía se está programando, siempre y cuando conecten mediante una API.
 
 **Lo que sacrifico o asumo:**
 
-- **Limitación técnica:** La separación estricta aumenta la cantidad de archivos y la navegación entre ellos, lo que requiere más tiempo inicial comparado con un script plano. De igual forma, exige invertir tiempo en configurar correctamente la Inyección de Dependencias en el archivo `Program.cs` para enlazar todas las capas.
-- **Deuda o riesgo:** En esta etapa inicial, los datos se manejan con persistencia temporal. El riesgo asumido es que la concurrencia masiva (cuando el foro crezca) será un cuello de botella hasta que migremos a un motor de base de datos robusto y dividamos los servicios.
+- **Una limitación técnica:** Aumenta considerablemente la complejidad operativa. En lugar de manejar un solo proyecto y un solo archivo JSON o base de datos, ahora tendré que gestionar la comunicación entre varios servicios, un API Gateway y múltiples bases de datos.
+- **Una deuda o riesgo:** Mantener la consistencia de los datos. Por ejemplo, si un usuario cambia su foto de perfil en el microservicio del Foro, tendré que asegurar que ese cambio también se refleje en el microservicio del Catálogo, lo cual es más complejo que tener todo en una sola base de datos.
 
 ## Diagrama
 
-<img width="511" height="361" alt="Diagrama de Arquitectura MVC" src="https://github.com/user-attachments/assets/9e4038d9-9690-4435-9d45-256b25be16aa" /> 
+![Diagrama VeryLike ADR03](./Images/VeryLike_ADR03.png)
 
 ---
 ## Uso de IA:
