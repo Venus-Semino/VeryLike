@@ -54,4 +54,5 @@ Esto es fundamental pensando en el futuro del proyecto a larga escala, ya que no
 ## Uso de IA:
 
 En este proyecto se está implementando el uso de IA para darle una esstructura más profeciomal acercandolo más a un poryecto en el ámbito laboral, se implementó para aclarar duda o corregir ideas mal planteadas.
+
 ---
