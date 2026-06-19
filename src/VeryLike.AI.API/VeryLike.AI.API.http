@@ -1,0 +1,6 @@
+@VeryLike.AI.API_HostAddress = http://localhost:5062
+
+GET {{VeryLike.AI.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

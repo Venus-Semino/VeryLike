@@ -1,7 +1,14 @@
-﻿public class Pelicula
+﻿namespace VeryLike.Frontend.Models
 {
-    public int Id { get; set; }
-    public string Titulo { get; set; }
-    public string Genero { get; set; }
-    public bool EstaVista { get; set; }
+    public class Pelicula
+    {
+        public string Nombre { get; set; } = string.Empty;
+        public string Genero { get; set; } = string.Empty;
+        public int AnioPublicacion { get; set; }
+        public string PlataformaStreaming { get; set; } = string.Empty;
+        public string Duracion { get; set; } = string.Empty;
+        public string Sinopsis { get; set; } = string.Empty;
+        public string Studio { get; set; } = string.Empty;
+        public int Calificacion { get; set; } // Valores del 1 al 5
+    }
 }
