@@ -1,29 +1,29 @@
-﻿@model IEnumerable<VeryLike.Frontend.Models.Pelicula>
+﻿@model IEnumerable<VeryLike.Frontend.Models.Serie>
 
 @{
-    ViewData["Title"] = "Catálogo VeryLike";
+    ViewData["Title"] = "Catálogo de Series";
 }
 
 <div class="container mt-4">
     <div class="text-center mb-5">
-        <h1 class="display-5 fw-bold text-primary">VeryLike</h1>
-        <p class="lead text-muted">Tu catálogo personalizado de contenido cinematográfico</p>
+        <h1 class="display-5 fw-bold text-success">VeryLike Series</h1>
+        <p class="lead text-muted">Gestiona tus series favoritas y temporadas pendientes</p>
     </div>
 
     <div class="card shadow-sm border-0 mb-5 rounded-3">
         <div class="card-header bg-dark text-white p-3">
-            <h4 class="m-0 fw-semibold">🍿 Añadir al Catálogo</h4>
+            <h4 class="m-0 fw-semibold">📺 Añadir Nueva Serie</h4>
         </div>
         <div class="card-body p-4">
             <form asp-action="Registrar" method="post">
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label fw-medium">Nombre de la Película / Serie</label>
-                        <input type="text" name="Nombre" class="form-control" placeholder="Ej. Interstellar" required />
+                        <label class="form-label fw-medium">Nombre de la Serie</label>
+                        <input type="text" name="Nombre" class="form-control" placeholder="Ej. Breaking Bad" required />
                     </div>
                     <div class="col-md-3">
                         <label class="form-label fw-medium">Género</label>
-                        <input type="text" name="Genero" class="form-control" placeholder="Ej. Ciencia Ficción" required />
+                        <input type="text" name="Genero" class="form-control" placeholder="Ej. Drama, Suspenso" required />
                     </div>
                     <div class="col-md-3">
                         <label class="form-label fw-medium">Año de Publicación</label>
@@ -31,33 +31,33 @@
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-medium">Plataforma de Streaming</label>
-                        <input type="text" name="PlataformaStreaming" class="form-control" placeholder="Ej. Netflix, Prime Video" required />
+                        <input type="text" name="PlataformaStreaming" class="form-control" placeholder="Ej. Netflix, HBO Max" required />
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label fw-medium">Duración / Temporadas</label>
-                        <input type="text" name="Duracion" class="form-control" placeholder="Ej. 2h 49m o 3 Temporadas" required />
+                        <label class="form-label fw-medium">Número de Temporadas</label>
+                        <input type="number" name="Temporadas" class="form-control" min="1" placeholder="Ej. 5" required />
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label fw-medium">Estudio Cinematográfico</label>
-                        <input type="text" name="Studio" class="form-control" placeholder="Ej. Warner Bros." required />
+                        <label class="form-label fw-medium">Estudio / Productora</label>
+                        <input type="text" name="Studio" class="form-control" placeholder="Ej. Sony Pictures" required />
                     </div>
                     <div class="col-md-9">
-                        <label class="form-label fw-medium">Sinopsis corta</label>
-                        <textarea name="Sinopsis" class="form-control" rows="2" placeholder="Describe brevemente la trama..." required></textarea>
+                        <label class="form-label fw-medium">Sinopsis de la Serie</label>
+                        <textarea name="Sinopsis" class="form-control" rows="2" placeholder="Resume brevemente de qué trata..." required></textarea>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label fw-medium">Calificación Personal</label>
+                        <label class="form-label fw-medium">Calificación (1 al 5)</label>
                         <input type="number" name="Calificacion" class="form-control" min="1" max="5" placeholder="Del 1 al 5" required />
                     </div>
                 </div>
                 <div class="text-end mt-4">
-                    <button type="submit" class="btn btn-primary px-5 btn-lg shadow-sm">Guardar en Lista</button>
+                    <button type="submit" class="btn btn-success px-5 btn-lg shadow-sm">Guardar Serie</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <h3 class="fw-bold mb-4 text-secondary">Mi Lista de Visualización</h3>
+    <h3 class="fw-bold mb-4 text-secondary">Mi Lista de Series</h3>
     <div class="row g-4">
         @if (Model != null && Model.Any())
         {
@@ -70,11 +70,11 @@
                                 <h5 class="card-title fw-bold text-dark m-0">@item.Nombre</h5>
                                 <span class="badge bg-light text-dark border px-2 py-1 small"> @item.PlataformaStreaming</span>
                             </div>
-                            <h6 class="card-subtitle mb-3 text-primary font-monospace small">@item.Genero • @item.AnioPublicacion</h6>
+                            <h6 class="card-subtitle mb-3 text-success font-monospace small">@item.Genero • @item.AnioPublicacion</h6>
                             <p class="card-text text-muted small flex-grow-1">@item.Sinopsis</p>
                             <hr class="text-black-50 my-3">
                             <div class="d-flex justify-content-between align-items-center bg-light p-2 rounded-2">
-                                <span class="text-secondary small"> @item.Studio</span>
+                                <span class="text-secondary small"> @item.Temporadas Temp. • @item.Studio</span>
                                 <span class="text-warning fw-bold">⭐ @item.Calificacion/5</span>
                             </div>
                         </div>
@@ -85,8 +85,8 @@
         else
         {
             <div class="col-12 text-center py-5">
-                <div class="text-muted fs-4">El archivo remoto local está vacío.</div>
-                <p class="text-secondary">Registra tu primera producción arriba para inicializar el flujo JSON.</p>
+                <div class="text-muted fs-4">Tu lista de series está vacía.</div>
+                <p class="text-secondary">Agrega tu primera serie arriba para generar el archivo series.json automáticamente.</p>
             </div>
         }
     </div>
