@@ -33,6 +33,9 @@
                     <partial name="_LoginPartial" />
                 </div>
             </div>
+            <button class="btn btn-sm btn-futuristic ms-auto" id="themeToggle">
+                MODO OSCURO
+            </button>
         </nav>
     </header>
     <div class="container">
@@ -50,5 +53,21 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        const toggleBtn = document.getElementById('themeToggle');
+        const currentTheme = localStorage.getItem('theme') || 'dark'; // Oscuro por defecto
+
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        toggleBtn.textContent = currentTheme === 'dark' ? 'MODO CLARO' : 'MODO OSCURO';
+
+        toggleBtn.addEventListener('click', () => {
+        let theme = document.documentElement.getAttribute('data-theme');
+        let switchToTheme = theme === 'dark' ? 'light' : 'dark';
+
+        document.documentElement.setAttribute('data-theme', switchToTheme);
+        localStorage.setItem('theme', switchToTheme);
+        toggleBtn.textContent = theme === 'dark' ? 'MODO CLARO' : 'MODO OSCURO';
+        });
+    </script>
 </body>
 </html>
