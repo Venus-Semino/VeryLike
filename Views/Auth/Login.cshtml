@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Iniciar Sesión";
+}
+
+<div class="row align-items-center" style="min-height: 80vh;">
+    <div class="col-md-6 pe-md-5">
+        <h2 class="fw-light mb-4 text-uppercase" style="letter-spacing: 2px;">Bienvenido <span style="color: var(--accent-color);">de nuevo</span></h2>
+
+        <form asp-action="Login" method="post" class="glass-card p-5">
+            <div asp-validation-summary="All" class="text-danger small mb-3"></div>
+
+            <div class="mb-4">
+                <input type="text" name="identificador" class="form-control form-control-glass" placeholder="Nombre de usuario o correo" required />
+            </div>
+            <div class="mb-4">
+                <input type="password" name="contrasena" class="form-control form-control-glass" placeholder="Contraseña" required />
+            </div>
+
+            <div class="mb-5 text-end">
+                <span class="text-muted small">¿No tienes cuenta? <a asp-action="Registro" style="color: var(--accent-color); text-decoration: none;">Regístrate</a></span>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <a asp-controller="Home" asp-action="Index" class="text-muted text-decoration-none small text-uppercase" style="letter-spacing: 1px;">&lt; Regresar</a>
+                <button type="submit" class="btn btn-futuristic">Iniciar Sesión</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-6 ps-md-5 d-none d-md-block">
+        <h6 class="text-uppercase text-muted tracking-widest mb-4" style="letter-spacing: 2px;">Actividad Reciente</h6>
+        <div class="d-flex flex-column gap-3">
+
+            <div class="chat-bubble align-self-start" style="width: 80%;">
+                <span class="fw-bold" style="color: var(--accent-color); font-size: 0.8rem;">@@NeoCinema</span>
+                <p class="mb-0 small mt-1">Acabo de actualizar mi Pizarrón con las recomendaciones de IA. ¡Acertó por completo con Perfect Blue!</p>
+            </div>
+
+            <div class="chat-bubble align-self-end text-end" style="width: 80%; background: transparent;">
+                <span class="fw-bold text-muted" style="font-size: 0.8rem;">@@CineFilaX</span>
+                <p class="mb-0 small mt-1">La IA siempre sabe qué sugerir cuando mezclas thrillers psicológicos. Tienes que ver The Imitation Game ahora.</p>
+            </div>
+
+            <div class="chat-bubble align-self-start" style="width: 80%;">
+                <span class="fw-bold" style="color: var(--accent-color); font-size: 0.8rem;">@@SeriesAddict</span>
+                <p class="mb-0 small mt-1">¿Alguien ya calificó Shōgun en su lista? Le di 5 estrellas sin dudar.</p>
+            </div>
+
+        </div>
+    </div>
+</div>
