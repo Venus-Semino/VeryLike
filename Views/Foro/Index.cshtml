@@ -1,0 +1,51 @@
+﻿@model IEnumerable<VeryLike.Domain.Models.MensajeForo>
+
+@{
+    ViewData["Title"] = "Comunidad";
+}
+
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1 class="display-6 fw-light text-uppercase" style="letter-spacing: 4px;">Comunidad</h1>
+        <p class="text-muted small">Canal abierto de discusión cinematográfica</p>
+    </div>
+
+    <div class="d-flex flex-column gap-4 mb-5" style="max-width: 800px; margin: 0 auto;">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var mensaje in Model.OrderByDescending(m => m.FechaPublicacion))
+            {
+                <div class="glass-card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2" style="border-bottom: 1px solid var(--border-glass); padding-bottom: 8px;">
+                        <span class="fw-normal" style="color: var(--accent-color); font-size: 0.9rem;">@mensaje.NombreUsuario</span>
+                        <span class="text-muted font-monospace" style="font-size: 0.75rem;">@mensaje.FechaPublicacion.ToString("dd/MM/yyyy HH:mm")</span>
+                    </div>
+                    <p class="mb-0 small" style="line-height: 1.6; white-space: pre-line;">@mensaje.Contenido</p>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="glass-card p-5 text-center">
+                <div class="text-muted fw-light">SISTEMA DE DISCUSIÓN INICIALIZADO. SIN MENSAJES.</div>
+            </div>
+        }
+    </div>
+
+    <div class="glass-card p-5" style="max-width: 800px; margin: 0 auto;">
+        <h4 class="fw-light mb-4 text-uppercase text-center" style="letter-spacing: 2px;">Participar en el Foro</h4>
+        <form asp-action="Publicar" method="post">
+            <div class="row g-4">
+                <div class="col-12">
+                    <input type="text" name="NombreUsuario" class="form-control form-control-glass" placeholder="Tu Nombre de Usuario" required />
+                </div>
+                <div class="col-12">
+                    <textarea name="Contenido" class="form-control form-control-glass" rows="4" placeholder="Escribe tu opinión o reseña aquí..." required></textarea>
+                </div>
+            </div>
+            <div class="text-center mt-5">
+                <button type="submit" class="btn btn-futuristic">Enviar Mensaje</button>
+            </div>
+        </form>
+    </div>
+</div>

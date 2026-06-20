@@ -16,4 +16,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\VeryLike.Domain\VeryLike.Domain.csproj" />
+    <ProjectReference Include="..\VeryLike.Infraestructure\VeryLike.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

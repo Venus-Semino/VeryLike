@@ -11,41 +11,52 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">VeryLike</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
+        <nav class="custom-navbar">
+            <div class="nav-container">
+                <a class="nav-brand-futuristic" asp-area="" asp-controller="Home" asp-action="Index">VeryLike</a>
+
+                <div class="nav-links">
+                    <a class="nav-link-futuristic" asp-area="" asp-controller="Peliculas" asp-action="Index">Películas</a>
+                    <a class="nav-link-futuristic" asp-area="" asp-controller="Series" asp-action="Index">Series</a>
+                    <a class="nav-link-futuristic" asp-area="" asp-controller="Foro" asp-action="Index">Comunidad</a>
+
+                    <button class="btn btn-futuristic" id="themeToggle">MODO OSCURO</button>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+
+    <div class="container pt-4">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - VeryLike - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="border-top footer text-muted mt-5">
+        <div class="container text-center text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;">
+            &copy; 2026 - VeryLike - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-muted" style="text-decoration: none;">Privacidad</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        const toggleBtn = document.getElementById('themeToggle');
+        const currentTheme = localStorage.getItem('theme') || 'dark'; // Oscuro por defecto
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        toggleBtn.textContent = currentTheme === 'dark' ? 'MODO CLARO' : 'MODO OSCURO';
+
+        toggleBtn.addEventListener('click', () => {
+        let theme = document.documentElement.getAttribute('data-theme');
+        let switchToTheme = theme === 'dark' ? 'light' : 'dark';
+
+        document.documentElement.setAttribute('data-theme', switchToTheme);
+        localStorage.setItem('theme', switchToTheme);
+        toggleBtn.textContent = theme === 'dark' ? 'MODO CLARO' : 'MODO OSCURO';
+        });
+    </script>
 </body>
 </html>
