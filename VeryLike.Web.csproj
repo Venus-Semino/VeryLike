@@ -20,5 +20,15 @@
     <ProjectReference Include="..\VeryLike.Domain\VeryLike.Domain.csproj" />
     <ProjectReference Include="..\VeryLike.Infrastructure\VeryLike.Infrastructure.csproj" />
   </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="VeryLike.Catalog.API\**" />
+		<Content Remove="VeryLike.Catalog.API\**" />
+		<EmbeddedResource Remove="VeryLike.Catalog.API\**" />
+		<None Remove="VeryLike.Catalog.API\**" />
 
+		<Compile Remove="VeryLike.Forum.API\**" />
+		<Content Remove="VeryLike.Forum.API\**" />
+		<EmbeddedResource Remove="VeryLike.Forum.API\**" />
+		<None Remove="VeryLike.Forum.API\**" />
+	</ItemGroup>
 </Project>
