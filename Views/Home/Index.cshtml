@@ -1,8 +1,82 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Bienvenido";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-fluid px-4 mt-4">
+    <div class="row align-items-center" style="min-height: 80vh;">
+
+        <div class="col-md-3 d-none d-md-block">
+            <h6 class="text-uppercase text-muted tracking-widest mb-4 text-center" style="letter-spacing: 2px;">Top Calificadas</h6>
+            <div class="movie-cascade-container">
+                <div class="movie-track">
+                    @for (int i = 0; i < 2; i++)
+                    {
+                        <div class="glass-card p-3 d-flex align-items-center gap-3">
+                            <div style="width: 50px; height: 75px; background: var(--border-glass); border-radius: 8px;"></div>
+                            <div>
+                                <h6 class="mb-1" style="color: var(--text-main);">Perfect Blue</h6>
+                                <span class="text-warning small">⭐⭐⭐⭐⭐</span>
+                            </div>
+                        </div>
+                        <div class="glass-card p-3 d-flex align-items-center gap-3">
+                            <div style="width: 50px; height: 75px; background: var(--border-glass); border-radius: 8px;"></div>
+                            <div>
+                                <h6 class="mb-1" style="color: var(--text-main);">The Imitation Game</h6>
+                                <span class="text-warning small">⭐⭐⭐⭐⭐</span>
+                            </div>
+                        </div>
+                        <div class="glass-card p-3 d-flex align-items-center gap-3">
+                            <div style="width: 50px; height: 75px; background: var(--border-glass); border-radius: 8px;"></div>
+                            <div>
+                                <h6 class="mb-1" style="color: var(--text-main);">Drive My Car</h6>
+                                <span class="text-warning small">⭐⭐⭐⭐</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 text-center px-5">
+            <h1 class="display-2 fw-light text-uppercase mb-3" style="letter-spacing: 10px; color: var(--accent-color) !important;">
+                VeryLike
+            </h1>
+            <p class="lead text-muted mb-5" style="font-weight: 300; letter-spacing: 1px; line-height: 1.8;">
+                Descubre, clasifica y debate. Tu ecosistema cinematográfico personal impulsado por análisis inteligente.
+            </p>
+
+            <div class="d-flex flex-column flex-sm-row justify-content-center gap-4 mt-5">
+                <a href="#" class="btn btn-futuristic px-5 py-3 fs-6">Iniciar Sesión</a>
+                <a href="#" class="btn btn-futuristic px-5 py-3 fs-6" style="background: var(--surface-glass);">Registrarse</a>
+            </div>
+        </div>
+
+        <div class="col-md-3 d-none d-md-block">
+            <h6 class="text-uppercase text-muted tracking-widest mb-4 text-center" style="letter-spacing: 2px;">En Discusión</h6>
+
+            <div class="glass-card p-4 h-100" style="max-height: 80vh; overflow-y: auto;">
+
+                <div class="forum-thread-preview">
+                    <div class="chat-bubble">
+                        <span class="fw-bold" style="color: var(--accent-color); font-size: 0.8rem;">@@Cineasta99</span>
+                        <p class="mb-0 small mt-1">¿Alguien más sintió que el final de Mr. Robot cambió la forma en que ven la ciberseguridad?</p>
+                    </div>
+
+                    <div class="chat-bubble ms-4" style="background: transparent;">
+                        <span class="fw-bold text-muted" style="font-size: 0.8rem;">@@DevOpsFan</span>
+                        <p class="mb-0 small mt-1">Totalmente. El nivel de detalle técnico con Kali Linux es insuperable en la TV.</p>
+                    </div>
+                </div>
+
+                <div class="forum-thread-preview mt-4">
+                    <div class="chat-bubble">
+                        <span class="fw-bold" style="color: var(--accent-color); font-size: 0.8rem;">@@Animatrix</span>
+                        <p class="mb-0 small mt-1">Acabo de ver Shōgun. La cinematografía es una obra maestra visual.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
 </div>

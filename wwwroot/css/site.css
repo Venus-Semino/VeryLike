@@ -164,3 +164,58 @@ h1, h2, h3, h4, h5, h6, p, span, label, th, td, input, textarea {
         opacity: 0.5;
         font-size: 0.85rem;
     }
+
+/* Animación de Cascada Infinita para Películas */
+.movie-cascade-container {
+    height: 80vh;
+    overflow: hidden;
+    position: relative;
+    mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+}
+
+.movie-track {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    animation: scrollVertical 20s linear infinite;
+}
+
+@keyframes scrollVertical {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(-50%);
+    }
+}
+
+/* Diseño de Hilo de Foro (Previsualización) */
+.forum-thread-preview {
+    border-left: 2px solid var(--accent-color);
+    padding-left: 15px;
+    margin-left: 10px;
+    position: relative;
+}
+
+    .forum-thread-preview::before {
+        content: '';
+        position: absolute;
+        left: -6px;
+        top: 0;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--accent-color);
+    }
+
+.chat-bubble {
+    background: var(--surface-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: 18px;
+    border-top-left-radius: 4px;
+    padding: 12px 16px;
+    margin-bottom: 15px;
+    box-shadow: var(--glow-shadow);
+}
