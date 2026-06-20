@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using VeryLike.Domain.Interfaces;
-using VeryLike.Domain.Models;
+using VeryLike.Domain.Interfaces; 
+using VeryLike.Domain.Models;     
 
 namespace VeryLike.Catalog.API.Controllers
 {
@@ -10,26 +10,22 @@ namespace VeryLike.Catalog.API.Controllers
     {
         private readonly IPeliculaRepository _peliculaRepository;
 
-        // El framework inyecta la infraestructura automáticamente aquí gracias al Program.cs
         public PeliculasController(IPeliculaRepository peliculaRepository)
         {
             _peliculaRepository = peliculaRepository;
         }
 
-        // GET: api/peliculas
         [HttpGet]
-        public ActionResult<IEnumerable<Pelicula>> Get()
+        public ActionResult<IEnumerable<Pelicula>> Get() 
         {
-            var peliculas = _peliculaRepository.ObtenerTodas();
-            return Ok(peliculas);
+            return Ok(_peliculaRepository.ObtenerTodas());
         }
 
-        // POST: api/peliculas
         [HttpPost]
-        public ActionResult Post([FromBody] Pelicula pelicula)
+        public ActionResult Post([FromBody] Pelicula pelicula) 
         {
             _peliculaRepository.Agregar(pelicula);
-            return Ok(new { mensaje = "Película registrada exitosamente en el catálogo." });
+            return Ok();
         }
     }
 }
