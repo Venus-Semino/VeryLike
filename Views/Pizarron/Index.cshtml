@@ -1,0 +1,116 @@
+﻿@{
+    ViewData["Title"] = "Mi Pizarrón";
+}
+
+<div class="container-fluid px-4 mt-4">
+    <div class="d-flex justify-content-between align-items-end mb-5">
+        <div>
+            <p class="text-muted text-uppercase tracking-widest mb-1 small" style="letter-spacing: 2px;">Bienvenido de nuevo</p>
+            <h1 class="display-5 fw-light m-0">Hola, <span style="color: var(--accent-color);">@ViewBag.NombreUsuario</span></h1>
+        </div>
+        <div class="dropdown">
+            <button class="btn btn-futuristic dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                Opciones
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark glass-card" style="background: var(--surface-glass);">
+                <li><a class="dropdown-item text-muted" href="#">Ajustes</a></li>
+                <li><a class="dropdown-item text-danger" href="#">Cerrar Sesión</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row g-5">
+        <div class="col-xl-9 col-lg-8">
+
+            <div class="mb-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="fw-light text-uppercase m-0" style="letter-spacing: 1px;">Para Ver</h4>
+                    <a asp-controller="Pizarron" asp-action="ParaVer" class="text-muted small text-decoration-none">Expandir Lista &rarr;</a>
+                </div>
+
+                <div class="horizontal-scroll-container">
+                    <div class="glass-card media-card movie-type d-flex flex-column">
+                        <div class="media-poster text-muted small">Sin Portada</div>
+                        <div class="p-3 text-center">
+                            <h6 class="mb-1 text-truncate">Drive My Car</h6>
+                            <span class="small" style="color: var(--accent-color);">Película</span>
+                        </div>
+                    </div>
+
+                    <div class="glass-card media-card series-type d-flex flex-column">
+                        <div class="media-poster text-muted small">Sin Portada</div>
+                        <div class="p-3 text-center">
+                            <h6 class="mb-1 text-truncate">Mr. Robot</h6>
+                            <span class="small text-info">Serie</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h4 class="fw-light text-uppercase m-0" style="letter-spacing: 1px;">Recomendadas</h4>
+                        <p class="text-muted small m-0">Basado en tus altas calificaciones a thrillers psicológicos</p>
+                    </div>
+                    <a href="#" class="text-muted small text-decoration-none">Expandir Lista &rarr;</a>
+                </div>
+
+                <div class="horizontal-scroll-container">
+                    <div class="glass-card media-card movie-type d-flex flex-column">
+                        <div class="media-poster text-muted small">Sin Portada</div>
+                        <div class="p-3 text-center">
+                            <h6 class="mb-1 text-truncate">Perfect Blue</h6>
+                            <span class="small text-muted">+ Agregar a Para Ver</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="fw-light text-uppercase m-0" style="letter-spacing: 1px;">Pendientes de Calificar</h4>
+                </div>
+                <div class="glass-card p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-1">The Imitation Game</h5>
+                        <span class="text-muted small">Vista el 15 de Junio</span>
+                    </div>
+                    <a href="#" class="btn btn-futuristic">Dar Calificación</a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-xl-3 col-lg-4">
+
+            <div class="glass-card p-4 mb-4">
+                <h6 class="text-uppercase text-muted tracking-widest mb-4" style="letter-spacing: 2px;">Tus Hilos</h6>
+
+                <div class="chat-bubble p-3 mb-3">
+                    <span class="fw-bold" style="color: var(--accent-color); font-size: 0.8rem;">Tú</span>
+                    <p class="mb-0 small mt-1 text-truncate">¿Alguien más sintió que el final de...</p>
+                    <div class="text-end mt-2"><span class="badge bg-secondary rounded-pill">3 Respuestas</span></div>
+                </div>
+
+                <a href="#" class="btn btn-sm w-100" style="border: 1px solid var(--border-glass); color: var(--text-main);">Ir a la Comunidad</a>
+            </div>
+
+            <div class="glass-card p-4 text-center">
+                <div class="rounded-circle mx-auto mb-3" style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent-color), transparent); display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                    
+                </div>
+                <h6 class="mb-1">@ViewBag.NombreUsuario</h6>
+                <p class="text-muted small mb-4">Cinéfilo Nivel 3</p>
+
+                <div class="d-flex justify-content-around mb-4 border-top border-bottom py-2" style="border-color: var(--border-glass) !important;">
+                    <div><h5 class="m-0">12</h5><span class="small text-muted">Vistas</span></div>
+                    <div><h5 class="m-0">5</h5><span class="small text-muted">Reseñas</span></div>
+                </div>
+
+                <a href="#" class="btn btn-futuristic w-100">Ver Perfil Público</a>
+            </div>
+
+        </div>
+    </div>
+</div>

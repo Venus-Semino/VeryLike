@@ -1,0 +1,80 @@
+﻿@{
+    ViewData["Title"] = "Mi Lista: Para Ver";
+}
+
+<div class="container-fluid px-4 mt-4">
+
+    <div class="d-flex align-items-center gap-4 mb-5">
+        <a asp-controller="Pizarron" asp-action="Index" class="btn btn-futuristic" style="padding: 8px 15px; border-radius: 50%;">
+            &larr;
+        </a>
+        <h2 class="fw-light text-uppercase m-0" style="letter-spacing: 2px;">Lista <span style="color: var(--accent-color);">Para Ver</span></h2>
+
+        <div class="ms-auto d-flex gap-3">
+            <a href="#" class="btn btn-sm btn-futuristic" style="background: var(--surface-glass);">Explorar</a>
+            <a href="#" class="btn btn-sm btn-futuristic text-muted" style="border-color: var(--border-glass);">Calificar</a>
+        </div>
+    </div>
+
+    <div class="row g-5 mb-5">
+
+        <div class="col-md-6">
+            <h4 class="fw-light mb-4 text-center" style="letter-spacing: 2px; color: var(--accent-color);">Películas</h4>
+            <div class="d-flex flex-column gap-3">
+
+                <div class="glass-card p-3 d-flex align-items-center justify-content-between media-card movie-type">
+                    <div class="d-flex align-items-center gap-3">
+                        <div style="width: 60px; height: 90px; background: var(--border-glass); border-radius: 4px;"></div>
+                        <div>
+                            <h5 class="mb-1">Drive My Car</h5>
+                            <span class="text-muted small">Drama • 2h 59m</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-danger" style="border-radius: 50%; width: 35px; height: 35px;">&times;</button>
+                </div>
+
+                <div class="glass-card p-3 d-flex align-items-center justify-content-between media-card movie-type">
+                    <div class="d-flex align-items-center gap-3">
+                        <div style="width: 60px; height: 90px; background: var(--border-glass); border-radius: 4px;"></div>
+                        <div>
+                            <h5 class="mb-1">The Imitation Game</h5>
+                            <span class="text-muted small">Historia • 1h 54m</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-danger" style="border-radius: 50%; width: 35px; height: 35px;">&times;</button>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h4 class="fw-light mb-4 text-center" style="letter-spacing: 2px; color: #b4a0ff;">Series</h4>
+            <div class="d-flex flex-column gap-3">
+
+                <div class="glass-card p-3 d-flex align-items-center justify-content-between media-card series-type">
+                    <div class="d-flex align-items-center gap-3">
+                        <div style="width: 60px; height: 90px; background: var(--border-glass); border-radius: 4px;"></div>
+                        <div>
+                            <h5 class="mb-1">Mr. Robot</h5>
+                            <span class="text-muted small">Temporada 1 • Thriller</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-danger" style="border-radius: 50%; width: 35px; height: 35px;">&times;</button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-5 pt-4" style="border-top: 1px solid var(--border-glass);">
+        <a asp-controller="Pizarron" asp-action="Index" class="btn btn-futuristic px-4 text-muted" style="border-color: var(--border-glass);">
+            Regresar al Pizarrón
+        </a>
+
+        <button class="btn btn-futuristic px-4" style="background: var(--surface-glass);">
+            + Agregar a la lista
+        </button>
+    </div>
+
+</div>

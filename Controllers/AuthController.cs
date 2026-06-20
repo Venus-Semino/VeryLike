@@ -31,7 +31,7 @@ namespace VeryLike.Web.Controllers
 
             _usuarioRepository.Agregar(nuevoUsuario);
             // Si se registra con éxito, lo mandamos directo al "Pizarrón" (lo haremos en el siguiente paso)
-            return RedirectToAction("Index", "Peliculas");
+            return RedirectToAction("Index", "Pizarron");
         }
 
         // --- PÁGINA DE INICIAR SESIÓN ---
@@ -52,7 +52,7 @@ namespace VeryLike.Web.Controllers
 
             if (usuarioValido != null)
             {
-                return RedirectToAction("Index", "Peliculas");
+                return RedirectToAction("Index", "Pizarron");
             }
 
             ModelState.AddModelError(string.Empty, "Credenciales incorrectas.");
