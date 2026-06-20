@@ -1,5 +1,5 @@
 using VeryLike.Domain.Interfaces;
-using VeryLike.Infrastructure.Repositories;
+using VeryLike.Infrastructure.Repositorie;
 
 var builder = WebApplication.CreateBuilder(args);
 

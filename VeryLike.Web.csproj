@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\VeryLike.Domain\VeryLike.Domain.csproj" />
-    <ProjectReference Include="..\VeryLike.Infraestructure\VeryLike.Infrastructure.csproj" />
+    <ProjectReference Include="..\VeryLike.Infrastructure\VeryLike.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
