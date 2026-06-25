@@ -10,34 +10,58 @@
     <link rel="stylesheet" href="~/VeryLike.styles.css" asp-append-version="true" />
 </head>
 <body>
-    
+
     @if (ViewData["HideMenu"] == null || !(bool)ViewData["HideMenu"])
     {
-        <button id="btnToggleMenu" class="btn btn-futuristic position-fixed top-0 start-0 m-4" 
-                style="z-index: 1060; border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.5rem;" 
+        <button id="btnToggleMenu" class="btn btn-futuristic position-fixed top-0 start-0 m-4"
+                style="z-index: 1060; border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.5rem;"
                 type="button" data-bs-toggle="offcanvas" data-bs-target="#menuPrincipal" aria-controls="menuPrincipal">
             &lt;
         </button>
 
-        <div class="offcanvas offcanvas-start glass-card" tabindex="-1" id="menuPrincipal" aria-labelledby="menuPrincipalLabel" 
-             style="width: 300px; background: var(--menu-bg); border-right: 1px solid var(--border-glass);">
-            
+        <div class="offcanvas offcanvas-start glass-card" tabindex="-1" id="menuPrincipal" aria-labelledby="menuPrincipalLabel"
+             style="width: 300px; background: var(--menu-bg) !important; border: none; border-right: 1px solid var(--border-glass) !important; border-radius: 0 16px 16px 0;">
+
             <div class="offcanvas-header pb-0 mt-4 ms-5">
-                <h5 class="offcanvas-title tracking-widest text-uppercase" id="menuPrincipalLabel" style="color: var(--accent-color); letter-spacing: 3px;">VeryLike</h5>
+                <h5 class="offcanvas-title tracking-widest text-uppercase" id="menuPrincipalLabel" style="color: var(--accent-color); letter-spacing: 3px; font-weight: 300;">VeryLike</h5>
             </div>
-            
+
             <div class="offcanvas-body d-flex flex-column mt-3">
-                
-                <div class="mb-4">
-                    <input type="text" class="form-control" style="background: var(--input-bg); border: 1px solid var(--border-glass); color: var(--text-main);" placeholder="Buscar películas, usuarios...">
-                </div>
+
+                <form asp-controller="Cinema" asp-action="Buscar" method="get" class="mb-4">
+                    <input type="text" name="query" class="form-control" style="background: var(--input-bg); border: 1px solid var(--border-glass); color: var(--text-main);" placeholder="Buscar películas, usuarios...">
+                </form>
+
+                @{
+                    var controladorActual = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+                    var accionActual = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+                }
 
                 <ul class="nav flex-column gap-3 mb-auto">
-                    <li class="nav-item"><a class="nav-link px-0 menu-link-dynamic" asp-controller="Pizarron" asp-action="Index"> Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link px-0 menu-link-dynamic" asp-controller="Foro" asp-action="Index"> Foro</a></li>
-                    <li class="nav-item"><a class="nav-link px-0 menu-link-dynamic" href="#"> Perfiles</a></li>
-                    <li class="nav-item"><a class="nav-link px-0 menu-link-dynamic" href="#"> Recomendaciones</a></li>
-                    <li class="nav-item"><a class="nav-link px-0 menu-link-dynamic" asp-controller="Pizarron" asp-action="ParaVer"> Listas</a></li>
+                    @if (!controladorActual.Equals("Pizarron", StringComparison.OrdinalIgnoreCase) || !accionActual.Equals("Index", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <li class="nav-item"><a class="nav-link px-0 menu-link-dynamic" asp-controller="Pizarron" asp-action="Index"> Inicio</a></li>
+                    }
+
+                    @if (!controladorActual.Equals("Foro", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <li class="nav-item"><a class="nav-link px-0 menu-link-dynamic" asp-controller="Foro" asp-action="Index"> Foro</a></li>
+                    }
+
+                    @if (!controladorActual.Equals("Perfiles", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <li class="nav-item"><a class="nav-link px-0 menu-link-dynamic" asp-controller="Perfiles" asp-action="Index"> Perfiles</a></li>
+                    }
+
+                    @if (!controladorActual.Equals("Cinema", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <li class="nav-item"><a class="nav-link px-0 menu-link-dynamic" asp-controller="Cinema" asp-action="Index"> Recomendaciones</a></li>
+                    }
+
+                    @if (!controladorActual.Equals("Pizarron", StringComparison.OrdinalIgnoreCase) || !accionActual.Equals("ParaVer", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <li class="nav-item"><a class="nav-link px-0 menu-link-dynamic" asp-controller="Pizarron" asp-action="ParaVer"> Listas</a></li>
+                    }
                 </ul>
 
                 <div class="mt-auto pt-3 border-top" style="border-color: var(--border-glass) !important;">
@@ -45,12 +69,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-muted small px-0" asp-controller="Home" asp-action="Privacy">Política de Privacidad</a>
                         </li>
-                        <li class="nav-item d-flex justify-content-between align-items-center mt-3">
+                        <li class="nav-item d-flex justify-content-between align-items-center mt-2">
                             <span class="text-muted small">Apariencia</span>
                             <button class="btn btn-sm btn-futuristic" id="themeToggle" style="font-size: 0.7rem;">MODO OSCURO</button>
                         </li>
                         <li class="nav-item mt-3">
-                            <a class="nav-link text-danger px-0" asp-controller="Home" asp-action="Index">Cerrar Sesión</a>
+                            <a class="nav-link text-danger px-0" asp-controller="Home" asp-action="Index" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Cerrar Sesión</a>
                         </li>
                     </ul>
                 </div>
@@ -76,37 +100,34 @@
     @await RenderSectionAsync("Scripts", required: false)
 
     <script>
-        // --- 1. LÓGICA DEL MODO OSCURO (Tu código original) ---
+        // --- Cambiador de Tema (Modo Claro / Oscuro) ---
         const toggleBtn = document.getElementById('themeToggle');
         if (toggleBtn) {
-            const currentTheme = localStorage.getItem('theme') || 'dark'; 
-            document.documentElement.setAttribute('data-theme', currentTheme);
-            toggleBtn.textContent = currentTheme === 'dark' ? 'MODO CLARO' : 'MODO OSCURO';
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        toggleBtn.textContent = currentTheme === 'dark' ? 'MODO CLARO' : 'MODO OSCURO';
 
-            toggleBtn.addEventListener('click', () => {
-                let theme = document.documentElement.getAttribute('data-theme');
-                let switchToTheme = theme === 'dark' ? 'light' : 'dark';
+        toggleBtn.addEventListener('click', () => {
+        let theme = document.documentElement.getAttribute('data-theme');
+        let switchToTheme = theme === 'dark' ? 'light' : 'dark';
 
-                document.documentElement.setAttribute('data-theme', switchToTheme);
-                localStorage.setItem('theme', switchToTheme);
-                toggleBtn.textContent = theme === 'dark' ? 'MODO CLARO' : 'MODO OSCURO';
-            });
+        document.documentElement.setAttribute('data-theme', switchToTheme);
+        localStorage.setItem('theme', switchToTheme);
+        toggleBtn.textContent = theme === 'dark' ? 'MODO CLARO' : 'MODO OSCURO';
+        });
         }
 
-        // --- 2. LÓGICA DEL BOTÓN(< / >) ---
+        // --- Manejo del Carácter Matemático (< / >) según estado del menú ---
         const menuOffcanvas = document.getElementById('menuPrincipal');
         const btnToggleMenu = document.getElementById('btnToggleMenu');
 
         if (menuOffcanvas && btnToggleMenu) {
-            // Cuando Bootstrap termina de abrir el menú
-            menuOffcanvas.addEventListener('show.bs.offcanvas', () => {
-                btnToggleMenu.innerHTML = '&gt;'; // Cambia a "mayor que"
-            });
-            
-            // Cuando Bootstrap termina de cerrar el menú
-            menuOffcanvas.addEventListener('hide.bs.offcanvas', () => {
-                btnToggleMenu.innerHTML = '&lt;'; // Cambia a "menor que"
-            });
+        menuOffcanvas.addEventListener('show.bs.offcanvas', () => {
+        btnToggleMenu.innerHTML = '&gt;'; // Cambia a > al abrir
+        });
+        menuOffcanvas.addEventListener('hide.bs.offcanvas', () => {
+        btnToggleMenu.innerHTML = '&lt;'; // Cambia a < al cerrar
+        });
         }
     </script>
 </body>
