@@ -3,11 +3,13 @@
     --bg-base: #fbf9fa;
     --surface-glass: rgba(255, 255, 255, 0.65);
     --text-main: #1e1b1c;
+    --menu-bg: rgba(255, 255, 255, 0.95);
     --text-muted: #6e6a6c;
     --border-glass: rgba(255, 183, 197, 0.35);
     --glow-shadow: 0 8px 32px 0 rgba(255, 183, 197, 0.12);
     --accent-color: #d896a3;
     --nav-bg: rgba(255, 255, 255, 0.8);
+    --input-bg: rgba(0, 0, 0, 0.05); /* AGREGADO: Fondo del buscador en modo claro */
 }
 
 /* Variables Modo Oscuro (Fondos profundos y brillo lavanda eléctrico suave) */
@@ -15,11 +17,13 @@
     --bg-base: #0b0c10;
     --surface-glass: rgba(20, 22, 28, 0.6);
     --text-main: #f1f5f9;
+    --menu-bg: rgba(22, 22, 26, 0.95);
     --text-muted: #94a3b8;
     --border-glass: rgba(180, 160, 255, 0.2);
     --glow-shadow: 0 8px 32px 0 rgba(180, 160, 255, 0.08);
     --accent-color: #b4a0ff;
     --nav-bg: rgba(15, 17, 21, 0.8);
+    --input-bg: rgba(255, 255, 255, 0.05); /* AGREGADO: Fondo del buscador en modo oscuro */
 }
 
 /* Inicialización del cuerpo para transiciones suaves */
@@ -267,3 +271,13 @@ h1, h2, h3, h4, h5, h6, p, span, label, th, td, input, textarea {
     align-items: center;
     justify-content: center;
 }
+
+/* --- AGREGADO: Clase dinámica para los enlaces del menú offcanvas --- */
+.menu-link-dynamic {
+    color: var(--text-main) !important;
+    transition: color 0.3s ease;
+}
+
+    .menu-link-dynamic:hover {
+        color: var(--accent-color) !important;
+    }

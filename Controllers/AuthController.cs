@@ -16,6 +16,8 @@ namespace VeryLike.Web.Controllers
         // --- PÁGINA DE REGISTRO ---
         public IActionResult Registro()
         {
+            // Ocultar el menú
+            ViewData["HideMenu"] = true;
             return View();
         }
 
@@ -37,6 +39,8 @@ namespace VeryLike.Web.Controllers
         // --- PÁGINA DE INICIAR SESIÓN ---
         public IActionResult Login()
         {
+            // Ocultar el menú
+            ViewData["HideMenu"] = true;
             return View();
         }
 

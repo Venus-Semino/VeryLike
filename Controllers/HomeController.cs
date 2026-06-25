@@ -8,6 +8,8 @@ namespace VeryLike.Controllers
     {
         public IActionResult Index()
         {
+            // Ocultar el menú
+            ViewData["HideMenu"] = true;
             return View();
         }
 
@@ -21,5 +23,6 @@ namespace VeryLike.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
     }
 }
