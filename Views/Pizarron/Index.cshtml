@@ -29,6 +29,7 @@
                 </div>
 
                 <div class="horizontal-scroll-container">
+
                     <div class="glass-card media-card movie-type d-flex flex-column"
                          data-bs-toggle="modal" data-bs-target="#modalDetalleMedia"
                          data-tipo="pelicula"
@@ -72,6 +73,7 @@
                 </div>
 
                 <div class="horizontal-scroll-container">
+
                     <div class="glass-card media-card movie-type d-flex flex-column"
                          data-bs-toggle="modal" data-bs-target="#modalDetalleMedia"
                          data-tipo="pelicula"
@@ -105,16 +107,13 @@
         </div>
 
         <div class="col-xl-3 col-lg-4">
-
             <div class="glass-card p-4 mb-4">
                 <h6 class="text-uppercase text-muted tracking-widest mb-4" style="letter-spacing: 2px;">Tus Hilos</h6>
-
                 <div class="chat-bubble p-3 mb-3">
                     <span class="fw-bold" style="color: var(--accent-color); font-size: 0.8rem;">Tú</span>
                     <p class="mb-0 small mt-1 text-truncate">¿Alguien más sintió que el final de...</p>
                     <div class="text-end mt-2"><span class="badge bg-secondary rounded-pill">3 Respuestas</span></div>
                 </div>
-
                 <a href="#" class="btn btn-sm w-100" style="border: 1px solid var(--border-glass); color: var(--text-main);">Ir a la Comunidad</a>
             </div>
 
@@ -123,22 +122,18 @@
                 </div>
                 <h6 class="mb-1">@ViewBag.NombreUsuario</h6>
                 <p class="text-muted small mb-4">Cinéfilo Nivel 3</p>
-
                 <div class="d-flex justify-content-around mb-4 border-top border-bottom py-2" style="border-color: var(--border-glass) !important;">
                     <div><h5 class="m-0">12</h5><span class="small text-muted">Vistas</span></div>
                     <div><h5 class="m-0">5</h5><span class="small text-muted">Reseñas</span></div>
                 </div>
-
                 <a href="#" class="btn btn-futuristic w-100">Ver Perfil Público</a>
             </div>
-
         </div>
     </div>
 
     @await Html.PartialAsync("_ModalDetalles")
 
+    @section Scripts {
+        <script src="~/js/pizarron.js" asp-append-version="true"></script>
+    }
 </div>
-
-@section Scripts {
-    <script src="~/js/pizarron.js" asp-append-version="true"></script>
-}

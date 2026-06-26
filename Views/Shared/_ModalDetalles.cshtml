@@ -82,11 +82,3 @@
         </div>
     </div>
 </div>
-```
-
-### 3. Conectar la pieza al Pizarrón
-Abre tu archivo **`Views/Pizarron/Index.cshtml`**. 
-Ve al lugar exacto donde tenías ese HTML gigante (justo después de que terminan las columnas del pizarrón y antes de la sección `@section Scripts`) e invoca a tu nuevo componente usando código C# (Razor) con esta única línea:
-
-```html
-@await Html.PartialAsync("_ModalDetalles")
