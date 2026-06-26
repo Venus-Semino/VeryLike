@@ -72,15 +72,3 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
-```
-
-### 2. Limpiar tu Vista y conectar el nuevo archivo
-
-Ahora ve a tu archivo **`Views / Pizarron / Index.cshtml`**. 
-
-Ve hasta el fondo del archivo, borra absolutamente todo el bloque de `< script > ... </script > ` que habíamos puesto y **reemplázalo** por esto:
-
-```html
-@section Scripts {
-    <script src="~/js/pizarron.js" asp-append-version="true"></script>
-}

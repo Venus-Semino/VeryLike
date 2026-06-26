@@ -1,16 +1,18 @@
-﻿<div class="modal fade" id="modalDetalleMedia" tabindex="-1" aria-hidden="true">
+﻿<!-- EL MODAL (Ventana Flotante) -->
+<div class="modal fade" id="modalDetalleMedia" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content glass-card" style="background: var(--menu-bg); border: 1px solid var(--border-glass);">
 
             <div class="modal-body p-4 text-white">
 
+                <!-- VISTA 1: DETALLES CON IDs -->
                 <div id="vistaDetalles">
                     <div class="row">
                         <div class="col-md-4 text-center">
                             <div id="modalPortada" class="media-poster mb-3" style="height: 250px; background-color: rgba(255,255,255,0.05); border-radius: 8px;">
                                 <span class="text-muted" style="line-height: 250px;">PORTADA</span>
                             </div>
-                            
+
                             <p id="modalInfoTecnica" class="text-muted small mb-1 fw-bold tracking-widest text-uppercase"></p>
 
                             <div title="Calificación de la comunidad">
@@ -49,6 +51,7 @@
                     </div>
                 </div>
 
+                <!-- VISTA 2: FORMULARIO -->
                 <div id="vistaFormulario" class="d-none">
                     <h4 class="text-center mb-4" style="color: var(--accent-color); letter-spacing: 2px;">TU CALIFICACIÓN</h4>
 
