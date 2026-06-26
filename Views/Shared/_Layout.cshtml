@@ -1,134 +1,290 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - VeryLike</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/VeryLike.styles.css" asp-append-version="true" />
-</head>
-<body>
+﻿@{
+    ViewData["Title"] = "Mi Pizarrón";
+}
 
-    @if (ViewData["HideMenu"] == null || !(bool)ViewData["HideMenu"])
-    {
-        <button id="btnToggleMenu" class="btn btn-futuristic position-fixed top-0 start-0 m-4"
-                style="z-index: 1060; border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.5rem;"
-                type="button" data-bs-toggle="offcanvas" data-bs-target="#menuPrincipal" aria-controls="menuPrincipal">
-            &lt;
-        </button>
+<div class="container-fluid px-4 mt-4">
+    <div class="d-flex justify-content-between align-items-end mb-5">
+        <div>
+            <p class="text-muted text-uppercase tracking-widest mb-1 small" style="letter-spacing: 2px;">Bienvenido de nuevo</p>
+            <h1 class="display-5 fw-light m-0">Hola, <span style="color: var(--accent-color);">@ViewBag.NombreUsuario</span></h1>
+        </div>
+        <div class="dropdown">
+            <button class="btn btn-futuristic dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                Opciones
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark glass-card" style="background: var(--surface-glass);">
+                <li><a class="dropdown-item text-muted" href="#">Ajustes</a></li>
+                <li><a class="dropdown-item text-danger" href="#">Cerrar Sesión</a></li>
+            </ul>
+        </div>
+    </div>
 
-        <div class="offcanvas offcanvas-start glass-card" tabindex="-1" id="menuPrincipal" aria-labelledby="menuPrincipalLabel"
-             style="width: 300px; background: var(--menu-bg) !important; border: none; border-right: 1px solid var(--border-glass) !important; border-radius: 0 16px 16px 0;">
+    <div class="row g-5">
+        <div class="col-xl-9 col-lg-8">
 
-            <div class="offcanvas-header pb-0 mt-4 ms-5">
-                <h5 class="offcanvas-title tracking-widest text-uppercase" id="menuPrincipalLabel" style="color: var(--accent-color); letter-spacing: 3px; font-weight: 300;">VeryLike</h5>
+            <div class="mb-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="fw-light text-uppercase m-0" style="letter-spacing: 1px;">Para Ver</h4>
+                    <a asp-controller="Pizarron" asp-action="ParaVer" class="text-muted small text-decoration-none">Expandir Lista &rarr;</a>
+                </div>
+
+                <div class="horizontal-scroll-container">
+
+                    <div class="glass-card media-card movie-type d-flex flex-column"
+                         data-bs-toggle="modal" data-bs-target="#modalDetalleMedia"
+                         data-tipo="pelicula"
+                         data-titulo="Drive My Car"
+                         data-duracion="2h 59m"
+                         data-sinopsis="Un actor y director de teatro lidia con la muerte de su esposa mientras dirige una producción de Tío Vania en Hiroshima."
+                         data-estudio="Bitters End"
+                         data-plataformas="MUBI, Apple TV">
+                        <div class="media-poster text-muted small">Sin Portada</div>
+                        <div class="p-3 text-center">
+                            <h6 class="mb-1 text-truncate">Drive My Car</h6>
+                            <span class="small" style="color: var(--accent-color);">Película</span>
+                        </div>
+                    </div>
+
+                    <div class="glass-card media-card series-type d-flex flex-column"
+                         data-bs-toggle="modal" data-bs-target="#modalDetalleMedia"
+                         data-tipo="serie"
+                         data-titulo="Mr. Robot"
+                         data-temporadas="4"
+                         data-episodios="45"
+                         data-sinopsis="Elliot, un brillante pero inestable ingeniero de ciberseguridad, es reclutado por un líder misterioso para derrocar a la corporación que le pagan por proteger."
+                         data-estudio="USA Network"
+                         data-plataformas="Prime Video">
+                        <div class="media-poster text-muted small">Sin Portada</div>
+                        <div class="p-3 text-center">
+                            <h6 class="mb-1 text-truncate">Mr. Robot</h6>
+                            <span class="small text-info">Serie</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="offcanvas-body d-flex flex-column mt-3">
+            <div class="mb-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h4 class="fw-light text-uppercase m-0" style="letter-spacing: 1px;">Recomendadas</h4>
+                        <p class="text-muted small m-0">Basado en tus altas calificaciones a thrillers psicológicos</p>
+                    </div>
+                    <a href="#" class="text-muted small text-decoration-none">Expandir Lista &rarr;</a>
+                </div>
 
-                <form asp-controller="Cinema" asp-action="Buscar" method="get" class="mb-4">
-                    <input type="text" name="query" class="form-control" style="background: var(--input-bg); border: 1px solid var(--border-glass); color: var(--text-main);" placeholder="Buscar películas, usuarios...">
-                </form>
+                <div class="horizontal-scroll-container">
 
-                @{
-                    var controladorActual = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
-                    var accionActual = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
-                }
+                    <div class="glass-card media-card movie-type d-flex flex-column"
+                         data-bs-toggle="modal" data-bs-target="#modalDetalleMedia"
+                         data-tipo="pelicula"
+                         data-titulo="Perfect Blue"
+                         data-duracion="1h 21m"
+                         data-sinopsis="Una cantante pop que decide dejar la música para convertirse en actriz se enfrenta a eventos perturbadores y a un fanático obsesionado que distorsionan su realidad."
+                         data-estudio="Madhouse"
+                         data-plataformas="Crunchyroll">
+                        <div class="media-poster text-muted small">Sin Portada</div>
+                        <div class="p-3 text-center">
+                            <h6 class="mb-1 text-truncate">Perfect Blue</h6>
+                            <span class="small text-muted">+ Agregar a Para Ver</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                <ul class="nav flex-column gap-3 mb-auto">
-                    @if (!controladorActual.Equals("Pizarron", StringComparison.OrdinalIgnoreCase) || !accionActual.Equals("Index", StringComparison.OrdinalIgnoreCase))
-                    {
-                        <li class="nav-item"><a class="nav-link px-0 menu-link-dynamic" asp-controller="Pizarron" asp-action="Index"> Inicio</a></li>
-                    }
+            <div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="fw-light text-uppercase m-0" style="letter-spacing: 1px;">Pendientes de Calificar</h4>
+                </div>
+                <div class="glass-card p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-1">The Imitation Game</h5>
+                        <span class="text-muted small">Vista el 15 de Junio</span>
+                    </div>
+                    <a href="#" class="btn btn-futuristic">Dar Calificación</a>
+                </div>
+            </div>
 
-                    @if (!controladorActual.Equals("Foro", StringComparison.OrdinalIgnoreCase))
-                    {
-                        <li class="nav-item"><a class="nav-link px-0 menu-link-dynamic" asp-controller="Foro" asp-action="Index"> Foro</a></li>
-                    }
+        </div>
 
-                    @if (!controladorActual.Equals("Perfiles", StringComparison.OrdinalIgnoreCase))
-                    {
-                        <li class="nav-item"><a class="nav-link px-0 menu-link-dynamic" asp-controller="Perfiles" asp-action="Index"> Perfiles</a></li>
-                    }
+        <div class="col-xl-3 col-lg-4">
+            <div class="glass-card p-4 mb-4">
+                <h6 class="text-uppercase text-muted tracking-widest mb-4" style="letter-spacing: 2px;">Tus Hilos</h6>
+                <div class="chat-bubble p-3 mb-3">
+                    <span class="fw-bold" style="color: var(--accent-color); font-size: 0.8rem;">Tú</span>
+                    <p class="mb-0 small mt-1 text-truncate">¿Alguien más sintió que el final de...</p>
+                    <div class="text-end mt-2"><span class="badge bg-secondary rounded-pill">3 Respuestas</span></div>
+                </div>
+                <a href="#" class="btn btn-sm w-100" style="border: 1px solid var(--border-glass); color: var(--text-main);">Ir a la Comunidad</a>
+            </div>
 
-                    @if (!controladorActual.Equals("Cinema", StringComparison.OrdinalIgnoreCase))
-                    {
-                        <li class="nav-item"><a class="nav-link px-0 menu-link-dynamic" asp-controller="Cinema" asp-action="Index"> Recomendaciones</a></li>
-                    }
+            <div class="glass-card p-4 text-center">
+                <div class="rounded-circle mx-auto mb-3" style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent-color), transparent); display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                </div>
+                <h6 class="mb-1">@ViewBag.NombreUsuario</h6>
+                <p class="text-muted small mb-4">Cinéfilo Nivel 3</p>
+                <div class="d-flex justify-content-around mb-4 border-top border-bottom py-2" style="border-color: var(--border-glass) !important;">
+                    <div><h5 class="m-0">12</h5><span class="small text-muted">Vistas</span></div>
+                    <div><h5 class="m-0">5</h5><span class="small text-muted">Reseñas</span></div>
+                </div>
+                <a href="#" class="btn btn-futuristic w-100">Ver Perfil Público</a>
+            </div>
+        </div>
+    </div>
 
-                    @if (!controladorActual.Equals("Pizarron", StringComparison.OrdinalIgnoreCase) || !accionActual.Equals("ParaVer", StringComparison.OrdinalIgnoreCase))
-                    {
-                        <li class="nav-item"><a class="nav-link px-0 menu-link-dynamic" asp-controller="Pizarron" asp-action="ParaVer"> Listas</a></li>
-                    }
-                </ul>
+    <div class="modal fade" id="modalDetalleMedia" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content glass-card" style="background: var(--menu-bg); border: 1px solid var(--border-glass);">
 
-                <div class="mt-auto pt-3 border-top" style="border-color: var(--border-glass) !important;">
-                    <ul class="nav flex-column gap-2">
-                        <li class="nav-item">
-                            <a class="nav-link text-muted small px-0" asp-controller="Home" asp-action="Privacy">Política de Privacidad</a>
-                        </li>
-                        <li class="nav-item d-flex justify-content-between align-items-center mt-2">
-                            <span class="text-muted small">Apariencia</span>
-                            <button class="btn btn-sm btn-futuristic" id="themeToggle" style="font-size: 0.7rem;">MODO OSCURO</button>
-                        </li>
-                        <li class="nav-item mt-3">
-                            <a class="nav-link text-danger px-0" asp-controller="Home" asp-action="Index" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Cerrar Sesión</a>
-                        </li>
-                    </ul>
+                <div class="modal-body p-4 text-white">
+
+                    <div id="vistaDetalles">
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                <div id="modalPortada" class="media-poster mb-3" style="height: 250px; background-color: rgba(255,255,255,0.05); border-radius: 8px;">
+                                    <span class="text-muted" style="line-height: 250px;">PORTADA</span>
+                                </div>
+
+                                <p id="modalInfoTecnica" class="text-muted small mb-1 fw-bold tracking-widest text-uppercase"></p>
+
+                                <div title="1,245 personas han calificado esto">
+                                    <span style="color: var(--accent-color); font-size: 1.2rem;">★★★★☆</span>
+                                </div>
+                                <h4 class="mt-1 fw-light" style="color: var(--text-main);">4.2 <span style="font-size: 0.8rem; color: var(--text-muted);">/ 5</span></h4>
+                            </div>
+
+                            <div class="col-md-8 d-flex flex-column">
+                                <h3 id="modalTitulo" class="fw-bold tracking-widest text-uppercase" style="color: var(--accent-color);">Título</h3>
+
+                                <p class="text-muted small mb-2"><strong>Estudio:</strong> <span id="modalEstudio"></span></p>
+                                <p id="modalSinopsis" style="color: var(--text-main); font-size: 0.9rem;"></p>
+
+                                <div class="mb-3">
+                                    <span class="text-muted small d-block mb-1">Lo puedes ver en:</span>
+                                    <div id="modalPlataformas"></div>
+                                </div>
+
+                                <div class="mt-auto p-3 rounded" style="background: var(--input-bg); border: 1px solid var(--border-glass);">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="text-muted small text-uppercase tracking-widest">Comunidad</span>
+                                        <div>
+                                            <button class="btn btn-sm btn-link text-muted text-decoration-none p-0">&lt;</button>
+                                            <button class="btn btn-sm btn-link text-muted text-decoration-none p-0 ms-2">&gt;</button>
+                                        </div>
+                                    </div>
+                                    <p class="mb-0" style="font-size: 0.85rem; color: var(--text-main);"><strong>Patolucas:</strong> Me gustó mucho la película porque los efectos visuales son increíbles...</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4 border-top pt-3" style="border-color: var(--border-glass) !important;">
+                            <button type="button" class="btn text-muted" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="button" class="btn btn-futuristic" onclick="cambiarAVistaFormulario()">Calificar</button>
+                        </div>
+                    </div>
+
+                    <div id="vistaFormulario" class="d-none">
+                        <h4 class="text-center mb-4" style="color: var(--accent-color); letter-spacing: 2px;">TU CALIFICACIÓN</h4>
+
+                        <div class="text-center mb-4">
+                            <div class="d-flex justify-content-center gap-2 mb-2">
+                                <span class="star-rating">★</span>
+                                <span class="star-rating">★</span>
+                                <span class="star-rating">★</span>
+                                <span class="star-rating">★</span>
+                                <span class="star-rating">★</span>
+                            </div>
+                            <p class="text-muted small">Haz clic para asignar (permite .5)</p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label text-muted small text-uppercase tracking-widest">Reseña Pública (Para el Foro)</label>
+                            <textarea class="form-control form-control-glass" rows="3" placeholder="¿Qué le dirías a la comunidad sobre esto?"></textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label text-muted small text-uppercase tracking-widest">Reseña Privada (Solo para ti)</label>
+                            <textarea class="form-control form-control-glass" rows="2" placeholder="Notas personales que nadie más leerá..."></textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-between border-top pt-3" style="border-color: var(--border-glass) !important;">
+                            <button type="button" class="btn text-muted" onclick="cambiarAVistaDetalles()">Cancelar</button>
+                            <button type="button" class="btn btn-futuristic">Guardar</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    }
-
-    <div class="container pt-4">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
     </div>
 
-    <footer class="border-top footer text-muted mt-5">
-        <div class="container text-center text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;">
-            &copy; 2026 - VeryLike - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-muted" style="text-decoration: none;">Privacidad</a>
-        </div>
-    </footer>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-
     <script>
-        // --- Cambiador de Tema (Modo Claro / Oscuro) ---
-        const toggleBtn = document.getElementById('themeToggle');
-        if (toggleBtn) {
-        const currentTheme = localStorage.getItem('theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', currentTheme);
-        toggleBtn.textContent = currentTheme === 'dark' ? 'MODO CLARO' : 'MODO OSCURO';
+            function cambiarAVistaFormulario() {
+                const vistaDetalles = document.getElementById('vistaDetalles');
+                const vistaFormulario = document.getElementById('vistaFormulario');
 
-        toggleBtn.addEventListener('click', () => {
-        let theme = document.documentElement.getAttribute('data-theme');
-        let switchToTheme = theme === 'dark' ? 'light' : 'dark';
+                vistaDetalles.classList.add('d-none');
+                vistaFormulario.classList.remove('d-none');
 
-        document.documentElement.setAttribute('data-theme', switchToTheme);
-        localStorage.setItem('theme', switchToTheme);
-        toggleBtn.textContent = theme === 'dark' ? 'MODO CLARO' : 'MODO OSCURO';
-        });
-        }
+                vistaFormulario.classList.remove('water-drop-enter');
+                void vistaFormulario.offsetWidth;
+                vistaFormulario.classList.add('water-drop-enter');
+            }
 
-        // --- Manejo del Carácter Matemático (< / >) según estado del menú ---
-        const menuOffcanvas = document.getElementById('menuPrincipal');
-        const btnToggleMenu = document.getElementById('btnToggleMenu');
+            function cambiarAVistaDetalles() {
+                const vistaDetalles = document.getElementById('vistaDetalles');
+                const vistaFormulario = document.getElementById('vistaFormulario');
 
-        if (menuOffcanvas && btnToggleMenu) {
-        menuOffcanvas.addEventListener('show.bs.offcanvas', () => {
-        btnToggleMenu.innerHTML = '&gt;'; // Cambia a > al abrir
-        });
-        menuOffcanvas.addEventListener('hide.bs.offcanvas', () => {
-        btnToggleMenu.innerHTML = '&lt;'; // Cambia a < al cerrar
-        });
-        }
+                vistaFormulario.classList.add('d-none');
+                vistaDetalles.classList.remove('d-none');
+
+                vistaDetalles.classList.remove('water-drop-enter');
+                void vistaDetalles.offsetWidth;
+                vistaDetalles.classList.add('water-drop-enter');
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                var modalDetalle = document.getElementById('modalDetalleMedia');
+
+                modalDetalle.addEventListener('show.bs.modal', function (event) {
+                    var tarjeta = event.relatedTarget;
+
+                    var tipo = tarjeta.getAttribute('data-tipo');
+                    var titulo = tarjeta.getAttribute('data-titulo');
+                    var sinopsis = tarjeta.getAttribute('data-sinopsis');
+                    var estudio = tarjeta.getAttribute('data-estudio');
+                    var plataformas = tarjeta.getAttribute('data-plataformas');
+
+                    document.getElementById('modalTitulo').textContent = titulo;
+                    document.getElementById('modalSinopsis').textContent = sinopsis;
+                    document.getElementById('modalEstudio').textContent = estudio;
+
+                    var infoTecnica = document.getElementById('modalInfoTecnica');
+                    if (tipo === 'pelicula') {
+                        var duracion = tarjeta.getAttribute('data-duracion');
+                        infoTecnica.textContent = '⏱ Duración: ' + duracion;
+                    } else if (tipo === 'serie') {
+                        var temporadas = tarjeta.getAttribute('data-temporadas');
+                        var episodios = tarjeta.getAttribute('data-episodios');
+                        infoTecnica.textContent = '📺 ' + temporadas + ' Temporadas | ' + episodios + ' Eps';
+                    }
+
+                    var contenedorPlataformas = document.getElementById('modalPlataformas');
+                    contenedorPlataformas.innerHTML = '';
+
+                    if (plataformas) {
+                        var listaPlataformas = plataformas.split(',');
+                        listaPlataformas.forEach(function(plat) {
+                            var badge = document.createElement('a');
+                            badge.href = "#";
+                            badge.className = "badge rounded-pill text-decoration-none px-3 py-2 me-1";
+                            badge.style.border = "1px solid var(--border-glass)";
+                            badge.style.color = "var(--text-main)";
+                            badge.textContent = plat.trim();
+                            contenedorPlataformas.appendChild(badge);
+                        });
+                    }
+
+                    cambiarAVistaDetalles();
+                });
+            });
     </script>
-</body>
-</html>
+</div>

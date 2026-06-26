@@ -281,3 +281,34 @@ h1, h2, h3, h4, h5, h6, p, span, label, th, td, input, textarea {
     .menu-link-dynamic:hover {
         color: var(--accent-color) !important;
     }
+
+/* Animación tipo gota de agua para el cambio de vistas en el modal */
+.water-drop-enter {
+    animation: waterDropRipple 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes waterDropRipple {
+    0% {
+        transform: scale(0.95);
+        opacity: 0;
+        filter: blur(8px);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+/* Estilo para las estrellitas */
+.star-rating {
+    color: var(--text-muted);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+    .star-rating:hover, .star-rating.active {
+        color: var(--accent-color);
+    }

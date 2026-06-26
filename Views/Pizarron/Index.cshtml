@@ -29,7 +29,14 @@
                 </div>
 
                 <div class="horizontal-scroll-container">
-                    <div class="glass-card media-card movie-type d-flex flex-column">
+                    <div class="glass-card media-card movie-type d-flex flex-column"
+                         data-bs-toggle="modal" data-bs-target="#modalDetalleMedia"
+                         data-tipo="pelicula"
+                         data-titulo="Drive My Car"
+                         data-duracion="2h 59m"
+                         data-sinopsis="Un actor y director de teatro lidia con la muerte de su esposa mientras dirige una producción de Tío Vania en Hiroshima."
+                         data-estudio="Bitters End"
+                         data-plataformas="MUBI, Apple TV">
                         <div class="media-poster text-muted small">Sin Portada</div>
                         <div class="p-3 text-center">
                             <h6 class="mb-1 text-truncate">Drive My Car</h6>
@@ -37,7 +44,15 @@
                         </div>
                     </div>
 
-                    <div class="glass-card media-card series-type d-flex flex-column">
+                    <div class="glass-card media-card series-type d-flex flex-column"
+                         data-bs-toggle="modal" data-bs-target="#modalDetalleMedia"
+                         data-tipo="serie"
+                         data-titulo="Mr. Robot"
+                         data-temporadas="4"
+                         data-episodios="45"
+                         data-sinopsis="Elliot, un brillante pero inestable ingeniero de ciberseguridad, es reclutado por un líder misterioso para derrocar a la corporación que le pagan por proteger."
+                         data-estudio="USA Network"
+                         data-plataformas="Prime Video">
                         <div class="media-poster text-muted small">Sin Portada</div>
                         <div class="p-3 text-center">
                             <h6 class="mb-1 text-truncate">Mr. Robot</h6>
@@ -57,7 +72,14 @@
                 </div>
 
                 <div class="horizontal-scroll-container">
-                    <div class="glass-card media-card movie-type d-flex flex-column">
+                    <div class="glass-card media-card movie-type d-flex flex-column"
+                         data-bs-toggle="modal" data-bs-target="#modalDetalleMedia"
+                         data-tipo="pelicula"
+                         data-titulo="Perfect Blue"
+                         data-duracion="1h 21m"
+                         data-sinopsis="Una cantante pop que decide dejar la música para convertirse en actriz se enfrenta a eventos perturbadores y a un fanático obsesionado que distorsionan su realidad."
+                         data-estudio="Madhouse"
+                         data-plataformas="Crunchyroll">
                         <div class="media-poster text-muted small">Sin Portada</div>
                         <div class="p-3 text-center">
                             <h6 class="mb-1 text-truncate">Perfect Blue</h6>
@@ -98,7 +120,6 @@
 
             <div class="glass-card p-4 text-center">
                 <div class="rounded-circle mx-auto mb-3" style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent-color), transparent); display: flex; align-items: center; justify-content: center; font-size: 2rem;">
-                    
                 </div>
                 <h6 class="mb-1">@ViewBag.NombreUsuario</h6>
                 <p class="text-muted small mb-4">Cinéfilo Nivel 3</p>
@@ -113,4 +134,11 @@
 
         </div>
     </div>
+
+    @await Html.PartialAsync("_ModalDetalles")
+
 </div>
+
+@section Scripts {
+    <script src="~/js/pizarron.js" asp-append-version="true"></script>
+}
