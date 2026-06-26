@@ -135,10 +135,12 @@
         </div>
     </div>
 
+    <!-- 1. AQUÍ LLAMAMOS A LA VISTA PARCIAL DEL MODAL -->
     @await Html.PartialAsync("_ModalDetalles")
 
 </div>
 
+<!-- 2. AQUÍ INYECTAMOS EL JAVASCRIPT EXTERNO -->
 @section Scripts {
     <script src="~/js/pizarron.js" asp-append-version="true"></script>
 }
