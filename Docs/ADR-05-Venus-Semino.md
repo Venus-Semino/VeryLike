@@ -43,3 +43,50 @@ ContenidoAudiovisual contenido = dto.Tipo.Trim().ToLowerInvariant() switch
 ```
 
 `CatalogoRepository` (la clase cliente) solo invoca `ContenidoFactory.CrearTodos(dtos)` y trabaja siempre contra el tipo base `ContenidoAudiovisual`; nunca necesita saber cómo se decide entre `Pelicula` y `Serie`.
+
+### Alternativas Consideradas
+
+**Deserialización polimórfica nativa de System.Text.Json** (`[JsonPolymorphic]` / `[JsonDerivedType]`).
+*Razón de rechazo:* acopla el modelo de dominio a atributos específicos de serialización y dificulta agregar lógica de validación o valores por defecto durante la construcción. El Factory Method mantiene esa lógica explícita y fácil de leer en un solo lugar.
+
+**Un `if/else` dentro de cada repositorio que necesite el catálogo.**
+*Razón de rechazo:* es exactamente la duplicación que el patrón busca evitar; cualquier nuevo tipo de contenido (por ejemplo, "Documental") obligaría a tocar múltiples archivos en lugar de uno solo.
+
+---
+
+## Patrón 2: Strategy
+
+### Problema que Resuelve
+
+El criterio para decidir qué se muestra en la sección "Recomendadas" del Pizarrón es una regla de negocio que va a evolucionar (hoy es "mejor calificadas", a futuro puede ser "por género preferido" o un modelo de IA). Si esa lógica vive directamente en `PizarronController`, cada cambio de criterio implica modificar el controlador y arriesga romper la lógica de sesión y de armado del `ViewModel` que también vive ahí.
+
+### Funcionamiento
+
+`IEstrategiaRecomendacion` define el contrato común para cualquier algoritmo de recomendación:
+
+```csharp
+public interface IEstrategiaRecomendacion
+{
+    List<ContenidoAudiovisual> AplicarEstrategia(List<ContenidoAudiovisual> catalogo);
+}
+```
+
+`OrdenarPorCalificacionStrategy` es la primera implementación concreta (ordena de mayor a menor calificación). `MotorDeRecomendacion` actúa como el *contexto* del patrón: recibe una estrategia en su constructor y delega en ella sin conocer su lógica interna:
+
+```csharp
+var motor = new MotorDeRecomendacion(new OrdenarPorCalificacionStrategy());
+modelo.Recomendadas = motor.Recomendar(catalogo.ToList())
+    .Where(c => !paraVerIds.Contains(c.Id))
+    .Take(10)
+    .ToList();
+```
+
+`PizarronController` solo conoce `IEstrategiaRecomendacion` y `MotorDeRecomendacion`; agregar una estrategia nueva (por género, por estudio, o una que consuma un modelo de IA) no requiere modificar el controlador, solo escribir una clase nueva que implemente la interfaz.
+
+### Alternativas Consideradas
+
+**Métodos de extensión LINQ directamente en el controlador** (`catalogo.OrderByDescending(...)`).
+*Razón de rechazo:* funciona para un solo criterio fijo, pero no permite intercambiar el algoritmo en tiempo de ejecución ni probar cada criterio de forma aislada (por ejemplo, en pruebas unitarias).
+
+**Enum + switch para seleccionar el criterio.**
+*Razón de rechazo:* sigue concentrando todos los algoritmos en una sola clase y obliga a modificar ese switch cada vez que se agrega un criterio nuevo, violando el principio de abierto/cerrado que Strategy sí respeta.
