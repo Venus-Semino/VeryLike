@@ -1,14 +1,12 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using VeryLike.Models;
-
-namespace VeryLike.Controllers
+using VeryLike.Web.Models;
+namespace VeryLike.Web.Controllers
 {
     public class HomeController : Controller
     {
         public IActionResult Index()
         {
-            // Ocultar el menú
             ViewData["HideMenu"] = true;
             return View();
         }
@@ -23,6 +21,5 @@ namespace VeryLike.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
     }
 }

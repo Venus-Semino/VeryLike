@@ -7,6 +7,7 @@ namespace VeryLike.Web.Controllers
     public class AuthController : Controller
     {
         private readonly IUsuarioRepository _usuarioRepository;
+        private const string ClaveSesion = "UsuarioNombre";
 
         public AuthController(IUsuarioRepository usuarioRepository)
         {
@@ -16,7 +17,6 @@ namespace VeryLike.Web.Controllers
         // --- PÁGINA DE REGISTRO ---
         public IActionResult Registro()
         {
-            // Ocultar el menú
             ViewData["HideMenu"] = true;
             return View();
         }
@@ -24,22 +24,21 @@ namespace VeryLike.Web.Controllers
         [HttpPost]
         public IActionResult Registro(Usuario nuevoUsuario)
         {
-            if (_usuarioRepository.ExisteNombreUsuario(nuevoUsuario.NombreUsuario))
+            if (_usuarioRepository.ObtenerPorNombreOCorreo(nuevoUsuario.NombreUsuario) != null)
             {
-                // Si el usuario existe, mandamos el error a la vista
                 ModelState.AddModelError("NombreUsuario", "Este nombre de usuario ya está en uso. Elige otro.");
+                ViewData["HideMenu"] = true;
                 return View(nuevoUsuario);
             }
 
             _usuarioRepository.Agregar(nuevoUsuario);
-            // Si se registra con éxito, lo mandamos directo al "Pizarrón" (lo haremos en el siguiente paso)
+            HttpContext.Session.SetString(ClaveSesion, nuevoUsuario.NombreUsuario);
             return RedirectToAction("Index", "Pizarron");
         }
 
         // --- PÁGINA DE INICIAR SESIÓN ---
         public IActionResult Login()
         {
-            // Ocultar el menú
             ViewData["HideMenu"] = true;
             return View();
         }
@@ -47,20 +46,24 @@ namespace VeryLike.Web.Controllers
         [HttpPost]
         public IActionResult Login(string identificador, string contrasena)
         {
-            var usuarios = _usuarioRepository.ObtenerTodos();
+            var usuario = _usuarioRepository.ObtenerPorNombreOCorreo(identificador);
 
-            // Corregido: Ahora comparamos contra u.Contrasena
-            var usuarioValido = usuarios.FirstOrDefault(u =>
-                (u.NombreUsuario == identificador || u.Correo == identificador) &&
-                u.Contrasena == contrasena);
-
-            if (usuarioValido != null)
+            if (usuario != null && usuario.Contrasena == contrasena)
             {
+                HttpContext.Session.SetString(ClaveSesion, usuario.NombreUsuario);
                 return RedirectToAction("Index", "Pizarron");
             }
 
             ModelState.AddModelError(string.Empty, "Credenciales incorrectas.");
+            ViewData["HideMenu"] = true;
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Remove(ClaveSesion);
+            return RedirectToAction("Index", "Home");
         }
     }
 }

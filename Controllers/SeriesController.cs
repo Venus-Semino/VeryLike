@@ -1,35 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using VeryLike.Domain.Interfaces;
-using VeryLike.Domain.Models;
+using VeryLike.Web.Services;
 
 namespace VeryLike.Web.Controllers
 {
     public class SeriesController : Controller
     {
-        private readonly ISerieRepository _serieRepository;
+        private readonly ICatalogoApiClient _catalogoApiClient;
 
-        public SeriesController(ISerieRepository serieRepository)
+        public SeriesController(ICatalogoApiClient catalogoApiClient)
         {
-            _serieRepository = serieRepository;
+            _catalogoApiClient = catalogoApiClient;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var series = _serieRepository.ObtenerTodas();
+            var series = await _catalogoApiClient.ObtenerSeriesAsync();
             return View(series);
-        }
-
-        [HttpPost]
-        public IActionResult Registrar(Serie nuevaSerie)
-        {
-            if (ModelState.IsValid)
-            {
-                _serieRepository.Agregar(nuevaSerie);
-                return RedirectToAction("Index");
-            }
-
-            var series = _serieRepository.ObtenerTodas();
-            return View("Index", series);
         }
     }
 }

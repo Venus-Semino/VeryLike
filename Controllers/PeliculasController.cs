@@ -1,36 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using VeryLike.Domain.Interfaces;
-using VeryLike.Domain.Models;
+using VeryLike.Web.Services;
 
 namespace VeryLike.Web.Controllers
 {
     public class PeliculasController : Controller
     {
-        private readonly IPeliculaRepository _peliculaRepository;
+        private readonly ICatalogoApiClient _catalogoApiClient;
 
-        // El framework inyecta el repositorio automáticamente aquí
-        public PeliculasController(IPeliculaRepository peliculaRepository)
+        public PeliculasController(ICatalogoApiClient catalogoApiClient)
         {
-            _peliculaRepository = peliculaRepository;
+            _catalogoApiClient = catalogoApiClient;
         }
 
-        public IActionResult Index()
+        // El catálogo es de solo lectura en este MVP: las películas se
+        // gestionan en VeryLike.Catalog.API, no se agregan desde aquí.
+        public async Task<IActionResult> Index()
         {
-            var peliculas = _peliculaRepository.ObtenerTodas();
+            var peliculas = await _catalogoApiClient.ObtenerPeliculasAsync();
             return View(peliculas);
-        }
-
-        [HttpPost]
-        public IActionResult Registrar(Pelicula nuevaPelicula)
-        {
-            if (ModelState.IsValid)
-            {
-                _peliculaRepository.Agregar(nuevaPelicula);
-                return RedirectToAction("Index");
-            }
-
-            var peliculas = _peliculaRepository.ObtenerTodas();
-            return View("Index", peliculas);
         }
     }
 }

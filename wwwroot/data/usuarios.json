@@ -4,6 +4,16 @@
     "Correo": "venus.semino@gmail.com",
     "NombreUsuario": "sunev",
     "Contrasena": "venussunev",
-    "ListaParaVer": [ 2, 4 ]
+    "ListaParaVer": [
+      2,
+      4
+    ]
+  },
+  {
+    "Id": 2,
+    "Correo": "venus.semino@gmail.com",
+    "NombreUsuario": "venus",
+    "Contrasena": "venussunev",
+    "ListaParaVer": []
   }
 ]
