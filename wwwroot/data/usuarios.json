@@ -1,8 +1,9 @@
 [
   {
-    "Id": "5e84e3b2-9f26-4fab-a7fe-2387bcfd3b21",
+    "Id": 1,
     "Correo": "venus.semino@gmail.com",
     "NombreUsuario": "sunev",
-    "Contrasena": "venussunev"
+    "Contrasena": "venussunev",
+    "ListaParaVer": [ 2, 4 ]
   }
 ]

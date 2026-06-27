@@ -3,15 +3,13 @@ using VeryLike.Infrastructure.Repositorie;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Agregar soporte para controladores (API REST)
-builder.Services.AddControllers();
-// Justo después de builder.Services.AddControllers();
+// 1. Controladores (API REST)
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
 });
 
-// 2. Configurar Swagger/OpenAPI (Obligatorio para la rúbrica)
+// 2. Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -28,13 +26,22 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// 3. INYECCIÓN DE DEPENDENCIAS
-builder.Services.AddScoped<IPeliculaRepository, PeliculaRepository>();
-builder.Services.AddScoped<ISerieRepository, SerieRepository>();
+// 3. CORS: VeryLike.Web (puerto 5135/7159) necesita poder llamar a esta API.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PermitirWeb", policy =>
+        policy.WithOrigins("http://localhost:5135", "https://localhost:7159")
+              .AllowAnyHeader()
+              .AllowAnyMethod());
+});
+
+// 4. Inyección de dependencias: este microservicio es el ÚNICO dueño de
+// catalogo.json. Se le pasa la ruta absoluta a su propia copia del archivo.
+var rutaCatalogo = Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "data", "catalogo.json");
+builder.Services.AddSingleton<ICatalogoRepository>(_ => new CatalogoRepository(rutaCatalogo));
 
 var app = builder.Build();
 
-// 4. Activar Swagger en entorno de desarrollo
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -45,6 +52,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseCors("PermitirWeb");
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

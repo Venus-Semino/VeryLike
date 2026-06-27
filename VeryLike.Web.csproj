@@ -1,26 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>aspnet-VeryLike-220d0dfd-dd49-49a0-b7ba-a8558ceca625</UserSecretsId>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>aspnet-VeryLike-220d0dfd-dd49-49a0-b7ba-a8558ceca625</UserSecretsId>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.7" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.2" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\VeryLike.Domain\VeryLike.Domain.csproj" />
+		<ProjectReference Include="..\VeryLike.Infrastructure\VeryLike.Infrastructure.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\VeryLike.Domain\VeryLike.Domain.csproj" />
-    <ProjectReference Include="..\VeryLike.Infrastructure\VeryLike.Infrastructure.csproj" />
-  </ItemGroup>
 	<ItemGroup>
 		<Compile Remove="VeryLike.Catalog.API\**" />
 		<Content Remove="VeryLike.Catalog.API\**" />
@@ -32,4 +23,5 @@
 		<EmbeddedResource Remove="VeryLike.Forum.API\**" />
 		<None Remove="VeryLike.Forum.API\**" />
 	</ItemGroup>
+
 </Project>

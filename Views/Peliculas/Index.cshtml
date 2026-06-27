@@ -25,7 +25,7 @@
                             <h5 class="fw-normal mb-1">@item.Nombre</h5>
                             <span class="text-muted small mb-3" style="letter-spacing: 1px;">@item.PlataformaStreaming</span>
 
-                            <h6 class="mb-3 font-monospace small" style="color: var(--accent-color);">@item.Genero | @item.AnioPublicacion</h6>
+                            <h6 class="mb-3 font-monospace small" style="color: var(--accent-color);">@string.Join(" / ", item.Genero) | @item.AnioPublicacion</h6>
                             <p class="text-muted small flex-grow-1" style="line-height: 1.6;">@item.Sinopsis</p>
 
                             <div class="d-flex justify-content-between align-items-center mt-3 pt-3" style="border-top: 1px solid var(--border-glass);">
@@ -45,38 +45,10 @@
         }
     </div>
 
-    <div class="glass-card p-5 mt-5">
-        <h4 class="fw-light mb-4 text-uppercase text-center" style="letter-spacing: 2px;">REGISTRAR PELÍCULA</h4>
-        <form asp-action="Registrar" method="post">
-            <div class="row g-4">
-                <div class="col-md-6">
-                    <input type="text" name="Nombre" class="form-control form-control-glass" placeholder="Título" required />
-                </div>
-                <div class="col-md-3">
-                    <input type="text" name="Genero" class="form-control form-control-glass" placeholder="Género" required />
-                </div>
-                <div class="col-md-3">
-                    <input type="number" name="AnioPublicacion" class="form-control form-control-glass" placeholder="Año" required />
-                </div>
-                <div class="col-md-4">
-                    <input type="text" name="PlataformaStreaming" class="form-control form-control-glass" placeholder="Plataforma" required />
-                </div>
-                <div class="col-md-4">
-                    <input type="text" name="Duracion" class="form-control form-control-glass" placeholder="Duración" required />
-                </div>
-                <div class="col-md-4">
-                    <input type="text" name="Studio" class="form-control form-control-glass" placeholder="Estudio" required />
-                </div>
-                <div class="col-md-9">
-                    <input type="text" name="Sinopsis" class="form-control form-control-glass" placeholder="Sinopsis breve" required />
-                </div>
-                <div class="col-md-3">
-                    <input type="number" name="Calificacion" class="form-control form-control-glass" min="1" max="5" placeholder="Calificación (1-5)" required />
-                </div>
-            </div>
-            <div class="text-center mt-5">
-                <button type="submit" class="btn btn-futuristic">Sincronizar Datos</button>
-            </div>
-        </form>
+    <div class="glass-card p-5 mt-5 text-center">
+        <p class="text-muted small mb-0">
+            El catálogo se gestiona desde <strong>VeryLike.Catalog.API</strong> (catalogo.json).
+            Por ahora es de solo lectura desde la Web; agregar títulos nuevos será el siguiente paso.
+        </p>
     </div>
 </div>

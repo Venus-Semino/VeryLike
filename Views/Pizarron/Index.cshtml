@@ -1,4 +1,5 @@
-﻿@{
+﻿@model VeryLike.Web.Models.PizarronViewModel
+@{
     ViewData["Title"] = "Mi Pizarrón";
 }
 
@@ -6,7 +7,7 @@
     <div class="d-flex justify-content-between align-items-end mb-5">
         <div>
             <p class="text-muted text-uppercase tracking-widest mb-1 small" style="letter-spacing: 2px;">Bienvenido de nuevo</p>
-            <h1 class="display-5 fw-light m-0">Hola, <span style="color: var(--accent-color);">@ViewBag.NombreUsuario</span></h1>
+            <h1 class="display-5 fw-light m-0">Hola, <span style="color: var(--accent-color);">@Model.NombreUsuario</span></h1>
         </div>
         <div class="dropdown">
             <button class="btn btn-futuristic dropdown-toggle" type="button" data-bs-toggle="dropdown">
@@ -120,7 +121,7 @@
             <div class="glass-card p-4 text-center">
                 <div class="rounded-circle mx-auto mb-3" style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent-color), transparent); display: flex; align-items: center; justify-content: center; font-size: 2rem;">
                 </div>
-                <h6 class="mb-1">@ViewBag.NombreUsuario</h6>
+                <h6 class="mb-1">@Model.NombreUsuario</h6>
                 <p class="text-muted small mb-4">Cinéfilo Nivel 3</p>
                 <div class="d-flex justify-content-around mb-4 border-top border-bottom py-2" style="border-color: var(--border-glass) !important;">
                     <div><h5 class="m-0">12</h5><span class="small text-muted">Vistas</span></div>
