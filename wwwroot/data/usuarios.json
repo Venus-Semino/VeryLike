@@ -15,5 +15,12 @@
     "NombreUsuario": "venus",
     "Contrasena": "venussunev",
     "ListaParaVer": []
+  },
+  {
+    "Id": 3,
+    "Correo": "venus.semino@gmail.com",
+    "NombreUsuario": "ven",
+    "Contrasena": "venussunev",
+    "ListaParaVer": []
   }
 ]
