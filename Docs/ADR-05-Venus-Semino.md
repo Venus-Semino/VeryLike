@@ -90,3 +90,22 @@ modelo.Recomendadas = motor.Recomendar(catalogo.ToList())
 
 **Enum + switch para seleccionar el criterio.**
 *Razón de rechazo:* sigue concentrando todos los algoritmos en una sola clase y obliga a modificar ese switch cada vez que se agrega un criterio nuevo, violando el principio de abierto/cerrado que Strategy sí respeta.
+
+---
+
+## Consecuencias
+
+### Positivas
+
+- La construcción de `Pelicula`/`Serie` está centralizada en un único punto (`ContenidoFactory`), reduciendo el riesgo de lógica duplicada o inconsistente.
+- Agregar un nuevo tipo de contenido audiovisual o un nuevo criterio de recomendación ya no implica modificar clases existentes, solo agregar una nueva (principio abierto/cerrado).
+- `PizarronController` queda enfocado en orquestar la petición HTTP, no en decidir algoritmos de negocio.
+- Ambos patrones dejan el terreno preparado para el requerimiento original del proyecto: sustituir la estrategia actual por una que use IA, sin tocar el resto del sistema.
+
+### Negativas
+
+- Se agregan clases e interfaces adicionales (`CatalogoItemDto`, `IEstrategiaRecomendacion`, `MotorDeRecomendacion`) que incrementan ligeramente la cantidad de archivos del proyecto.
+- Por ahora solo existe una estrategia concreta (`OrdenarPorCalificacionStrategy`); el beneficio completo del patrón Strategy se hará evidente cuando se agregue una segunda estrategia real.
+
+## Uso de Inteligencia Artificial
+En este proyecto se realizó con la ayuda de IA para poder resolver problemas de mal compilamiento, ajustar las variables e aydar con la parte lógica de los temas recientes aprendidos
