@@ -4,7 +4,7 @@
 |--------|-------|
 | Autor  | Venus Semino |
 | Fecha  | 15/05/2026 |
-| Estado | `Propuesto`  |
+| Estado | `Remplazado por ADR-02`  |
 
 ---
 

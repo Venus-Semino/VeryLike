@@ -3,7 +3,7 @@
 | Campo | Valor |
 |-------|-------|
 | Autor | Venus Getsemaní Semino Alemán |
-| Estado| `Aceptado` |
+| Estado| `Remplazado por ADR-04` |
 
 
 ## Contexto

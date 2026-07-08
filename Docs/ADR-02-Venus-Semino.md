@@ -4,7 +4,7 @@
 |-------|-------|
 | Autor | Venus Getsemaní Semino Alemán |
 | Fecha | 05/06/2026 |
-| Estado| `Aceptado` |
+| Estado| `Remplazado por ADR-03` |
 
 ---
 
