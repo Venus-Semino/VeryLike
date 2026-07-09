@@ -28,7 +28,7 @@ A continuación se documenta la arquitectura de VeryLike utilizando el modelo C4
 > * **Para quién es:** Personas de negocio, directivos y usuarios no técnicos.
 > * **Qué pregunta responde:** ¿Cuál es el panorama general del proyecto, qué es la plataforma en términos simples y quién interactúa con ella?
 
-```
+```mermaid
 C4Context
     title Diagrama de Contexto (Nivel 1) - Plataforma VeryLike
     
@@ -38,16 +38,13 @@ C4Context
     Rel(usuario, verylike, "Visita, gestiona listas y debate", "HTTPS")
 ```
 
----
 
+### Nivel 2: Contenedores (Containers)
 
-Nivel 2: Contenedores (Containers)
+> * **Para quién es:** Arquitectos de Software, DevOps y Líderes Técnicos.
+> * **Qué pregunta responde:** ¿Cuáles son las piezas de software grandes (desplegables) que forman el sistema y cómo se comunican entre sí a alto nivel?
 
-Para quién es: Arquitectos de Software, DevOps y Líderes Técnicos.
-
-Qué pregunta responde: ¿Cuáles son las piezas de software grandes (desplegables) que forman el sistema y cómo se comunican entre sí a alto nivel?
-
-Fragmento de código
+```mermaid
 C4Container
     title Diagrama de Contenedores (Nivel 2) - Ecosistema VeryLike
     
@@ -63,9 +60,37 @@ C4Container
     Rel(webapp, api, "Solicita el catálogo general", "JSON / HTTPS")
     Rel(webapp, db_json, "Lee/Escribe datos de usuario (listas y foros)", "File I/O")
     Rel(api, db_json, "Lee datos del catálogo", "File I/O")
+```
+
+---
 
 
+### Nivel 3: Componentes (Components)
 
+> * **Para quién es:** Desarrolladores de Software del equipo.
+> * **Qué pregunta responde:** ¿Cómo está estructurado el código internamente dentro de la aplicación, qué patrones de diseño GOF se utilizan y cómo se relacionan las clases?
+
+```mermaid
+C4Component
+    title Diagrama de Componentes (Nivel 3) - Flujo de Pizarrón y Recomendaciones
+    
+    Container_Boundary(webapp_bound, "Aplicación Web y Dominio (VeryLike)") {
+        Component(controller, "PizarronController", "MVC Controller", "Punto de entrada. Orquesta los datos de la sesión y arma el ViewModel para el Pizarrón.")
+        
+        Component(strategy, "MotorDeRecomendacion", "Patrón Strategy (GOF)", "Recibe una IEstrategiaRecomendacion para calcular sugerencias sin acoplar el algoritmo al controlador.")
+        
+        Component(factory, "ContenidoFactory", "Patrón Factory Method (GOF)", "Centraliza la lógica de creación. Instancia objetos concretos (Película o Serie) según el DTO.")
+        
+        Component(apiclient, "CatalogoApiClient", "HTTP Client Service", "Se comunica con la API externa para obtener los DTOs del catálogo.")
+        
+        Component(repo, "UsuarioRepository", "Patrón Repository", "Abstrae el acceso a la información del usuario guardada en el JSON.")
+    }
+
+    Rel(controller, apiclient, "Solicita todo el catálogo", "Async / Await")
+    Rel(controller, repo, "Obtiene las listas del usuario activo", "Inyección de dependencias")
+    Rel(controller, strategy, "Delega la lógica de recomendaciones", "Inyección de dependencias")
+    Rel(apiclient, factory, "Usa la fábrica para mapear los DTOs a clases de Dominio", "Llamada a método estático")
+```
 
 
 ## Patrón 1: Factory Method
