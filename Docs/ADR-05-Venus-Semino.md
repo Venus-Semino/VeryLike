@@ -8,20 +8,38 @@
 
 ## Contexto
 
-Tras la separación del catálogo en **VeryLike.Catalog.API** (ADR-04), la lógica de dominio quedó concentrada en **VeryLike.Domain**. Sin embargo, dos problemas de diseño seguían latentes:
+Tras la separación del catálogo en VeryLike.Catalog.API (ADR-04), la lógica de dominio quedó concentrada en VeryLike.Domain. Sin embargo, dos problemas de diseño seguían latentes:
 
-1. **Instanciación rígida de contenido audiovisual.** El catálogo mezcla dos tipos de contenido — `Pelicula` y `Serie` — que comparten la mayoría de sus atributos (`Nombre`, `Género`, `Año`, `Sinopsis`, `Studio`, `Calificación`) pero difieren en uno específico (`Duracion` vs. `Temporadas`). Antes de esta iteración, cualquier clase que leyera `catalogo.json` necesitaba conocer ambos tipos concretos y decidir manualmente cuál instanciar, repitiendo esa lógica de decisión en cada lugar que tocara el archivo.
+Instanciación rígida de contenido audiovisual. El catálogo mezcla dos tipos de contenido — Pelicula y Serie — que comparten la mayoría de sus atributos (Nombre, Género, Año, Sinopsis, Studio, Calificación) pero difieren en uno específico (Duracion vs. Temporadas). Antes de esta iteración, cualquier clase que leyera catalogo.json necesitaba conocer ambos tipos concretos y decidir manualmente cuál instanciar, repitiendo esa lógica de decisión en cada lugar que tocara el archivo.
 
-2. **Lógica de recomendación atada al controlador.** El `PizarronController` necesitaba mostrar una lista de contenido "recomendado", pero el criterio de recomendación (mejor calificado, por género, más reciente, y eventualmente un criterio basado en IA) es una regla de negocio que cambia con el tiempo. Si ese criterio se escribe directamente dentro del controlador, cada nuevo criterio implica modificar una clase que no debería conocer el detalle del algoritmo.
-
-## Decisión
-
-Se incorporan dos patrones de diseño **GOF (Gang of Four)** al proyecto:
-
-- **Factory Method**, en `VeryLike.Domain.Factories.ContenidoFactory`, para centralizar la construcción de objetos `ContenidoAudiovisual` a partir del JSON del catálogo.
-- **Strategy**, en `PizarronController` (clases `IEstrategiaRecomendacion`, `OrdenarPorCalificacionStrategy` y `MotorDeRecomendacion`), para desacoplar el algoritmo de recomendación del controlador que lo consume.
+Lógica de recomendación atada al controlador. El PizarronController necesitaba mostrar una lista de contenido "recomendado", pero el criterio de recomendación (mejor calificado, por género, más reciente, y eventualmente un criterio basado en IA) es una regla de negocio que cambia con el tiempo. Si ese criterio se escribe directamente dentro del controlador, cada nuevo criterio implica modificar una clase que no debería conocer el detalle del algoritmo.
 
 ---
+
+## Diagramas Arquitectónicos C4
+
+A continuación se documenta la arquitectura de VeryLike utilizando el modelo C4 para reflejar la separación en microservicios y la adopción de patrones GOF.
+
+---
+
+### 🟦 Nivel 1: Contexto (Context)
+
+> **Nota Breve:**
+> * **Para quién es:** Personas de negocio, directivos y usuarios no técnicos.
+> * **Qué pregunta responde:** ¿Cuál es el panorama general del proyecto, qué es la plataforma en términos simples y quién interactúa con ella?
+
+```mermaid
+C4Context
+    title Diagrama de Contexto (Nivel 1) - Plataforma VeryLike
+    
+    Person(usuario, "Cinéfilo", "Un usuario de la plataforma que busca organizar sus películas, gestionar sus listas de 'Para Ver' y debatir en la comunidad.")
+    System(verylike, "Sistema VeryLike", "Ecosistema web centralizado que permite el seguimiento de películas/series, motor de recomendaciones y foros de discusión.")
+    
+    Rel(usuario, verylike, "Visita, gestiona listas y debate", "HTTPS")
+```
+
+---
+
 
 ## Patrón 1: Factory Method
 
