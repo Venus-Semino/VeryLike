@@ -22,13 +22,13 @@ A continuación se documenta la arquitectura de VeryLike utilizando el modelo C4
 
 ---
 
-### 🟦 Nivel 1: Contexto (Context)
+### Nivel 1: Contexto (Context)
 
 > **Nota Breve:**
 > * **Para quién es:** Personas de negocio, directivos y usuarios no técnicos.
 > * **Qué pregunta responde:** ¿Cuál es el panorama general del proyecto, qué es la plataforma en términos simples y quién interactúa con ella?
 
-```mermaid
+```
 C4Context
     title Diagrama de Contexto (Nivel 1) - Plataforma VeryLike
     
@@ -39,6 +39,33 @@ C4Context
 ```
 
 ---
+
+
+Nivel 2: Contenedores (Containers)
+
+Para quién es: Arquitectos de Software, DevOps y Líderes Técnicos.
+
+Qué pregunta responde: ¿Cuáles son las piezas de software grandes (desplegables) que forman el sistema y cómo se comunican entre sí a alto nivel?
+
+Fragmento de código
+C4Container
+    title Diagrama de Contenedores (Nivel 2) - Ecosistema VeryLike
+    
+    Person(usuario, "Cinéfilo", "Usuario de la plataforma.")
+
+    System_Boundary(sys, "VeryLike") {
+        Container(webapp, "Aplicación Web Frontend", "ASP.NET Core MVC", "Provee la interfaz inmersiva (Glassmorphism), maneja la sesión del usuario y orquesta la vista.")
+        Container(api, "API de Catálogo", "ASP.NET Core Web API", "Microservicio RESTful documentado con Swagger que administra el catálogo global de manera independiente.")
+        ContainerDb(db_json, "Archivos de Persistencia", "Archivos estáticos (JSON)", "Almacenamiento de datos temporales (peliculas.json, usuarios.json) simulando la base de datos.")
+    }
+
+    Rel(usuario, webapp, "Navega e interactúa", "HTTPS")
+    Rel(webapp, api, "Solicita el catálogo general", "JSON / HTTPS")
+    Rel(webapp, db_json, "Lee/Escribe datos de usuario (listas y foros)", "File I/O")
+    Rel(api, db_json, "Lee datos del catálogo", "File I/O")
+
+
+
 
 
 ## Patrón 1: Factory Method
