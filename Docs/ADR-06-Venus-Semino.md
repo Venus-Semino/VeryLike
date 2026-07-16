@@ -198,7 +198,27 @@ Aplicar el **Options Pattern** de .NET para extraer todas las URLs y cadenas de 
 
 Posteriormente, configurar un **Typed HttpClient** mediante `AddHttpClient()` para que la URL base sea inyectada dinámicamente según el entorno donde se ejecute la aplicación.
 
----
+
+
+## Deuda Técnica #2: Persistencia mediante I/O Síncrono y Bloqueos (Locks)
+
+### Descripción
+Actualmente el almacenamiento y recuperación de datos (Catálogo, Usuarios y Foro) se realiza mediante archivos `.json` locales. Para evitar conflictos de escritura, clases como `MensajeForoRepository` utilizan bloqueos (`lock`) en memoria.
+
+### Motivo
+Se adoptó esta solución como una estrategia temporal que permitiera validar la arquitectura basada en los patrones **Factory**, **Strategy** y **Repository** sin invertir tiempo en configurar un ORM y diseñar una base de datos relacional.
+
+### Impacto
+- Impide la escalabilidad horizontal.
+- Los bloqueos reducen el rendimiento cuando múltiples usuarios realizan operaciones simultáneamente.
+- En una arquitectura distribuida, cada instancia tendría su propio archivo `.json`, provocando inconsistencias y pérdida de integridad de los datos.
+
+### Propuesta de Refactorización
+Migrar la persistencia hacia una base de datos relacional como **PostgreSQL** o **SQL Server** utilizando **Entity Framework Core**.
+
+Gracias al uso previo del **Patrón Repositorio**, la migración únicamente requerirá crear nuevas implementaciones (por ejemplo, `SqlCatalogoRepository`) y modificar la inyección de dependencias en `Program.cs`, sin afectar la lógica de negocio ni los controladores existentes.
+
+
 
 ---
 
