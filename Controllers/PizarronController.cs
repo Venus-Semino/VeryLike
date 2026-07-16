@@ -16,7 +16,6 @@ namespace VeryLike.Web.Controllers
             _catalogoApiClient = catalogoApiClient;
             _usuarioRepository = usuarioRepository;
         }
-
         public async Task<IActionResult> Index()
         {
             var nombreSesion = HttpContext.Session.GetString("UsuarioNombre");
@@ -29,15 +28,10 @@ namespace VeryLike.Web.Controllers
                 var usuario = _usuarioRepository.ObtenerPorNombreOCorreo(nombreSesion);
                 if (usuario != null)
                 {
-                    // Asumiendo que ListaParaVer tiene los IDs
                     modelo.ParaVer = catalogo.Where(c => usuario.ListaParaVer.Contains(c.Id)).ToList();
                 }
             }
-
-            // GOF - Strategy: Invocamos el patrón de comportamiento
             var motor = new MotorDeRecomendacion(new OrdenarPorCalificacionStrategy());
-
-            // Verificamos que ParaVer no sea null para evitar errores
             var paraVerIds = modelo.ParaVer?.Select(p => p.Id).ToList() ?? new List<int>(); modelo.Recomendadas = motor.Recomendar(catalogo.ToList())
                 .Where(c => !paraVerIds.Contains(c.Id))
                 .Take(10)
@@ -52,23 +46,18 @@ namespace VeryLike.Web.Controllers
         }
     }
 
-    // ====================================================================
-    // PATRÓN STRATEGY (Ubicado aquí temporalmente para garantizar compilación)
-    // ====================================================================
+    // PATRÓN STRATEGY
     public interface IEstrategiaRecomendacion
     {
         List<ContenidoAudiovisual> AplicarEstrategia(List<ContenidoAudiovisual> catalogo);
     }
-
     public class OrdenarPorCalificacionStrategy : IEstrategiaRecomendacion
     {
         public List<ContenidoAudiovisual> AplicarEstrategia(List<ContenidoAudiovisual> catalogo)
         {
-            // Ordena los contenidos de mayor a menor calificación
             return catalogo.OrderByDescending(c => c.Calificacion).ToList();
         }
     }
-
     public class MotorDeRecomendacion
     {
         private readonly IEstrategiaRecomendacion _estrategia;
@@ -77,7 +66,6 @@ namespace VeryLike.Web.Controllers
         {
             _estrategia = estrategia;
         }
-
         public List<ContenidoAudiovisual> Recomendar(List<ContenidoAudiovisual> catalogo)
         {
             return _estrategia.AplicarEstrategia(catalogo);

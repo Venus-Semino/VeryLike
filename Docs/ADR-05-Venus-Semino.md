@@ -4,7 +4,7 @@
 |--------|--------|
 | **Autor** | Venus Semino |
 | **Fecha** | 30 de junio de 2026 |
-| **Estado** | `Aceptado` |
+| **Estado** | `Remplazado por ADR-06` |
 
 ## Contexto
 
