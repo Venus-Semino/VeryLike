@@ -1,9 +1,0 @@
-<Solution>
-  <Project Path="../VeryLike.Domain/VeryLike.Domain.csproj" Id="5cd9c291-28dd-4c92-af36-3620e9ea40e8">
-    <Build Solution="Debug|*" Project="false" />
-  </Project>
-  <Project Path="../VeryLike.Infrastructure/VeryLike.Infrastructure.csproj" Id="a478cc79-326c-4ea7-aca1-ab7869214ce2" />
-  <Project Path="VeryLike.Catalog.API/VeryLike.Catalog.API.csproj" />
-  <Project Path="VeryLike.Forum.API/VeryLike.Forum.API.csproj" />
-  <Project Path="VeryLike.Web.csproj" />
-</Solution>
