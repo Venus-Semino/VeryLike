@@ -1,10 +1,10 @@
-﻿# ADR-05: Adopción de Patrones de Diseño GOF (Factory Method y Strategy)
+# ADR-05: Adopción de Patrones de Diseño GOF (Factory Method y Strategy)
 
 | Campo | Valor |
 |--------|--------|
 | **Autor** | Venus Semino |
-| **Fecha** | 15 de julio de 2026 |
-| **Estado** | `Remplazado por ADR-06` |
+| **Fecha** | 22 de julio de 2026 |
+| **Estado** | `Aceptado` |
 
 ## Contexto
 
@@ -218,7 +218,23 @@ Migrar la persistencia hacia una base de datos relacional como **PostgreSQL** o 
 
 Gracias al uso previo del **Patrón Repositorio**, la migración únicamente requerirá crear nuevas implementaciones (por ejemplo, `SqlCatalogoRepository`) y modificar la inyección de dependencias en `Program.cs`, sin afectar la lógica de negocio ni los controladores existentes.
 
+---
 
+---
+
+## Pruebas Automatizadas y Pipeline CI
+
+### Estrategia de Pruebas (xUnit)
+Para garantizar la calidad del software y evitar regresiones, se implementó una suite de pruebas unitarias utilizando **xUnit** bajo el patrón **AAA (Arrange-Act-Assert)**. 
+
+### Clases Probadas
+Se seleccionaron tres clases de la capa de Dominio (`VeryLike.Domain`) por contener lógica de negocio crítica y pura, sin dependencias externas:
+1. **ContenidoFactory:** Se probó para asegurar que la fábrica instancia correctamente objetos `Pelicula` o `Serie` según las propiedades del DTO extraído.
+2. **OrdenarPorCalificacionStrategy:** Se validó para garantizar que la regla de negocio de ordenamiento matemático funcione de manera exacta y aislada.
+3. **MotorDeRecomendacion:** Se verificó para confirmar que el contexto del patrón Strategy recibe, inyecta y delega la responsabilidad correctamente a la estrategia activa.
+
+### Pipeline de Integración Continua (GitHub Actions)
+Se configuró un flujo de CI automatizado mediante **GitHub Actions** (`.github/workflows/ci.yml`). Este pipeline se ejecuta en cada `push` o `pull_request`, encargándose de restaurar dependencias, compilar el proyecto y correr toda la suite de pruebas automatizadas. Esto asegura como compuerta de calidad que ningún cambio nuevo rompa la arquitectura previamente validada.
 
 ---
 
