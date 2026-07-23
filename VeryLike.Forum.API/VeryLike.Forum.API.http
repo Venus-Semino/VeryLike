@@ -1,6 +1,0 @@
-@VeryLike.Forum.API_HostAddress = http://localhost:5005
-
-GET {{VeryLike.Forum.API_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

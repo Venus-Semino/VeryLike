@@ -1,6 +1,0 @@
-@VeryLike.Catalog.API_HostAddress = http://localhost:5033
-
-GET {{VeryLike.Catalog.API_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
