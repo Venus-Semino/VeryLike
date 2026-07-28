@@ -8,7 +8,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\VeryLike.Catalog.API\VeryLike.Catalog.API.csproj" />
 		<ProjectReference Include="..\VeryLike.Domain\VeryLike.Domain.csproj" />
+		<ProjectReference Include="..\VeryLike.Forum.API\VeryLike.Forum.API.csproj" />
 		<ProjectReference Include="..\VeryLike.Infrastructure\VeryLike.Infrastructure.csproj" />
 	</ItemGroup>
 
