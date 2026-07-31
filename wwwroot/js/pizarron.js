@@ -23,6 +23,16 @@ function cambiarAVistaDetalles() {
     vistaDetalles.classList.add('water-drop-enter');
 }
 
+// Genera una cadena de estrellas llenas/vacías a partir de una calificación 0-5
+function generarEstrellas(calificacion) {
+    var llenas = Math.round(calificacion);
+    var estrellas = '';
+    for (var i = 0; i < 5; i++) {
+        estrellas += i < llenas ? '★' : '☆';
+    }
+    return estrellas;
+}
+
 // Inyector dinámico de datos al abrir el modal
 document.addEventListener('DOMContentLoaded', function () {
     var modalDetalle = document.getElementById('modalDetalleMedia');
@@ -37,19 +47,46 @@ document.addEventListener('DOMContentLoaded', function () {
             var sinopsis = tarjeta.getAttribute('data-sinopsis');
             var estudio = tarjeta.getAttribute('data-estudio');
             var plataformas = tarjeta.getAttribute('data-plataformas');
+            var poster = tarjeta.getAttribute('data-poster');
+            var calificacion = parseFloat(tarjeta.getAttribute('data-calificacion')) || 0;
+            var enlace = tarjeta.getAttribute('data-enlace');
 
             document.getElementById('modalTitulo').textContent = titulo;
             document.getElementById('modalSinopsis').textContent = sinopsis;
             document.getElementById('modalEstudio').textContent = estudio;
+            document.getElementById('modalCalificacion').textContent = calificacion.toFixed(1);
+            document.getElementById('modalEstrellas').textContent = generarEstrellas(calificacion);
+
+            // Póster real si existe; si no, mantiene el texto de respaldo "PORTADA"
+            var imgPortada = document.getElementById('modalPortadaImg');
+            var textoPortada = document.getElementById('modalPortadaTexto');
+            if (poster) {
+                imgPortada.src = poster;
+                imgPortada.alt = 'Póster de ' + titulo;
+                imgPortada.classList.remove('d-none');
+                textoPortada.classList.add('d-none');
+            } else {
+                imgPortada.classList.add('d-none');
+                textoPortada.classList.remove('d-none');
+            }
+
+            // Enlace profundo hacia la plataforma de streaming (redirección con un clic)
+            var enlaceStreaming = document.getElementById('modalEnlaceStreaming');
+            if (enlace) {
+                enlaceStreaming.href = enlace;
+                enlaceStreaming.classList.remove('d-none');
+                enlaceStreaming.textContent = plataformas ? 'Ver en ' + plataformas.split(',')[0].trim() : 'Ver en streaming';
+            } else {
+                enlaceStreaming.classList.add('d-none');
+            }
 
             var infoTecnica = document.getElementById('modalInfoTecnica');
             if (tipo === 'pelicula') {
                 var duracion = tarjeta.getAttribute('data-duracion');
-                infoTecnica.textContent = '⏱ Duración: ' + duracion;
+                infoTecnica.textContent = 'Duración: ' + duracion;
             } else if (tipo === 'serie') {
                 var temporadas = tarjeta.getAttribute('data-temporadas');
-                var episodios = tarjeta.getAttribute('data-episodios');
-                infoTecnica.textContent = '📺 ' + temporadas + ' Temporadas | ' + episodios + ' Eps';
+                infoTecnica.textContent = temporadas + ' Temporada(s)';
             }
 
             var contenedorPlataformas = document.getElementById('modalPlataformas');
@@ -58,8 +95,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (plataformas) {
                 var listaPlataformas = plataformas.split(',');
                 listaPlataformas.forEach(function (plat) {
-                    var badge = document.createElement('a');
-                    badge.href = "#";
+                    var badge = document.createElement('span');
                     badge.className = "badge rounded-pill text-decoration-none px-3 py-2 me-1";
                     badge.style.border = "1px solid var(--border-glass)";
                     badge.style.color = "var(--text-main)";

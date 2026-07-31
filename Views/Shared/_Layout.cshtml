@@ -30,6 +30,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Series" asp-action="Index">Series</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Foro" asp-action="Index">Comunidad</a>
+                        </li>
+                        @if (!string.IsNullOrEmpty(Context.Session.GetString("UsuarioNombre")))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Pizarron" asp-action="Index">Mi Pizarrón</a>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -55,20 +64,20 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
     <script>
-        const toggleBtn = document.getElementById('themeToggle');
-        const currentTheme = localStorage.getItem('theme') || 'dark'; // Oscuro por defecto
+            const toggleBtn = document.getElementById('themeToggle');
+            const currentTheme = localStorage.getItem('theme') || 'dark'; // Oscuro por defecto
 
-        document.documentElement.setAttribute('data-theme', currentTheme);
-        toggleBtn.textContent = currentTheme === 'dark' ? 'MODO CLARO' : 'MODO OSCURO';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            toggleBtn.textContent = currentTheme === 'dark' ? 'MODO CLARO' : 'MODO OSCURO';
 
-        toggleBtn.addEventListener('click', () => {
-        let theme = document.documentElement.getAttribute('data-theme');
-        let switchToTheme = theme === 'dark' ? 'light' : 'dark';
+            toggleBtn.addEventListener('click', () => {
+                let theme = document.documentElement.getAttribute('data-theme');
+                let switchToTheme = theme === 'dark' ? 'light' : 'dark';
 
-        document.documentElement.setAttribute('data-theme', switchToTheme);
-        localStorage.setItem('theme', switchToTheme);
-        toggleBtn.textContent = theme === 'dark' ? 'MODO CLARO' : 'MODO OSCURO';
-        });
+                document.documentElement.setAttribute('data-theme', switchToTheme);
+                localStorage.setItem('theme', switchToTheme);
+                toggleBtn.textContent = theme === 'dark' ? 'MODO CLARO' : 'MODO OSCURO';
+            });
     </script>
 </body>
 </html>

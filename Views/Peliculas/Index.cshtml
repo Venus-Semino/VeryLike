@@ -1,54 +1,164 @@
-﻿@model IEnumerable<VeryLike.Domain.Models.Pelicula>
-
+﻿@model VeryLike.Web.Models.PizarronViewModel
 @{
-    ViewData["Title"] = "Catálogo VeryLike";
+    ViewData["Title"] = "Mi Pizarrón";
 }
 
-<div class="container mt-5">
-    <div class="text-center mb-5">
-        <h1 class="display-6 fw-light text-uppercase tracking-widest" style="letter-spacing: 4px;">PELÍCULAS</h1>
-        <p class="text-muted small">Catálogo Registra todas las películas que viste o vas a ver!</p>
+<div class="container-fluid px-4 mt-4">
+    <div class="d-flex justify-content-between align-items-end mb-5 flex-wrap gap-3">
+        <div>
+            <p class="text-muted text-uppercase tracking-widest mb-1 small" style="letter-spacing: 2px;">Bienvenido de nuevo</p>
+            <h1 class="display-5 fw-light m-0">Hola, <span style="color: var(--accent-color);">@Model.NombreUsuario</span></h1>
+        </div>
+
+        <div class="dropdown">
+            <button class="btn btn-futuristic dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                Opciones
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark glass-card" style="background: var(--surface-glass);">
+                <li><a class="dropdown-item text-muted" href="#">Ajustes</a></li>
+                <li>
+                    <form asp-controller="Auth" asp-action="Logout" method="post">
+                        <button type="submit" class="dropdown-item text-danger">Cerrar Sesión</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
     </div>
 
-    <div class="row g-5 mb-5">
-        @if (Model != null && Model.Any())
-        {
-            @foreach (var item in Model)
-            {
-                <div class="col-md-4">
-                    <div class="glass-card h-100 d-flex flex-column">
-                        <div class="cover-placeholder">
-                            Sin Portada Asignada
-                        </div>
+    <div class="row g-5">
+        <div class="col-xl-9 col-lg-8">
 
-                        <div class="p-4 d-flex flex-column flex-grow-1">
-                            <h5 class="fw-normal mb-1">@item.Nombre</h5>
-                            <span class="text-muted small mb-3" style="letter-spacing: 1px;">@item.PlataformaStreaming</span>
+            <div class="mb-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="fw-light text-uppercase m-0" style="letter-spacing: 1px;">Para Ver</h4>
+                    <a asp-controller="Pizarron" asp-action="ParaVer" class="text-muted small text-decoration-none">Expandir Lista &rarr;</a>
+                </div>
 
-                            <h6 class="mb-3 font-monospace small" style="color: var(--accent-color);">@string.Join(" / ", item.Genero) | @item.AnioPublicacion</h6>
-                            <p class="text-muted small flex-grow-1" style="line-height: 1.6;">@item.Sinopsis</p>
-
-                            <div class="d-flex justify-content-between align-items-center mt-3 pt-3" style="border-top: 1px solid var(--border-glass);">
-                                <span class="small text-muted">@item.Studio</span>
-                                <span class="fw-bold" style="color: var(--accent-color);">@item.Calificacion / 5</span>
+                <div class="horizontal-scroll-container">
+                    @if (Model.ParaVer.Any())
+                    {
+                        @foreach (var item in Model.ParaVer)
+                        {
+                            <div class="glass-card media-card @(item.Tipo == "Pelicula" ? "movie-type" : "series-type") d-flex flex-column"
+                                 data-bs-toggle="modal" data-bs-target="#modalDetalleMedia"
+                                 data-tipo="@item.Tipo.ToLowerInvariant()"
+                                 data-titulo="@item.Nombre"
+                                 data-duracion="@(item is VeryLike.Domain.Models.Pelicula p ? p.Duracion : null)"
+                                 data-temporadas="@(item is VeryLike.Domain.Models.Serie s ? s.Temporadas.ToString() : null)"
+                                 data-sinopsis="@item.Sinopsis"
+                                 data-estudio="@item.Studio"
+                                 data-calificacion="@item.Calificacion"
+                                 data-poster="@item.PosterUrl"
+                                 data-enlace="@item.EnlaceStreaming"
+                                 data-plataformas="@item.PlataformaStreaming">
+                                @if (!string.IsNullOrWhiteSpace(item.PosterUrl))
+                                {
+                                    <img src="@item.PosterUrl" alt="Póster de @item.Nombre" class="media-poster-img" loading="lazy" />
+                                }
+                                else
+                                {
+                                    <div class="media-poster text-muted small">Sin Portada</div>
+                                }
+                                <div class="p-3 text-center">
+                                    <h6 class="mb-1 text-truncate">@item.Nombre</h6>
+                                    <span class="small" style="color: @(item.Tipo == "Pelicula" ? "var(--accent-color)" : "#b4a0ff");">@(item.Tipo == "Pelicula" ? "Película" : "Serie")</span>
+                                </div>
                             </div>
-                        </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="glass-card p-4 text-muted small">Tu lista "Para Ver" está vacía. Explora el catálogo y agrega algo.</div>
+                    }
+                </div>
+            </div>
+
+            <div>
+                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
+                    <div>
+                        <h4 class="fw-light text-uppercase m-0" style="letter-spacing: 1px;">Recomendadas</h4>
+                        <p class="text-muted small m-0">
+                            @(Model.ModoRecomendacion == "ia"
+                                ? "Motor de recomendación inteligente basado en tus géneros afines"
+                                : "Ordenadas por calificación de la comunidad")
+                        </p>
+                    </div>
+
+                    <div class="btn-group modo-recomendacion-toggle" role="group" aria-label="Modo de recomendación">
+                        <a asp-action="Index" asp-route-modo="ia" class="btn btn-sm @(Model.ModoRecomendacion == "ia" ? "active" : "")">IA</a>
+                        <a asp-action="Index" asp-route-modo="calificacion" class="btn btn-sm @(Model.ModoRecomendacion == "calificacion" ? "active" : "")">Mejor calificadas</a>
                     </div>
                 </div>
-            }
-        }
-        else
-        {
-            <div class="col-12 text-center py-5">
-                <div class="text-muted fw-light">SISTEMA INICIALIZADO. BASE DE DATOS VACÍA.</div>
+
+                <div class="horizontal-scroll-container">
+                    @if (Model.Recomendadas.Any())
+                    {
+                        @foreach (var item in Model.Recomendadas)
+                        {
+                            <div class="glass-card media-card @(item.Tipo == "Pelicula" ? "movie-type" : "series-type") d-flex flex-column"
+                                 data-bs-toggle="modal" data-bs-target="#modalDetalleMedia"
+                                 data-tipo="@item.Tipo.ToLowerInvariant()"
+                                 data-titulo="@item.Nombre"
+                                 data-duracion="@(item is VeryLike.Domain.Models.Pelicula p ? p.Duracion : null)"
+                                 data-temporadas="@(item is VeryLike.Domain.Models.Serie s ? s.Temporadas.ToString() : null)"
+                                 data-sinopsis="@item.Sinopsis"
+                                 data-estudio="@item.Studio"
+                                 data-calificacion="@item.Calificacion"
+                                 data-poster="@item.PosterUrl"
+                                 data-enlace="@item.EnlaceStreaming"
+                                 data-plataformas="@item.PlataformaStreaming"
+                                 data-contenido-id="@item.Id">
+                                @if (!string.IsNullOrWhiteSpace(item.PosterUrl))
+                                {
+                                    <img src="@item.PosterUrl" alt="Póster de @item.Nombre" class="media-poster-img" loading="lazy" />
+                                }
+                                else
+                                {
+                                    <div class="media-poster text-muted small">Sin Portada</div>
+                                }
+                                <div class="p-3 text-center">
+                                    <h6 class="mb-1 text-truncate">@item.Nombre</h6>
+                                    <form asp-controller="Pizarron" asp-action="AgregarAParaVer" method="post" onclick="event.stopPropagation();">
+                                        <input type="hidden" name="contenidoId" value="@item.Id" />
+                                        <button type="submit" class="btn btn-link btn-sm text-muted p-0 small text-decoration-none">+ Agregar a Para Ver</button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="glass-card p-4 text-muted small">Aún no hay suficientes datos para recomendarte algo. ¡Explora el catálogo!</div>
+                    }
+                </div>
             </div>
-        }
+
+        </div>
+
+        <div class="col-xl-3 col-lg-4">
+            <div class="glass-card p-4 mb-4">
+                <h6 class="text-uppercase text-muted tracking-widest mb-4" style="letter-spacing: 2px;">Comunidad</h6>
+                <p class="text-muted small">Comparte tus reseñas y lee lo que opinan otros cinéfilos.</p>
+                <a asp-controller="Foro" asp-action="Index" class="btn btn-sm w-100" style="border: 1px solid var(--border-glass); color: var(--text-main);">Ir a la Comunidad</a>
+            </div>
+
+            <div class="glass-card p-4 text-center">
+                <div class="avatar-inicial mx-auto mb-3" style="width: 80px; height: 80px; font-size: 2rem;">
+                    @Model.NombreUsuario.Substring(0, 1).ToUpper()
+                </div>
+                <h6 class="mb-1">@Model.NombreUsuario</h6>
+                <p class="text-muted small mb-4">Cinéfilo VeryLike</p>
+                <div class="d-flex justify-content-around mb-4 border-top border-bottom py-2" style="border-color: var(--border-glass) !important;">
+                    <div><h5 class="m-0">@Model.ParaVer.Count</h5><span class="small text-muted">Para Ver</span></div>
+                    <div><h5 class="m-0">@Model.Recomendadas.Count</h5><span class="small text-muted">Sugerencias</span></div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="glass-card p-5 mt-5 text-center">
-        <p class="text-muted small mb-0">
-            El catálogo se gestiona desde <strong>VeryLike.Catalog.API</strong> (catalogo.json).
-            Por ahora es de solo lectura desde la Web; agregar títulos nuevos será el siguiente paso.
-        </p>
-    </div>
+    @await Html.PartialAsync("_ModalDetalles")
+
+    @section Scripts {
+        <script src="~/js/pizarron.js" asp-append-version="true"></script>
+    }
 </div>

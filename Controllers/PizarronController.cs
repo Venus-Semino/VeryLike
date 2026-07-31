@@ -1,38 +1,60 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VeryLike.Domain.Interfaces;
 using VeryLike.Domain.Models;
+using VeryLike.Domain.Recomendaciones;
 using VeryLike.Web.Models;
-using VeryLike.Web.Services;
 
 namespace VeryLike.Web.Controllers
 {
     public class PizarronController : Controller
     {
-        private readonly ICatalogoApiClient _catalogoApiClient;
+        private readonly ICatalogoRepository _catalogoRepository;
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly OrdenarPorCalificacionStrategy _estrategiaCalificacion;
+        private readonly RecomendacionInteligenteIaStrategy _estrategiaIa;
 
-        public PizarronController(ICatalogoApiClient catalogoApiClient, IUsuarioRepository usuarioRepository)
+        public PizarronController(
+            ICatalogoRepository catalogoRepository,
+            IUsuarioRepository usuarioRepository,
+            OrdenarPorCalificacionStrategy estrategiaCalificacion,
+            RecomendacionInteligenteIaStrategy estrategiaIa)
         {
-            _catalogoApiClient = catalogoApiClient;
+            _catalogoRepository = catalogoRepository;
             _usuarioRepository = usuarioRepository;
+            _estrategiaCalificacion = estrategiaCalificacion;
+            _estrategiaIa = estrategiaIa;
         }
-        public async Task<IActionResult> Index()
+
+        // modo=ia (por defecto) o modo=calificacion, elegido por el usuario desde la vista.
+        public async Task<IActionResult> Index(string modo = "ia")
         {
             var nombreSesion = HttpContext.Session.GetString("UsuarioNombre");
-            var catalogo = await _catalogoApiClient.ObtenerTodoAsync();
+            var catalogo = await _catalogoRepository.ObtenerTodoAsync();
 
-            var modelo = new PizarronViewModel { NombreUsuario = nombreSesion ?? "Invitado" };
+            var modelo = new PizarronViewModel
+            {
+                NombreUsuario = nombreSesion ?? "Invitado",
+                ModoRecomendacion = modo
+            };
 
+            Usuario? usuario = null;
             if (nombreSesion != null)
             {
-                var usuario = _usuarioRepository.ObtenerPorNombreOCorreo(nombreSesion);
+                usuario = await _usuarioRepository.ObtenerPorNombreOCorreoAsync(nombreSesion);
                 if (usuario != null)
                 {
-                    modelo.ParaVer = catalogo.Where(c => usuario.ListaParaVer.Contains(c.Id)).ToList();
+                    modelo.ParaVer = await _usuarioRepository.ObtenerParaVerAsync(usuario.Id);
                 }
             }
-            var motor = new MotorDeRecomendacion(new OrdenarPorCalificacionStrategy());
-            var paraVerIds = modelo.ParaVer?.Select(p => p.Id).ToList() ?? new List<int>(); modelo.Recomendadas = motor.Recomendar(catalogo.ToList())
+
+            IEstrategiaRecomendacion estrategia = modo == "calificacion"
+                ? _estrategiaCalificacion
+                : _estrategiaIa;
+
+            var motor = new MotorDeRecomendacion(estrategia);
+            var paraVerIds = modelo.ParaVer.Select(p => p.Id).ToHashSet();
+
+            modelo.Recomendadas = motor.Recomendar(usuario, catalogo)
                 .Where(c => !paraVerIds.Contains(c.Id))
                 .Take(10)
                 .ToList();
@@ -40,35 +62,49 @@ namespace VeryLike.Web.Controllers
             return View(modelo);
         }
 
-        public IActionResult ParaVer()
+        public async Task<IActionResult> ParaVer()
         {
-            return View();
-        }
-    }
+            var nombreSesion = HttpContext.Session.GetString("UsuarioNombre");
+            if (nombreSesion is null) return RedirectToAction("Login", "Auth");
 
-    // PATRÓN STRATEGY
-    public interface IEstrategiaRecomendacion
-    {
-        List<ContenidoAudiovisual> AplicarEstrategia(List<ContenidoAudiovisual> catalogo);
-    }
-    public class OrdenarPorCalificacionStrategy : IEstrategiaRecomendacion
-    {
-        public List<ContenidoAudiovisual> AplicarEstrategia(List<ContenidoAudiovisual> catalogo)
-        {
-            return catalogo.OrderByDescending(c => c.Calificacion).ToList();
-        }
-    }
-    public class MotorDeRecomendacion
-    {
-        private readonly IEstrategiaRecomendacion _estrategia;
+            var usuario = await _usuarioRepository.ObtenerPorNombreOCorreoAsync(nombreSesion);
+            var paraVer = usuario != null
+                ? await _usuarioRepository.ObtenerParaVerAsync(usuario.Id)
+                : new List<ContenidoAudiovisual>();
 
-        public MotorDeRecomendacion(IEstrategiaRecomendacion estrategia)
-        {
-            _estrategia = estrategia;
+            return View(paraVer);
         }
-        public List<ContenidoAudiovisual> Recomendar(List<ContenidoAudiovisual> catalogo)
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AgregarAParaVer(int contenidoId)
         {
-            return _estrategia.AplicarEstrategia(catalogo);
+            var nombreSesion = HttpContext.Session.GetString("UsuarioNombre");
+            if (nombreSesion is null) return RedirectToAction("Login", "Auth");
+
+            var usuario = await _usuarioRepository.ObtenerPorNombreOCorreoAsync(nombreSesion);
+            if (usuario != null)
+            {
+                await _usuarioRepository.AgregarAParaVerAsync(usuario.Id, contenidoId);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> QuitarDeParaVer(int contenidoId)
+        {
+            var nombreSesion = HttpContext.Session.GetString("UsuarioNombre");
+            if (nombreSesion is null) return RedirectToAction("Login", "Auth");
+
+            var usuario = await _usuarioRepository.ObtenerPorNombreOCorreoAsync(nombreSesion);
+            if (usuario != null)
+            {
+                await _usuarioRepository.QuitarDeParaVerAsync(usuario.Id, contenidoId);
+            }
+
+            return RedirectToAction(nameof(ParaVer));
         }
     }
 }

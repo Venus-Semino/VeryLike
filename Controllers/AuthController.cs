@@ -7,11 +7,13 @@ namespace VeryLike.Web.Controllers
     public class AuthController : Controller
     {
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IPasswordHasher _passwordHasher;
         private const string ClaveSesion = "UsuarioNombre";
 
-        public AuthController(IUsuarioRepository usuarioRepository)
+        public AuthController(IUsuarioRepository usuarioRepository, IPasswordHasher passwordHasher)
         {
             _usuarioRepository = usuarioRepository;
+            _passwordHasher = passwordHasher;
         }
 
         // --- PÁGINA DE REGISTRO ---
@@ -22,16 +24,25 @@ namespace VeryLike.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Registro(Usuario nuevoUsuario)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Registro(Usuario nuevoUsuario)
         {
-            if (_usuarioRepository.ObtenerPorNombreOCorreo(nuevoUsuario.NombreUsuario) != null)
+            if (!ModelState.IsValid)
+            {
+                ViewData["HideMenu"] = true;
+                return View(nuevoUsuario);
+            }
+
+            if (await _usuarioRepository.ObtenerPorNombreOCorreoAsync(nuevoUsuario.NombreUsuario) != null)
             {
                 ModelState.AddModelError("NombreUsuario", "Este nombre de usuario ya está en uso. Elige otro.");
                 ViewData["HideMenu"] = true;
                 return View(nuevoUsuario);
             }
 
-            _usuarioRepository.Agregar(nuevoUsuario);
+            nuevoUsuario.Contrasena = _passwordHasher.Hash(nuevoUsuario.Contrasena);
+            await _usuarioRepository.AgregarAsync(nuevoUsuario);
+
             HttpContext.Session.SetString(ClaveSesion, nuevoUsuario.NombreUsuario);
             return RedirectToAction("Index", "Pizarron");
         }
@@ -44,11 +55,12 @@ namespace VeryLike.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(string identificador, string contrasena)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(string identificador, string contrasena)
         {
-            var usuario = _usuarioRepository.ObtenerPorNombreOCorreo(identificador);
+            var usuario = await _usuarioRepository.ObtenerPorNombreOCorreoAsync(identificador);
 
-            if (usuario != null && usuario.Contrasena == contrasena)
+            if (usuario != null && _passwordHasher.Verificar(contrasena, usuario.Contrasena))
             {
                 HttpContext.Session.SetString(ClaveSesion, usuario.NombreUsuario);
                 return RedirectToAction("Index", "Pizarron");
@@ -60,6 +72,7 @@ namespace VeryLike.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Logout()
         {
             HttpContext.Session.Remove(ClaveSesion);

@@ -1,13 +1,37 @@
 ﻿@model IEnumerable<VeryLike.Domain.Models.Serie>
 @{
     ViewData["Title"] = "Series";
+    var generos = ViewData["Generos"] as List<string> ?? new List<string>();
+    var generoSeleccionado = ViewData["GeneroSeleccionado"] as string;
 }
 
 <div class="container mt-5">
-    <div class="text-center mb-5">
+    <div class="text-center mb-4">
         <h1 class="display-6 fw-light text-uppercase" style="letter-spacing: 4px;">Series</h1>
-        <p class="text-muted small">Catálogo de Producciones por Temporadas</p>
+        <p class="text-muted small">Catálogo de producciones por temporadas</p>
     </div>
+
+    <form method="get" asp-action="Index" class="d-flex justify-content-center align-items-center gap-3 mb-5 flex-wrap">
+        <label for="genero" class="text-muted small text-uppercase" style="letter-spacing: 1px;">Filtrar por género</label>
+        <select id="genero" name="genero" class="filtro-genero-select" onchange="this.form.submit()">
+            <option value="">Todos</option>
+            @foreach (var g in generos)
+            {
+                if (g == generoSeleccionado)
+                {
+                    <option value="@g" selected>@g</option>
+                }
+                else
+                {
+                    <option value="@g">@g</option>
+                }
+            }
+        </select>
+        @if (!string.IsNullOrEmpty(generoSeleccionado))
+        {
+            <a asp-action="Index" class="text-muted small text-decoration-none">Quitar filtro &times;</a>
+        }
+    </form>
 
     <div class="row g-5 mb-5">
         @if (Model != null && Model.Any())
@@ -16,9 +40,14 @@
             {
                 <div class="col-md-4">
                     <div class="glass-card h-100 d-flex flex-column">
-                        <div class="cover-placeholder">
-                            Sin Imagen de Portada
-                        </div>
+                        @if (!string.IsNullOrWhiteSpace(item.PosterUrl))
+                        {
+                            <img src="@item.PosterUrl" alt="Póster de @item.Nombre" class="cover-placeholder-img" loading="lazy" />
+                        }
+                        else
+                        {
+                            <div class="cover-placeholder">Sin Imagen de Portada</div>
+                        }
 
                         <div class="p-4 d-flex flex-column flex-grow-1">
                             <h5 class="fw-normal mb-1">@item.Nombre</h5>
@@ -31,6 +60,10 @@
                                 <span class="small text-muted">Temporadas: @item.Temporadas • @item.Studio</span>
                                 <span class="fw-bold" style="color: var(--accent-color);">@item.Calificacion / 5</span>
                             </div>
+
+                            <a href="@item.EnlaceStreaming" target="_blank" rel="noopener" class="btn btn-streaming w-100 mt-3">
+                                Ver en @(string.IsNullOrWhiteSpace(item.PlataformaStreaming) ? "streaming" : item.PlataformaStreaming)
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -39,15 +72,8 @@
         else
         {
             <div class="col-12 text-center py-5">
-                <div class="text-muted fw-light">SISTEMA INICIALIZADO. BASE DE DATOS VACÍA.</div>
+                <div class="text-muted fw-light">NO HAY SERIES QUE COINCIDAN CON ESE FILTRO.</div>
             </div>
         }
-    </div>
-
-    <div class="glass-card p-5 mt-5 text-center">
-        <p class="text-muted small mb-0">
-            El catálogo se gestiona desde <strong>VeryLike.Catalog.API</strong> (catalogo.json).
-            Por ahora es de solo lectura desde la Web; agregar títulos nuevos será el siguiente paso.
-        </p>
     </div>
 </div>

@@ -7,16 +7,19 @@
                 <div id="vistaDetalles">
                     <div class="row">
                         <div class="col-md-4 text-center">
-                            <div id="modalPortada" class="media-poster mb-3" style="height: 250px; background-color: rgba(255,255,255,0.05); border-radius: 8px;">
-                                <span class="text-muted" style="line-height: 250px;">PORTADA</span>
+                            <div id="modalPortadaContenedor" class="media-poster mb-3" style="height: 250px; background-color: rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden;">
+                                <img id="modalPortadaImg" src="" alt="" class="d-none w-100 h-100" style="object-fit: cover;" />
+                                <span id="modalPortadaTexto" class="text-muted" style="line-height: 250px;">PORTADA</span>
                             </div>
 
                             <p id="modalInfoTecnica" class="text-muted small mb-1 fw-bold tracking-widest text-uppercase"></p>
 
                             <div title="Calificación de la comunidad">
-                                <span style="color: var(--accent-color); font-size: 1.2rem;">★★★★☆</span>
+                                <span id="modalEstrellas" style="color: var(--accent-color); font-size: 1.2rem;"></span>
                             </div>
-                            <h4 class="mt-1 fw-light" style="color: var(--text-main);">4.2 <span style="font-size: 0.8rem; color: var(--text-muted);">/ 5</span></h4>
+                            <h4 class="mt-1 fw-light" style="color: var(--text-main);"><span id="modalCalificacion">-</span> <span style="font-size: 0.8rem; color: var(--text-muted);">/ 5</span></h4>
+
+                            <a id="modalEnlaceStreaming" href="#" target="_blank" rel="noopener" class="btn btn-streaming btn-sm w-100 mt-2">Ver en streaming</a>
                         </div>
 
                         <div class="col-md-8 d-flex flex-column">
@@ -26,19 +29,15 @@
                             <p id="modalSinopsis" style="color: var(--text-main); font-size: 0.9rem;"></p>
 
                             <div class="mb-3">
-                                <span class="text-muted small d-block mb-1">Lo puedes ver en:</span>
+                                <span class="text-muted small d-block mb-1">Disponible en:</span>
                                 <div id="modalPlataformas"></div>
                             </div>
 
                             <div class="mt-auto p-3 rounded" style="background: var(--input-bg); border: 1px solid var(--border-glass);">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <span class="text-muted small text-uppercase tracking-widest">Comunidad</span>
-                                    <div>
-                                        <button class="btn btn-sm btn-link text-muted text-decoration-none p-0">&lt;</button>
-                                        <button class="btn btn-sm btn-link text-muted text-decoration-none p-0 ms-2">&gt;</button>
-                                    </div>
                                 </div>
-                                <p class="mb-0" style="font-size: 0.85rem; color: var(--text-main);"><strong>Patolucas:</strong> Me gustó mucho la película porque los efectos visuales son increíbles...</p>
+                                <p class="mb-0" style="font-size: 0.85rem; color: var(--text-main);">Lee y comparte reseñas de otros cinéfilos en la <a asp-controller="Foro" asp-action="Index" style="color: var(--accent-color);">Comunidad</a>.</p>
                             </div>
                         </div>
                     </div>

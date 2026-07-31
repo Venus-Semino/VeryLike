@@ -13,22 +13,23 @@ namespace VeryLike.Web.Controllers
             _foroRepository = foroRepository;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var mensajes = _foroRepository.ObtenerTodos();
+            var mensajes = await _foroRepository.ObtenerTodosAsync();
             return View(mensajes);
         }
 
         [HttpPost]
-        public IActionResult Publicar(MensajeForo nuevoMensaje)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Publicar(MensajeForo nuevoMensaje)
         {
             if (ModelState.IsValid)
             {
-                _foroRepository.Agregar(nuevoMensaje);
-                return RedirectToAction("Index");
+                await _foroRepository.AgregarAsync(nuevoMensaje);
+                return RedirectToAction(nameof(Index));
             }
 
-            var mensajes = _foroRepository.ObtenerTodos();
+            var mensajes = await _foroRepository.ObtenerTodosAsync();
             return View("Index", mensajes);
         }
     }

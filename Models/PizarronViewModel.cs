@@ -7,5 +7,8 @@ namespace VeryLike.Web.Models
         public string NombreUsuario { get; set; } = "Invitado";
         public List<ContenidoAudiovisual> ParaVer { get; set; } = new();
         public List<ContenidoAudiovisual> Recomendadas { get; set; } = new();
+
+        /// <summary>"ia" o "calificacion". Controla qué IEstrategiaRecomendacion se usó.</summary>
+        public string ModoRecomendacion { get; set; } = "ia";
     }
 }

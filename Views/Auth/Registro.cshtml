@@ -1,74 +1,62 @@
-﻿@model VeryLike.Domain.Models.Usuario
+﻿@model IEnumerable<VeryLike.Domain.Models.MensajeForo>
+
 @{
-    ViewData["Title"] = "Crear Cuenta";
+    ViewData["Title"] = "Comunidad";
+    var nombreSesion = Context.Session.GetString("UsuarioNombre");
 }
 
-<style>
-    /* Animación horizontal para flashcards */
-    .flashcard-track {
-        display: flex;
-        gap: 20px;
-        animation: scrollHorizontal 20s linear infinite;
-        width: max-content;
-    }
-
-    @@keyframes scrollHorizontal {
-        0% {
-            transform: translateX(0);
-        }
-
-        100% {
-            transform: translateX(-50%);
-        }
-    }
-</style>
-
-<div class="row align-items-center" style="min-height: 80vh;">
-    <div class="col-md-6 pe-md-5">
-        <h2 class="fw-light mb-4 text-uppercase" style="letter-spacing: 2px;">Únete a <span style="color: var(--accent-color);">VeryLike</span></h2>
-
-        <form asp-action="Registro" method="post" class="glass-card p-5">
-            <div class="mb-4">
-                <input asp-for="Correo" type="email" class="form-control form-control-glass" placeholder="Correo electrónico" required />
-            </div>
-            <div class="mb-4">
-                <input asp-for="NombreUsuario" type="text" class="form-control form-control-glass" placeholder="Crea un nombre de usuario" required />
-                <span asp-validation-for="NombreUsuario" class="text-danger small mt-2 d-block"></span>
-            </div>
-            <div class="mb-5">
-                <input asp-for="Contrasena" type="password" class="form-control form-control-glass" placeholder="Crea tu contraseña" required />
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center">
-                <a asp-controller="Home" asp-action="Index" class="text-muted text-decoration-none small text-uppercase" style="letter-spacing: 1px;">&lt; Regresar</a>
-                <button type="submit" class="btn btn-futuristic">Registrarse</button>
-            </div>
-        </form>
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1 class="display-6 fw-light text-uppercase" style="letter-spacing: 4px;">Comunidad</h1>
+        <p class="text-muted small">Lee reseñas de otros cinéfilos y comparte la tuya</p>
     </div>
 
-    <div class="col-md-6 overflow-hidden d-none d-md-block">
-        <div class="flashcard-track">
-            @for (int i = 0; i < 2; i++)
+    <div class="d-flex flex-column gap-4 mb-5" style="max-width: 800px; margin: 0 auto;">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var mensaje in Model.OrderByDescending(m => m.FechaPublicacion))
             {
-                <div class="glass-card" style="width: 300px; height: 400px; background: linear-gradient(135deg, var(--surface-glass), transparent);">
-                    <div class="p-4 d-flex flex-column h-100 justify-content-center text-center text-muted">
-                        <h4 class="fw-light">Tu Pizarrón</h4>
-                        <p class="small">Todo tu contenido organizado.</p>
+                <div class="glass-card p-4">
+                    <div class="d-flex align-items-center gap-3 mb-2" style="border-bottom: 1px solid var(--border-glass); padding-bottom: 12px;">
+                        <div class="avatar-inicial">@mensaje.NombreUsuario.Substring(0, 1).ToUpper()</div>
+                        <div class="flex-grow-1">
+                            <span class="fw-normal d-block" style="color: var(--accent-color); font-size: 0.9rem;">@mensaje.NombreUsuario</span>
+                            <span class="text-muted font-monospace" style="font-size: 0.75rem;">@mensaje.FechaPublicacion.ToString("dd/MM/yyyy HH:mm")</span>
+                        </div>
                     </div>
-                </div>
-                <div class="glass-card" style="width: 300px; height: 400px; background: linear-gradient(135deg, transparent, var(--border-glass));">
-                    <div class="p-4 d-flex flex-column h-100 justify-content-center text-center text-muted">
-                        <h4 class="fw-light">Comunidad Viva</h4>
-                        <p class="small">Debates y recomendaciones.</p>
-                    </div>
-                </div>
-                <div class="glass-card" style="width: 300px; height: 400px; background: linear-gradient(135deg, var(--surface-glass), transparent);">
-                    <div class="p-4 d-flex flex-column h-100 justify-content-center text-center text-muted">
-                        <h4 class="fw-light">Recomendaciones IA</h4>
-                        <p class="small">Descubre tu próxima obsesión.</p>
-                    </div>
+                    <p class="mb-0 small" style="line-height: 1.6; white-space: pre-line;">@mensaje.Contenido</p>
                 </div>
             }
-        </div>
+        }
+        else
+        {
+            <div class="glass-card p-5 text-center">
+                <div class="text-muted fw-light">TODAVÍA NO HAY MENSAJES. ¡SÉ EL PRIMERO EN COMPARTIR ALGO!</div>
+            </div>
+        }
+    </div>
+
+    <div class="glass-card p-5" style="max-width: 800px; margin: 0 auto;">
+        <h4 class="fw-light mb-4 text-uppercase text-center" style="letter-spacing: 2px;">Participar en el Foro</h4>
+        <form asp-action="Publicar" method="post">
+            <div class="row g-4">
+                <div class="col-12">
+                    @if (!string.IsNullOrEmpty(nombreSesion))
+                    {
+                        <input type="text" name="NombreUsuario" value="@nombreSesion" class="form-control form-control-glass" readonly />
+                    }
+                    else
+                    {
+                        <input type="text" name="NombreUsuario" class="form-control form-control-glass" placeholder="Tu Nombre de Usuario" required />
+                    }
+                </div>
+                <div class="col-12">
+                    <textarea name="Contenido" class="form-control form-control-glass" rows="4" placeholder="Escribe tu opinión o reseña aquí..." required></textarea>
+                </div>
+            </div>
+            <div class="text-center mt-5">
+                <button type="submit" class="btn btn-futuristic">Enviar Mensaje</button>
+            </div>
+        </form>
     </div>
 </div>

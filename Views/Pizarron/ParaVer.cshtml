@@ -1,80 +1,70 @@
-﻿@{
-    ViewData["Title"] = "Mi Lista: Para Ver";
+﻿@model List<VeryLike.Domain.Models.ContenidoAudiovisual>
+@{
+    ViewData["Title"] = "Para Ver";
 }
 
-<div class="container-fluid px-4 mt-4">
-
-    <div class="d-flex align-items-center gap-4 mb-5">
-        <a asp-controller="Pizarron" asp-action="Index" class="btn btn-futuristic" style="padding: 8px 15px; border-radius: 50%;">
-            &larr;
-        </a>
-        <h2 class="fw-light text-uppercase m-0" style="letter-spacing: 2px;">Lista <span style="color: var(--accent-color);">Para Ver</span></h2>
-
-        <div class="ms-auto d-flex gap-3">
-            <a href="#" class="btn btn-sm btn-futuristic" style="background: var(--surface-glass);">Explorar</a>
-            <a href="#" class="btn btn-sm btn-futuristic text-muted" style="border-color: var(--border-glass);">Calificar</a>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-5 flex-wrap gap-3">
+        <div>
+            <h1 class="display-6 fw-light text-uppercase" style="letter-spacing: 4px;">Mi Lista "Para Ver"</h1>
+            <p class="text-muted small m-0">@Model.Count título(s) en tu lista</p>
         </div>
+        <a asp-controller="Pizarron" asp-action="Index" class="text-muted small text-decoration-none">&larr; Volver al Pizarrón</a>
     </div>
 
-    <div class="row g-5 mb-5">
+    <div class="row g-5">
+        @if (Model.Any())
+        {
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4 col-lg-3">
+                    <div class="glass-card h-100 d-flex flex-column"
+                         data-bs-toggle="modal" data-bs-target="#modalDetalleMedia"
+                         style="cursor: pointer;"
+                         data-tipo="@item.Tipo.ToLowerInvariant()"
+                         data-titulo="@item.Nombre"
+                         data-duracion="@(item is VeryLike.Domain.Models.Pelicula p ? p.Duracion : null)"
+                         data-temporadas="@(item is VeryLike.Domain.Models.Serie s ? s.Temporadas.ToString() : null)"
+                         data-sinopsis="@item.Sinopsis"
+                         data-estudio="@item.Studio"
+                         data-calificacion="@item.Calificacion"
+                         data-poster="@item.PosterUrl"
+                         data-enlace="@item.EnlaceStreaming"
+                         data-plataformas="@item.PlataformaStreaming">
+                        @if (!string.IsNullOrWhiteSpace(item.PosterUrl))
+                        {
+                            <img src="@item.PosterUrl" alt="Póster de @item.Nombre" class="cover-placeholder-img" style="height: 260px;" loading="lazy" />
+                        }
+                        else
+                        {
+                            <div class="cover-placeholder" style="height: 260px;">Sin Portada</div>
+                        }
 
-        <div class="col-md-6">
-            <h4 class="fw-light mb-4 text-center" style="letter-spacing: 2px; color: var(--accent-color);">Películas</h4>
-            <div class="d-flex flex-column gap-3">
+                        <div class="p-3 d-flex flex-column flex-grow-1">
+                            <h6 class="mb-1 text-truncate">@item.Nombre</h6>
+                            <span class="text-muted small mb-2">@(item.Tipo == "Pelicula" ? "Película" : "Serie") · @item.AnioPublicacion</span>
 
-                <div class="glass-card p-3 d-flex align-items-center justify-content-between media-card movie-type">
-                    <div class="d-flex align-items-center gap-3">
-                        <div style="width: 60px; height: 90px; background: var(--border-glass); border-radius: 4px;"></div>
-                        <div>
-                            <h5 class="mb-1">Drive My Car</h5>
-                            <span class="text-muted small">Drama • 2h 59m</span>
+                            <form asp-controller="Pizarron" asp-action="QuitarDeParaVer" method="post" class="mt-auto" onclick="event.stopPropagation();">
+                                <input type="hidden" name="contenidoId" value="@item.Id" />
+                                <button type="submit" class="btn btn-sm w-100" style="border: 1px solid var(--border-glass); color: var(--text-muted);">Quitar de la lista</button>
+                            </form>
                         </div>
                     </div>
-                    <button class="btn btn-sm btn-outline-danger" style="border-radius: 50%; width: 35px; height: 35px;">&times;</button>
                 </div>
-
-                <div class="glass-card p-3 d-flex align-items-center justify-content-between media-card movie-type">
-                    <div class="d-flex align-items-center gap-3">
-                        <div style="width: 60px; height: 90px; background: var(--border-glass); border-radius: 4px;"></div>
-                        <div>
-                            <h5 class="mb-1">The Imitation Game</h5>
-                            <span class="text-muted small">Historia • 1h 54m</span>
-                        </div>
-                    </div>
-                    <button class="btn btn-sm btn-outline-danger" style="border-radius: 50%; width: 35px; height: 35px;">&times;</button>
-                </div>
-
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center py-5">
+                <p class="text-muted fw-light mb-3">TU LISTA "PARA VER" ESTÁ VACÍA.</p>
+                <a asp-controller="Peliculas" asp-action="Index" class="btn btn-futuristic">Explorar Catálogo</a>
             </div>
-        </div>
-
-        <div class="col-md-6">
-            <h4 class="fw-light mb-4 text-center" style="letter-spacing: 2px; color: #b4a0ff;">Series</h4>
-            <div class="d-flex flex-column gap-3">
-
-                <div class="glass-card p-3 d-flex align-items-center justify-content-between media-card series-type">
-                    <div class="d-flex align-items-center gap-3">
-                        <div style="width: 60px; height: 90px; background: var(--border-glass); border-radius: 4px;"></div>
-                        <div>
-                            <h5 class="mb-1">Mr. Robot</h5>
-                            <span class="text-muted small">Temporada 1 • Thriller</span>
-                        </div>
-                    </div>
-                    <button class="btn btn-sm btn-outline-danger" style="border-radius: 50%; width: 35px; height: 35px;">&times;</button>
-                </div>
-
-            </div>
-        </div>
-
+        }
     </div>
 
-    <div class="d-flex justify-content-between align-items-center mt-5 pt-4" style="border-top: 1px solid var(--border-glass);">
-        <a asp-controller="Pizarron" asp-action="Index" class="btn btn-futuristic px-4 text-muted" style="border-color: var(--border-glass);">
-            Regresar al Pizarrón
-        </a>
+    @await Html.PartialAsync("_ModalDetalles")
 
-        <button class="btn btn-futuristic px-4" style="background: var(--surface-glass);">
-            + Agregar a la lista
-        </button>
-    </div>
-
+    @section Scripts {
+        <script src="~/js/pizarron.js" asp-append-version="true"></script>
+    }
 </div>
