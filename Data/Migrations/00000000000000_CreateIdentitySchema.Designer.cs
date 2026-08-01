@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VeryLike.Data;
+using VeryLike.Infrastructure.Data;
 
 namespace VeryLike.Data.Migrations
 {
