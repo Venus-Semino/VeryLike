@@ -12,33 +12,35 @@ namespace VeryLike.Web.Services
     }
 
     /// <summary>
-    /// Esta clase es la pieza que faltaba: en vez de leer catalogo.json
-    /// directamente (como hacía antes), VeryLike.Web le pide los datos a
-    /// VeryLike.Catalog.API por HTTP. Así la API que ya existía deja de
-    /// estar "huérfana" y el catálogo vive en un solo lugar.
+    /// Cliente HTTP tipado hacia VeryLike.Catalog.API. VeryLike.Web ya no lee
+    /// la base de datos de catálogo directamente: le pide los datos a este
+    /// microservicio (ver Program.cs, AddHttpClient&lt;ICatalogoApiClient, ...&gt;,
+    /// donde se configura BaseAddress a partir de ServiceUrlsOptions).
     /// </summary>
     public class CatalogoApiClient : ICatalogoApiClient
     {
         private readonly HttpClient _http;
+        private readonly ILogger<CatalogoApiClient> _logger;
         private static readonly JsonSerializerOptions _opciones = new() { PropertyNameCaseInsensitive = true };
 
-        public CatalogoApiClient(HttpClient http)
+        public CatalogoApiClient(HttpClient http, ILogger<CatalogoApiClient> logger)
         {
             _http = http;
+            _logger = logger;
         }
 
         public async Task<List<Pelicula>> ObtenerPeliculasAsync()
         {
             try
             {
-                return await _http.GetFromJsonAsync<List<Pelicula>>("api/catalogo/peliculas", _opciones)
-                       ?? new List<Pelicula>();
+                return await _http.GetFromJsonAsync<List<Pelicula>>("api/catalogo/peliculas", _opciones) ?? new();
             }
-            catch (HttpRequestException)
+            catch (HttpRequestException ex)
             {
-                // El microservicio no está levantado todavía: la vista no debe
-                // tronar, solo se queda sin datos hasta que Catalog.API esté arriba.
-                return new List<Pelicula>();
+                // Catalog.API no está levantado: la vista no debe tronar, solo
+                // se queda sin datos hasta que el microservicio esté arriba.
+                _logger.LogWarning(ex, "No se pudo contactar a Catalog.API para obtener películas.");
+                return new();
             }
         }
 
@@ -46,14 +48,15 @@ namespace VeryLike.Web.Services
         {
             try
             {
-                return await _http.GetFromJsonAsync<List<Serie>>("api/catalogo/series", _opciones)
-                       ?? new List<Serie>();
+                return await _http.GetFromJsonAsync<List<Serie>>("api/catalogo/series", _opciones) ?? new();
             }
-            catch (HttpRequestException)
+            catch (HttpRequestException ex)
             {
-                return new List<Serie>();
+                _logger.LogWarning(ex, "No se pudo contactar a Catalog.API para obtener series.");
+                return new();
             }
         }
+
         public async Task<List<ContenidoAudiovisual>> ObtenerTodoAsync()
         {
             var peliculas = await ObtenerPeliculasAsync();

@@ -3,23 +3,24 @@ using VeryLike.Domain.Interfaces;
 using VeryLike.Domain.Models;
 using VeryLike.Domain.Recomendaciones;
 using VeryLike.Web.Models;
+using VeryLike.Web.Services;
 
 namespace VeryLike.Web.Controllers
 {
     public class PizarronController : Controller
     {
-        private readonly ICatalogoRepository _catalogoRepository;
+        private readonly ICatalogoApiClient _catalogoApiClient;
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly OrdenarPorCalificacionStrategy _estrategiaCalificacion;
         private readonly RecomendacionInteligenteIaStrategy _estrategiaIa;
 
         public PizarronController(
-            ICatalogoRepository catalogoRepository,
+            ICatalogoApiClient catalogoApiClient,
             IUsuarioRepository usuarioRepository,
             OrdenarPorCalificacionStrategy estrategiaCalificacion,
             RecomendacionInteligenteIaStrategy estrategiaIa)
         {
-            _catalogoRepository = catalogoRepository;
+            _catalogoApiClient = catalogoApiClient;
             _usuarioRepository = usuarioRepository;
             _estrategiaCalificacion = estrategiaCalificacion;
             _estrategiaIa = estrategiaIa;
@@ -29,7 +30,7 @@ namespace VeryLike.Web.Controllers
         public async Task<IActionResult> Index(string modo = "ia")
         {
             var nombreSesion = HttpContext.Session.GetString("UsuarioNombre");
-            var catalogo = await _catalogoRepository.ObtenerTodoAsync();
+            var catalogo = await _catalogoApiClient.ObtenerTodoAsync();
 
             var modelo = new PizarronViewModel
             {

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
@@ -8,23 +8,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\VeryLike.Catalog.API\VeryLike.Catalog.API.csproj" />
+		<!-- VeryLike.Web es un CONSUMIDOR: habla con Catalog.API y Forum.API
+		     por HTTP (ver Services/), no referencia sus ensamblados. Solo
+		     depende de Domain (modelos/DTOs compartidos) e Infrastructure
+		     (EF Core, para Usuario/Auth, que sí vive en este proceso). -->
 		<ProjectReference Include="..\VeryLike.Domain\VeryLike.Domain.csproj" />
-		<ProjectReference Include="..\VeryLike.Forum.API\VeryLike.Forum.API.csproj" />
 		<ProjectReference Include="..\VeryLike.Infrastructure\VeryLike.Infrastructure.csproj" />
-		
-	</ItemGroup>
-
-	<ItemGroup>
-		<Compile Remove="VeryLike.Catalog.API\**" />
-		<Content Remove="VeryLike.Catalog.API\**" />
-		<EmbeddedResource Remove="VeryLike.Catalog.API\**" />
-		<None Remove="VeryLike.Catalog.API\**" />
-
-		<Compile Remove="VeryLike.Forum.API\**" />
-		<Content Remove="VeryLike.Forum.API\**" />
-		<EmbeddedResource Remove="VeryLike.Forum.API\**" />
-		<None Remove="VeryLike.Forum.API\**" />
 	</ItemGroup>
 
 </Project>

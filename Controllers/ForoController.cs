@@ -1,21 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using VeryLike.Domain.Interfaces;
 using VeryLike.Domain.Models;
+using VeryLike.Web.Services;
 
 namespace VeryLike.Web.Controllers
 {
     public class ForoController : Controller
     {
-        private readonly IMensajeForoRepository _foroRepository;
+        private readonly IForoApiClient _foroApiClient;
 
-        public ForoController(IMensajeForoRepository foroRepository)
+        public ForoController(IForoApiClient foroApiClient)
         {
-            _foroRepository = foroRepository;
+            _foroApiClient = foroApiClient;
         }
 
         public async Task<IActionResult> Index()
         {
-            var mensajes = await _foroRepository.ObtenerTodosAsync();
+            var mensajes = await _foroApiClient.ObtenerTodosAsync();
             return View(mensajes);
         }
 
@@ -25,11 +25,11 @@ namespace VeryLike.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _foroRepository.AgregarAsync(nuevoMensaje);
+                await _foroApiClient.PublicarAsync(nuevoMensaje);
                 return RedirectToAction(nameof(Index));
             }
 
-            var mensajes = await _foroRepository.ObtenerTodosAsync();
+            var mensajes = await _foroApiClient.ObtenerTodosAsync();
             return View("Index", mensajes);
         }
     }
