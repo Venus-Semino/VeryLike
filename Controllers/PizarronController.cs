@@ -44,13 +44,14 @@ namespace VeryLike.Web.Controllers
                 ModoRecomendacion = modo
             };
 
-            Usuario? usuario = null;
+            var perfil = PerfilDeGustos.Anonimo;
             if (nombreSesion != null)
             {
-                usuario = await _usuarioRepository.ObtenerPorNombreOCorreoAsync(nombreSesion);
+                var usuario = await _usuarioRepository.ObtenerPorNombreOCorreoAsync(nombreSesion);
                 if (usuario != null)
                 {
                     modelo.ParaVer = await _usuarioRepository.ObtenerParaVerAsync(usuario.Id);
+                    usuario.ListaParaVer = modelo.ParaVer;
 
                     var calificaciones = await _calificacionRepository.ObtenerDeUsuarioAsync(usuario.Id);
                     var calificados = calificaciones.Select(c => c.ContenidoId).ToHashSet();
@@ -59,6 +60,9 @@ namespace VeryLike.Web.Controllers
                     modelo.TotalResenas = calificaciones.Count(c => !string.IsNullOrWhiteSpace(c.ResenaPublica));
                     modelo.PendientesDeCalificar = modelo.ParaVer.Where(c => !calificados.Contains(c.Id)).ToList();
                     modelo.MisPublicaciones = await _foroRepository.ObtenerDeUsuarioAsync(usuario.NombreUsuario);
+
+                    perfil = new PerfilDeGustos(usuario, calificaciones);
+                    modelo.GenerosFavoritos = perfil.GenerosFavoritos(3);
                 }
             }
 
@@ -70,7 +74,7 @@ namespace VeryLike.Web.Controllers
             var paraVerIds = modelo.ParaVer.Select(p => p.Id).ToHashSet();
             ViewData["ParaVerIds"] = paraVerIds;
 
-            modelo.Recomendadas = motor.Recomendar(usuario, catalogo)
+            modelo.Recomendadas = motor.Recomendar(perfil, catalogo)
                 .Where(c => !paraVerIds.Contains(c.Id))
                 .Take(10)
                 .ToList();

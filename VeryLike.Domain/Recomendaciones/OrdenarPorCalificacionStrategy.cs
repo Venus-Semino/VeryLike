@@ -7,7 +7,7 @@ namespace VeryLike.Domain.Recomendaciones
     {
         public string Nombre => "Mejor calificadas";
 
-        public List<ContenidoAudiovisual> Recomendar(Usuario? usuario, List<ContenidoAudiovisual> catalogo)
+        public List<ContenidoAudiovisual> Recomendar(PerfilDeGustos perfil, List<ContenidoAudiovisual> catalogo)
         {
             ArgumentNullException.ThrowIfNull(catalogo);
             return catalogo.OrderByDescending(c => c.Calificacion).ToList();

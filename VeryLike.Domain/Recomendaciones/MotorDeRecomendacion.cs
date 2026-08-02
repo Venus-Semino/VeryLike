@@ -12,7 +12,7 @@ namespace VeryLike.Domain.Recomendaciones
             _estrategia = estrategia ?? throw new ArgumentNullException(nameof(estrategia));
         }
 
-        public List<ContenidoAudiovisual> Recomendar(Usuario? usuario, List<ContenidoAudiovisual> catalogo) =>
-            _estrategia.Recomendar(usuario, catalogo);
+        public List<ContenidoAudiovisual> Recomendar(PerfilDeGustos perfil, List<ContenidoAudiovisual> catalogo) =>
+            _estrategia.Recomendar(perfil, catalogo);
     }
 }

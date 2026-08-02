@@ -48,7 +48,24 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div>
                         <h4 class="fw-light text-uppercase m-0" style="letter-spacing: 1px;">Recomendadas</h4>
-                        <p class="text-muted small m-0">Basado en tus altas calificaciones a thrillers psicológicos</p>
+                        <p class="text-muted small m-0">
+                            @if (Model.ModoRecomendacion == "calificacion")
+                            {
+                                @:Los títulos mejor calificados por la comunidad
+                            }
+                            else if (Model.GenerosFavoritos.Any())
+                            {
+                                @:Basado en tus calificaciones: @string.Join(", ", Model.GenerosFavoritos)
+                            }
+                            else if (Model.TotalCalificadas > 0)
+                            {
+                                @:Evitamos los géneros que calificaste bajo
+                            }
+                            else
+                            {
+                                @:Calificá algunos títulos para personalizar tus recomendaciones
+                            }
+                        </p>
                     </div>
                     <a href="#" class="text-muted small text-decoration-none">Expandir Lista &rarr;</a>
                 </div>

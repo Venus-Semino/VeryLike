@@ -8,6 +8,9 @@ namespace VeryLike.Web.Models
         public List<ContenidoAudiovisual> ParaVer { get; set; } = new();
         public List<ContenidoAudiovisual> Recomendadas { get; set; } = new();
 
+        /// <summary>Géneros con mejor afinidad, para explicar de dónde salen las sugerencias.</summary>
+        public List<string> GenerosFavoritos { get; set; } = new();
+
         /// <summary>Títulos calificados y publicaciones propias, para el panel lateral.</summary>
         public int TotalCalificadas { get; set; }
         public int TotalResenas { get; set; }
