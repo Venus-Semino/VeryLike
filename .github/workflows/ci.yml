@@ -23,7 +23,7 @@ jobs:
       run: |
         find . -type d \( -name "obj" -o -name "bin" \) -exec rm -rf {} +
 
-   - name: Restaurar dependencias
+    - name: Restaurar dependencias
       run: dotnet restore VeryLike.Web.csproj
 
     - name: Compilar proyecto principal
