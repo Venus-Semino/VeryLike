@@ -77,24 +77,43 @@
         }
     </div>
 
-    <div class="glass-card p-5" style="max-width: 800px; margin: 0 auto;">
-        <h4 class="fw-light mb-4 text-uppercase text-center" style="letter-spacing: 2px;">Participar en el Foro</h4>
-
+    <div class="text-center">
         @if (string.IsNullOrEmpty(usuarioSesion))
         {
-            <p class="text-center text-muted small mb-0">
+            <p class="text-muted small mb-0">
                 <a asp-controller="Auth" asp-action="Login" style="color: var(--accent-color);">Iniciá sesión</a> para publicar.
             </p>
         }
         else
         {
-            <form asp-action="Publicar" method="post">
-                <textarea name="Contenido" class="form-control form-control-glass" rows="4"
-                          placeholder="Escribe tu opinión o reseña aquí... (las etiquetas se generan solas)" required></textarea>
-                <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-futuristic">Enviar Mensaje</button>
-                </div>
-            </form>
+            <button type="button" class="btn btn-futuristic" data-bs-toggle="modal" data-bs-target="#modalPublicarForo">
+                Participar en el foro
+            </button>
         }
     </div>
 </div>
+
+@if (!string.IsNullOrEmpty(usuarioSesion))
+{
+    <div class="modal fade" id="modalPublicarForo" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-card">
+                <div class="modal-header" style="border-bottom: 1px solid var(--border-glass);">
+                    <h5 class="modal-title fw-light text-uppercase" style="letter-spacing: 2px;">Participar en el Foro</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <form asp-action="Publicar" method="post">
+                    <div class="modal-body">
+                        <p class="text-muted small">Publicás como <span style="color: var(--accent-color);">@usuarioSesion</span></p>
+                        <textarea name="Contenido" class="form-control form-control-glass" rows="5"
+                                  placeholder="Escribe tu opinión o reseña aquí... (las etiquetas se generan solas)" required></textarea>
+                    </div>
+                    <div class="modal-footer" style="border-top: 1px solid var(--border-glass);">
+                        <button type="button" class="btn btn-sm text-muted" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-futuristic">Enviar Mensaje</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
