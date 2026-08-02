@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
+using VeryLike.Domain.Interfaces;
 using VeryLike.Domain.Models;
 
 namespace VeryLike.Web.Services
@@ -20,12 +21,14 @@ namespace VeryLike.Web.Services
     public class CatalogoApiClient : ICatalogoApiClient
     {
         private readonly HttpClient _http;
+        private readonly ICatalogoRepository _catalogoLocal;
         private readonly ILogger<CatalogoApiClient> _logger;
         private static readonly JsonSerializerOptions _opciones = new() { PropertyNameCaseInsensitive = true };
 
-        public CatalogoApiClient(HttpClient http, ILogger<CatalogoApiClient> logger)
+        public CatalogoApiClient(HttpClient http, ICatalogoRepository catalogoLocal, ILogger<CatalogoApiClient> logger)
         {
             _http = http;
+            _catalogoLocal = catalogoLocal;
             _logger = logger;
         }
 
@@ -37,10 +40,10 @@ namespace VeryLike.Web.Services
             }
             catch (HttpRequestException ex)
             {
-                // Catalog.API no está levantado: la vista no debe tronar, solo
-                // se queda sin datos hasta que el microservicio esté arriba.
-                _logger.LogWarning(ex, "No se pudo contactar a Catalog.API para obtener películas.");
-                return new();
+                // Catalog.API todavía no está levantado: se sirve el catálogo
+                // desde la base compartida para no dejar la vista vacía.
+                _logger.LogWarning(ex, "No se pudo contactar a Catalog.API; se usa el catálogo local.");
+                return await _catalogoLocal.ObtenerPeliculasAsync();
             }
         }
 
@@ -52,8 +55,8 @@ namespace VeryLike.Web.Services
             }
             catch (HttpRequestException ex)
             {
-                _logger.LogWarning(ex, "No se pudo contactar a Catalog.API para obtener series.");
-                return new();
+                _logger.LogWarning(ex, "No se pudo contactar a Catalog.API; se usan las series locales.");
+                return await _catalogoLocal.ObtenerSeriesAsync();
             }
         }
 

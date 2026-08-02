@@ -9,6 +9,16 @@
     <div class="text-center mb-4">
         <h1 class="display-6 fw-light text-uppercase" style="letter-spacing: 4px;">Series</h1>
         <p class="text-muted small">Catálogo de producciones por temporadas</p>
+
+        @if (TempData["MensajeCatalogo"] is string mensaje)
+        {
+            <p class="small" style="color: var(--accent-color);">@mensaje</p>
+        }
+
+        <form asp-controller="Catalogo" asp-action="Sincronizar" method="post" class="d-inline">
+            <input type="hidden" name="origen" value="Series" />
+            <button type="submit" class="btn btn-futuristic btn-sm">Traer títulos desde TMDB</button>
+        </form>
     </div>
 
     <form method="get" asp-action="Index" class="d-flex justify-content-center align-items-center gap-3 mb-5 flex-wrap">

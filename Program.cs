@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using VeryLike.Domain.Factories;
 using VeryLike.Domain.Interfaces;
 using VeryLike.Domain.Recomendaciones;
+using VeryLike.Infrastructure.ExternalServices;
 using VeryLike.Infrastructure.Data;
 using VeryLike.Infrastructure.Repositories;
 using VeryLike.Infrastructure.Security;
@@ -30,6 +32,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<ICalificacionRepository, CalificacionRepository>();
+builder.Services.AddScoped<ICatalogoRepository, CatalogoRepository>();
 builder.Services.AddSingleton<IPasswordHasher, Sha256PasswordHasher>();
 
 // 4. Patrón Strategy: se registran ambas estrategias concretas; el
@@ -42,6 +45,18 @@ builder.Services.AddScoped<RecomendacionInteligenteIaStrategy>();
 // ServiceUrls__CatalogApi, ServiceUrls__ForumApi), sin recompilar.
 builder.Services.Configure<ServiceUrlsOptions>(
     builder.Configuration.GetSection(ServiceUrlsOptions.SeccionConfiguracion));
+
+// Options Pattern + cliente tipado para la API externa de cine (TMDB), que
+// alimenta el catálogo automáticamente (ver SincronizadorCatalogoService).
+builder.Services.Configure<TmdbOptions>(builder.Configuration.GetSection("Tmdb"));
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<ContenidoFactory>();
+builder.Services.AddScoped<SincronizadorCatalogoService>();
+builder.Services.AddHttpClient<ICatalogoExternoService, TmdbCatalogoExternoService>((sp, http) =>
+{
+    var opciones = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<TmdbOptions>>().Value;
+    http.BaseAddress = new Uri(opciones.BaseUrl);
+});
 
 // 6. Clientes HTTP tipados hacia los microservicios. El BaseAddress se toma
 // de ServiceUrlsOptions ya resuelto en el contenedor de DI.
