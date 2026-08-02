@@ -65,13 +65,35 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="fw-light text-uppercase m-0" style="letter-spacing: 1px;">Pendientes de Calificar</h4>
                 </div>
-                <div class="glass-card p-4 d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="mb-1">The Imitation Game</h5>
-                        <span class="text-muted small">Vista el 15 de Junio</span>
-                    </div>
-                    <a href="#" class="btn btn-futuristic">Dar Calificación</a>
-                </div>
+                @if (Model.PendientesDeCalificar.Any())
+                {
+                    @foreach (var pendiente in Model.PendientesDeCalificar)
+                    {
+                        <div class="glass-card p-4 mb-3 d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-1">@pendiente.Nombre</h5>
+                                <span class="text-muted small">En tu lista Para Ver</span>
+                            </div>
+                            <button type="button" class="btn btn-futuristic"
+                                    data-bs-toggle="modal" data-bs-target="#modalDetalleMedia"
+                                    data-id="@pendiente.Id"
+                                    data-tipo="@pendiente.Tipo.ToLowerInvariant()"
+                                    data-titulo="@pendiente.Nombre"
+                                    data-sinopsis="@pendiente.Sinopsis"
+                                    data-estudio="@pendiente.Studio"
+                                    data-calificacion="@pendiente.Calificacion"
+                                    data-poster="@pendiente.PosterUrl"
+                                    data-enlace="@pendiente.EnlaceStreaming"
+                                    data-plataformas="@pendiente.PlataformaStreaming">
+                                Dar Calificación
+                            </button>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="glass-card p-4 text-muted small">No tenés títulos pendientes de calificar.</div>
+                }
             </div>
 
         </div>
@@ -79,24 +101,36 @@
         <div class="col-xl-3 col-lg-4">
             <div class="glass-card p-4 mb-4">
                 <h6 class="text-uppercase text-muted tracking-widest mb-4" style="letter-spacing: 2px;">Tus Hilos</h6>
-                <div class="chat-bubble p-3 mb-3">
-                    <span class="fw-bold" style="color: var(--accent-color); font-size: 0.8rem;">Tú</span>
-                    <p class="mb-0 small mt-1 text-truncate">¿Alguien más sintió que el final de...</p>
-                    <div class="text-end mt-2"><span class="badge bg-secondary rounded-pill">3 Respuestas</span></div>
-                </div>
-                <a href="#" class="btn btn-sm w-100" style="border: 1px solid var(--border-glass); color: var(--text-main);">Ir a la Comunidad</a>
+                @if (Model.MisPublicaciones.Any())
+                {
+                    @foreach (var publicacion in Model.MisPublicaciones.Take(3))
+                    {
+                        <div class="chat-bubble p-3 mb-3">
+                            <span class="fw-bold" style="color: var(--accent-color); font-size: 0.8rem;">Tú</span>
+                            <p class="mb-0 small mt-1 text-truncate">@publicacion.Contenido</p>
+                            <div class="text-end mt-2">
+                                <span class="badge bg-secondary rounded-pill">@publicacion.Comentarios.Count Respuestas</span>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted small">Todavía no publicaste nada.</p>
+                }
+                <a asp-controller="Foro" asp-action="Index" class="btn btn-sm w-100" style="border: 1px solid var(--border-glass); color: var(--text-main);">Ir a la Comunidad</a>
             </div>
 
             <div class="glass-card p-4 text-center">
                 <div class="rounded-circle mx-auto mb-3" style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent-color), transparent); display: flex; align-items: center; justify-content: center; font-size: 2rem;">
                 </div>
                 <h6 class="mb-1">@Model.NombreUsuario</h6>
-                <p class="text-muted small mb-4">Cinéfilo Nivel 3</p>
+                <p class="text-muted small mb-4">Cinéfilo</p>
                 <div class="d-flex justify-content-around mb-4 border-top border-bottom py-2" style="border-color: var(--border-glass) !important;">
-                    <div><h5 class="m-0">12</h5><span class="small text-muted">Vistas</span></div>
-                    <div><h5 class="m-0">5</h5><span class="small text-muted">Reseñas</span></div>
+                    <div><h5 class="m-0">@Model.TotalCalificadas</h5><span class="small text-muted">Calificadas</span></div>
+                    <div><h5 class="m-0">@Model.TotalResenas</h5><span class="small text-muted">Reseñas</span></div>
                 </div>
-                <a href="#" class="btn btn-futuristic w-100">Ver Perfil Público</a>
+                <a asp-controller="Perfil" asp-action="Index" class="btn btn-futuristic w-100">Ver Mi Perfil</a>
             </div>
         </div>
     </div>

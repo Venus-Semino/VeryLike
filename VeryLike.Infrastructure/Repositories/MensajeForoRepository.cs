@@ -34,6 +34,15 @@ namespace VeryLike.Infrastructure.Repositories
                 .ToList();
         }
 
+        public Task<List<MensajeForo>> ObtenerDeUsuarioAsync(string nombreUsuario)
+        {
+            return _context.MensajesForo
+                .Where(m => m.MensajePadreId == null && m.NombreUsuario == nombreUsuario)
+                .Include(m => m.Comentarios)
+                .OrderByDescending(m => m.FechaPublicacion)
+                .ToListAsync();
+        }
+
         public Task<MensajeForo?> ObtenerPorIdAsync(int id)
         {
             return _context.MensajesForo

@@ -11,17 +11,23 @@ namespace VeryLike.Web.Controllers
     {
         private readonly ICatalogoApiClient _catalogoApiClient;
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly ICalificacionRepository _calificacionRepository;
+        private readonly IMensajeForoRepository _foroRepository;
         private readonly OrdenarPorCalificacionStrategy _estrategiaCalificacion;
         private readonly RecomendacionInteligenteIaStrategy _estrategiaIa;
 
         public PizarronController(
             ICatalogoApiClient catalogoApiClient,
             IUsuarioRepository usuarioRepository,
+            ICalificacionRepository calificacionRepository,
+            IMensajeForoRepository foroRepository,
             OrdenarPorCalificacionStrategy estrategiaCalificacion,
             RecomendacionInteligenteIaStrategy estrategiaIa)
         {
             _catalogoApiClient = catalogoApiClient;
             _usuarioRepository = usuarioRepository;
+            _calificacionRepository = calificacionRepository;
+            _foroRepository = foroRepository;
             _estrategiaCalificacion = estrategiaCalificacion;
             _estrategiaIa = estrategiaIa;
         }
@@ -45,6 +51,14 @@ namespace VeryLike.Web.Controllers
                 if (usuario != null)
                 {
                     modelo.ParaVer = await _usuarioRepository.ObtenerParaVerAsync(usuario.Id);
+
+                    var calificaciones = await _calificacionRepository.ObtenerDeUsuarioAsync(usuario.Id);
+                    var calificados = calificaciones.Select(c => c.ContenidoId).ToHashSet();
+
+                    modelo.TotalCalificadas = calificaciones.Count;
+                    modelo.TotalResenas = calificaciones.Count(c => !string.IsNullOrWhiteSpace(c.ResenaPublica));
+                    modelo.PendientesDeCalificar = modelo.ParaVer.Where(c => !calificados.Contains(c.Id)).ToList();
+                    modelo.MisPublicaciones = await _foroRepository.ObtenerDeUsuarioAsync(usuario.NombreUsuario);
                 }
             }
 

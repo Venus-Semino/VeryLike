@@ -10,6 +10,9 @@ namespace VeryLike.Domain.Interfaces
         /// <summary>Publicaciones que llevan la etiqueta indicada.</summary>
         Task<List<MensajeForo>> ObtenerPorHashtagAsync(string hashtag);
 
+        /// <summary>Publicaciones raíz escritas por un usuario.</summary>
+        Task<List<MensajeForo>> ObtenerDeUsuarioAsync(string nombreUsuario);
+
         Task<MensajeForo?> ObtenerPorIdAsync(int id);
 
         Task AgregarAsync(MensajeForo mensaje);

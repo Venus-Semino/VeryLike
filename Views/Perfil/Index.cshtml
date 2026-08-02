@@ -1,0 +1,95 @@
+@model VeryLike.Web.Models.PerfilViewModel
+
+@{
+    ViewData["Title"] = Model.EsPropio ? "Mi Perfil" : $"Perfil de {Model.NombreUsuario}";
+}
+
+<div class="container mt-5" style="max-width: 900px;">
+    <div class="glass-card p-4 mb-4 d-flex align-items-center gap-4">
+        <div class="rounded-circle" style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent-color), transparent);"></div>
+        <div class="flex-grow-1">
+            <h2 class="fw-light mb-1">@Model.NombreUsuario</h2>
+            <p class="text-muted small mb-0">@(Model.EsPropio ? "Tu perfil" : "Perfil público")</p>
+        </div>
+        <div class="d-flex gap-4 text-center">
+            <div><h5 class="m-0">@Model.TotalVistas</h5><span class="small text-muted">Calificadas</span></div>
+            <div><h5 class="m-0">@Model.TotalResenas</h5><span class="small text-muted">Reseñas</span></div>
+            <div><h5 class="m-0">@Model.PromedioPropio</h5><span class="small text-muted">Promedio</span></div>
+        </div>
+    </div>
+
+    <div class="glass-card p-4 mb-4">
+        <h5 class="fw-light text-uppercase mb-3" style="letter-spacing: 2px;">Calificaciones</h5>
+        @if (Model.Calificaciones.Any())
+        {
+            @foreach (var calificacion in Model.Calificaciones)
+            {
+                <div class="mb-3 pb-3" style="border-bottom: 1px solid var(--border-glass);">
+                    <div class="d-flex justify-content-between">
+                        <span>@(calificacion.Contenido?.Nombre ?? "Título eliminado")</span>
+                        <span style="color: var(--accent-color);">@calificacion.Puntaje / 5</span>
+                    </div>
+                    @if (!string.IsNullOrWhiteSpace(calificacion.ResenaPublica))
+                    {
+                        <p class="small text-muted mb-1 mt-1">@calificacion.ResenaPublica</p>
+                    }
+                    @if (Model.EsPropio && !string.IsNullOrWhiteSpace(calificacion.ResenaPrivada))
+                    {
+                        <p class="small mb-0 mt-1" style="color: var(--accent-color); font-style: italic;">
+                            Nota privada: @calificacion.ResenaPrivada
+                        </p>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <p class="text-muted small mb-0">Todavía no calificó nada.</p>
+        }
+    </div>
+
+    <div class="glass-card p-4 mb-4">
+        <h5 class="fw-light text-uppercase mb-3" style="letter-spacing: 2px;">Publicaciones en el foro</h5>
+        @if (Model.Publicaciones.Any())
+        {
+            @foreach (var publicacion in Model.Publicaciones)
+            {
+                <div class="mb-3 pb-3" style="border-bottom: 1px solid var(--border-glass);">
+                    <p class="small mb-1" style="white-space: pre-line;">@publicacion.Contenido</p>
+                    <span class="text-muted" style="font-size: 0.75rem;">
+                        @publicacion.FechaPublicacion.ToString("dd/MM/yyyy HH:mm") · @publicacion.Comentarios.Count comentario(s)
+                    </span>
+                    @foreach (var etiqueta in publicacion.Hashtags)
+                    {
+                        <a class="ms-2 small text-decoration-none" style="color: var(--accent-color);"
+                           asp-controller="Foro" asp-action="Index" asp-route-hashtag="@etiqueta">#@etiqueta</a>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <p class="text-muted small mb-0">Todavía no publicó en la comunidad.</p>
+        }
+    </div>
+
+    @if (Model.EsPropio)
+    {
+        <div class="glass-card p-4">
+            <h5 class="fw-light text-uppercase mb-3" style="letter-spacing: 2px;">Tu lista Para Ver</h5>
+            @if (Model.ParaVer.Any())
+            {
+                <ul class="mb-0 small">
+                    @foreach (var contenido in Model.ParaVer)
+                    {
+                        <li>@contenido.Nombre</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="text-muted small mb-0">Tu lista está vacía.</p>
+            }
+        </div>
+    }
+</div>

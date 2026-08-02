@@ -27,6 +27,10 @@
             {
                 <li class="mb-2"><a class="text-decoration-none" style="color: var(--text-main);" asp-controller="Foro" asp-action="Index">Foro</a></li>
             }
+            @if (controladorActual != "Perfil")
+            {
+                <li class="mb-2"><a class="text-decoration-none" style="color: var(--text-main);" asp-controller="Perfil" asp-action="Index">Perfil</a></li>
+            }
             @if (controladorActual != "Peliculas")
             {
                 <li class="mb-2"><a class="text-decoration-none" style="color: var(--text-main);" asp-controller="Peliculas" asp-action="Index">Recomendaciones</a></li>

@@ -6,6 +6,9 @@ namespace VeryLike.Domain.Interfaces
     {
         Task<Calificacion?> ObtenerDelUsuarioAsync(int usuarioId, int contenidoId);
 
+        /// <summary>Todas las calificaciones de un usuario con su contenido, de la más reciente a la más antigua.</summary>
+        Task<List<Calificacion>> ObtenerDeUsuarioAsync(int usuarioId);
+
         /// <summary>Reseñas públicas de un contenido, de la más reciente a la más antigua.</summary>
         Task<List<Calificacion>> ObtenerResenasPublicasAsync(int contenidoId);
 

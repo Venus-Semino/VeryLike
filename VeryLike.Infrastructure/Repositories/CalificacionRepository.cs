@@ -20,6 +20,15 @@ namespace VeryLike.Infrastructure.Repositories
                 .FirstOrDefaultAsync(c => c.UsuarioId == usuarioId && c.ContenidoId == contenidoId);
         }
 
+        public Task<List<Calificacion>> ObtenerDeUsuarioAsync(int usuarioId)
+        {
+            return _context.Calificaciones
+                .Include(c => c.Contenido)
+                .Where(c => c.UsuarioId == usuarioId)
+                .OrderByDescending(c => c.FechaActualizacion)
+                .ToListAsync();
+        }
+
         public Task<List<Calificacion>> ObtenerResenasPublicasAsync(int contenidoId)
         {
             return _context.Calificaciones
