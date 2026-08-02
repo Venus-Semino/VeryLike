@@ -20,10 +20,10 @@ jobs:
         dotnet-version: '10.0.x'
 
     - name: Restaurar dependencias
-      run: dotnet restore VeryLike.slnx
+      run: dotnet restore
 
     - name: Compilar solución
-      run: dotnet build VeryLike.slnx --no-restore
+      run: dotnet build --no-restore
 
     - name: Correr pruebas automatizadas
       run: dotnet test VeryLike.Tests/VeryLike.Tests.csproj --no-build --verbosity normal
