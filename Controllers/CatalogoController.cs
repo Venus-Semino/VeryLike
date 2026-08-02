@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using VeryLike.Domain.Interfaces;
+using VeryLike.Domain.Models;
 using VeryLike.Web.Services;
 
 namespace VeryLike.Web.Controllers
@@ -6,10 +8,25 @@ namespace VeryLike.Web.Controllers
     public class CatalogoController : Controller
     {
         private readonly SincronizadorCatalogoService _sincronizador;
+        private readonly ICatalogoRepository _catalogoRepository;
 
-        public CatalogoController(SincronizadorCatalogoService sincronizador)
+        public CatalogoController(SincronizadorCatalogoService sincronizador, ICatalogoRepository catalogoRepository)
         {
             _sincronizador = sincronizador;
+            _catalogoRepository = catalogoRepository;
+        }
+
+        /// <summary>Buscador del menú lateral: filtra el catálogo por nombre.</summary>
+        public async Task<IActionResult> Buscar(string? q)
+        {
+            var catalogo = await _catalogoRepository.ObtenerTodoAsync();
+
+            var resultados = string.IsNullOrWhiteSpace(q)
+                ? new List<ContenidoAudiovisual>()
+                : catalogo.Where(c => c.Nombre.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            ViewData["Consulta"] = q;
+            return View(resultados);
         }
 
         /// <summary>

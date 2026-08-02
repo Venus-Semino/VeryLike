@@ -398,3 +398,16 @@ a, button, .btn-futuristic, input, textarea, select {
     font-weight: 700;
     flex-shrink: 0;
 }
+
+/* Botón que abre el menú lateral desplegable */
+.btn-menu-toggle {
+    background: transparent;
+    border: 1px solid var(--border-glass);
+    color: var(--text-main);
+    letter-spacing: 2px;
+}
+
+.btn-menu-toggle:hover {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+}

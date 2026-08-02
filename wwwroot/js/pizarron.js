@@ -76,7 +76,7 @@ function cargarCalificaciones(contenidoId) {
         return;
     }
 
-    fetch('/Calificaciones/Detalle?contenidoId=' + encodeURIComponent(contenidoId))
+    fetch('/Calificaciones/Detalle?contenidoId=' + encodeURIComponent(contenidoId), { credentials: 'include' })
         .then(function (respuesta) { return respuesta.json(); })
         .then(function (datos) {
             if (datos.total > 0) {
@@ -98,6 +98,10 @@ function cargarCalificaciones(contenidoId) {
                 bloque.appendChild(document.createTextNode(resena.texto));
                 contenedorResenas.appendChild(bloque);
             });
+
+            if (!datos.autenticado) {
+                document.getElementById('modalMensajeCalificacion').textContent = 'El servidor no detecta tu sesión: iniciá sesión de nuevo para calificar.';
+            }
 
             if (datos.miCalificacion) {
                 establecerPuntaje(datos.miCalificacion.puntaje);
@@ -131,6 +135,7 @@ function guardarCalificacion() {
 
     fetch('/Calificaciones/Guardar', {
         method: 'POST',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
             'RequestVerificationToken': token ? token.value : ''

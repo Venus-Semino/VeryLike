@@ -1,0 +1,52 @@
+@{
+    var usuarioSesion = Context.Session.GetString("UsuarioNombre");
+    var controladorActual = ViewContext.RouteData.Values["controller"]?.ToString();
+}
+
+<button class="btn btn-sm btn-menu-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuLateral" aria-controls="menuLateral">
+    &#9776; Menú
+</button>
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="menuLateral" style="background: var(--menu-bg); color: var(--text-main); max-width: 25%; min-width: 260px;">
+    <div class="offcanvas-header">
+        <h6 class="offcanvas-title text-uppercase" style="letter-spacing: 2px; color: var(--accent-color);">VeryLike</h6>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+    </div>
+
+    <div class="offcanvas-body d-flex flex-column">
+        <form asp-controller="Catalogo" asp-action="Buscar" method="get" class="mb-4">
+            <input type="search" name="q" class="form-control form-control-glass" placeholder="Buscar películas, series o usuarios" />
+        </form>
+
+        <ul class="list-unstyled flex-grow-1">
+            @if (controladorActual != "Pizarron")
+            {
+                <li class="mb-2"><a class="text-decoration-none" style="color: var(--text-main);" asp-controller="Pizarron" asp-action="Index">Inicio</a></li>
+            }
+            @if (controladorActual != "Foro")
+            {
+                <li class="mb-2"><a class="text-decoration-none" style="color: var(--text-main);" asp-controller="Foro" asp-action="Index">Foro</a></li>
+            }
+            @if (controladorActual != "Peliculas")
+            {
+                <li class="mb-2"><a class="text-decoration-none" style="color: var(--text-main);" asp-controller="Peliculas" asp-action="Index">Recomendaciones</a></li>
+            }
+            @if (controladorActual != "Series")
+            {
+                <li class="mb-2"><a class="text-decoration-none" style="color: var(--text-main);" asp-controller="Series" asp-action="Index">Series</a></li>
+            }
+            <li class="mb-2"><a class="text-decoration-none" style="color: var(--text-main);" asp-controller="Pizarron" asp-action="ParaVer">Listas</a></li>
+        </ul>
+
+        <div class="border-top pt-3" style="border-color: var(--border-glass) !important;">
+            <a class="small text-decoration-none text-muted" asp-controller="Home" asp-action="Privacy">Privacidad</a>
+
+            @if (!string.IsNullOrEmpty(usuarioSesion))
+            {
+                <form asp-controller="Auth" asp-action="Logout" method="post" class="text-end mt-2">
+                    <button type="submit" class="btn btn-sm text-danger p-0">Cerrar sesión</button>
+                </form>
+            }
+        </div>
+    </div>
+</div>
