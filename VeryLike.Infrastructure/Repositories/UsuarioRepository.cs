@@ -32,6 +32,15 @@ namespace VeryLike.Infrastructure.Repositories
                 .FirstOrDefaultAsync(u => u.Id == id);
         }
 
+        public Task<List<Usuario>> BuscarPorNombreAsync(string texto)
+        {
+            return _context.Usuarios
+                .Where(u => EF.Functions.Like(u.NombreUsuario, $"%{texto}%"))
+                .OrderBy(u => u.NombreUsuario)
+                .Take(20)
+                .ToListAsync();
+        }
+
         public async Task AgregarAsync(Usuario usuario)
         {
             await _context.Usuarios.AddAsync(usuario);

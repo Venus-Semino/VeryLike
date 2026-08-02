@@ -1,32 +1,47 @@
-@model IEnumerable<VeryLike.Domain.Models.ContenidoAudiovisual>
+@model VeryLike.Web.Models.BusquedaViewModel
+
 @{
     ViewData["Title"] = "Buscar";
-    var consulta = ViewData["Consulta"] as string;
 }
 
 <div class="container mt-5">
     <h1 class="display-6 fw-light text-uppercase" style="letter-spacing: 4px;">Resultados</h1>
     <p class="text-muted small mb-4">
-        @(string.IsNullOrWhiteSpace(consulta) ? "Escribe algo en el buscador del menú." : $"Búsqueda: \"{consulta}\"")
+        @(string.IsNullOrWhiteSpace(Model.Consulta) ? "Escribe algo en el buscador del menú." : $"Búsqueda: \"{Model.Consulta}\"")
     </p>
 
-    <div class="row g-4">
-        @if (Model.Any())
-        {
-            @foreach (var item in Model)
+    @if (Model.Usuarios.Any())
+    {
+        <h5 class="fw-light text-uppercase mb-3" style="letter-spacing: 2px;">Usuarios</h5>
+        <div class="glass-card p-4 mb-5">
+            @foreach (var usuario in Model.Usuarios)
+            {
+                <a class="d-block mb-2 text-decoration-none"
+                   style="color: var(--accent-color);"
+                   asp-controller="Perfil" asp-action="Ver" asp-route-nombreUsuario="@usuario.NombreUsuario">
+                    @usuario.NombreUsuario
+                </a>
+            }
+        </div>
+    }
+
+    @if (Model.Titulos.Any())
+    {
+        <h5 class="fw-light text-uppercase mb-3" style="letter-spacing: 2px;">Títulos</h5>
+        <div class="row g-4">
+            @foreach (var item in Model.Titulos)
             {
                 <div class="col-6 col-md-3">
                     @await Html.PartialAsync("_TarjetaMedia", item)
                 </div>
             }
-        }
-        else if (!string.IsNullOrWhiteSpace(consulta))
-        {
-            <div class="col-12 text-center py-5">
-                <div class="text-muted fw-light">NO SE ENCONTRARON TÍTULOS.</div>
-            </div>
-        }
-    </div>
+        </div>
+    }
+
+    @if (Model.SinResultados && !string.IsNullOrWhiteSpace(Model.Consulta))
+    {
+        <div class="text-center py-5 text-muted fw-light">NO SE ENCONTRARON RESULTADOS.</div>
+    }
 
     @await Html.PartialAsync("_ModalDetalles")
 </div>

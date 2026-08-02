@@ -1,0 +1,48 @@
+@model VeryLike.Web.Models.CinemaViewModel
+
+@{
+    ViewData["Title"] = "Cinema";
+}
+
+<div class="container mt-5">
+    <h1 class="display-6 fw-light text-uppercase text-center" style="letter-spacing: 4px;">Cinema</h1>
+    <p class="text-muted small text-center mb-4">Explorá todo el catálogo por tendencia y género</p>
+
+    @if (Model.Destacado is not null)
+    {
+        <div class="glass-card p-4 mb-5 d-flex flex-wrap align-items-center gap-4">
+            <div>
+                <span class="small text-uppercase" style="color: var(--accent-color); letter-spacing: 2px;">Destacado</span>
+                <h3 class="fw-light mb-1">@Model.Destacado.Nombre</h3>
+                <p class="text-muted small mb-2">@Model.Destacado.Sinopsis</p>
+                <span class="small">@Model.Destacado.Calificacion / 5 · @Model.Destacado.AnioPublicacion</span>
+            </div>
+        </div>
+    }
+
+    @if (!Model.Filas.Any())
+    {
+        <p class="text-muted text-center">El catálogo está vacío. Traé títulos desde TMDB en Películas o Series.</p>
+    }
+
+    @foreach (var fila in Model.Filas)
+    {
+        <div class="mb-5">
+            <h5 class="fw-light text-uppercase mb-3" style="letter-spacing: 2px;">@fila.Titulo</h5>
+            <div class="d-flex gap-3 pb-2" style="overflow-x: auto;">
+                @foreach (var contenido in fila.Contenidos)
+                {
+                    <div style="min-width: 180px; max-width: 180px;">
+                        @await Html.PartialAsync("_TarjetaMedia", contenido)
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @await Html.PartialAsync("_ModalDetalles")
+</div>
+
+@section Scripts {
+    <script src="~/js/pizarron.js" asp-append-version="true"></script>
+}

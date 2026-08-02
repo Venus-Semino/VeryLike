@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using VeryLike.Domain.Interfaces;
 using VeryLike.Domain.Models;
+using VeryLike.Web.Models;
 using VeryLike.Web.Services;
 
 namespace VeryLike.Web.Controllers
@@ -9,24 +10,72 @@ namespace VeryLike.Web.Controllers
     {
         private readonly SincronizadorCatalogoService _sincronizador;
         private readonly ICatalogoRepository _catalogoRepository;
+        private readonly IUsuarioRepository _usuarioRepository;
 
-        public CatalogoController(SincronizadorCatalogoService sincronizador, ICatalogoRepository catalogoRepository)
+        public CatalogoController(
+            SincronizadorCatalogoService sincronizador,
+            ICatalogoRepository catalogoRepository,
+            IUsuarioRepository usuarioRepository)
         {
             _sincronizador = sincronizador;
             _catalogoRepository = catalogoRepository;
+            _usuarioRepository = usuarioRepository;
         }
 
-        /// <summary>Buscador del menú lateral: filtra el catálogo por nombre.</summary>
-        public async Task<IActionResult> Buscar(string? q)
+        /// <summary>Catálogo completo en filas: tendencias, tipos y géneros.</summary>
+        public async Task<IActionResult> Cinema()
         {
             var catalogo = await _catalogoRepository.ObtenerTodoAsync();
 
-            var resultados = string.IsNullOrWhiteSpace(q)
-                ? new List<ContenidoAudiovisual>()
-                : catalogo.Where(c => c.Nombre.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+            var modelo = new CinemaViewModel
+            {
+                Destacado = catalogo.OrderByDescending(c => c.Calificacion).FirstOrDefault()
+            };
 
-            ViewData["Consulta"] = q;
-            return View(resultados);
+            if (catalogo.Count > 0)
+            {
+                modelo.Filas.Add(new FilaCinema(
+                    "Tendencias",
+                    catalogo.OrderByDescending(c => c.Calificacion).Take(12).ToList()));
+
+                modelo.Filas.Add(new FilaCinema(
+                    "Estrenos",
+                    catalogo.OrderByDescending(c => c.AnioPublicacion).Take(12).ToList()));
+
+                var generos = catalogo
+                    .SelectMany(c => c.Genero)
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .OrderBy(g => g);
+
+                foreach (var genero in generos)
+                {
+                    var deGenero = catalogo
+                        .Where(c => c.Genero.Contains(genero, StringComparer.OrdinalIgnoreCase))
+                        .ToList();
+
+                    modelo.Filas.Add(new FilaCinema(genero, deGenero));
+                }
+            }
+
+            return View(modelo);
+        }
+
+        /// <summary>Buscador global del menú lateral: títulos del catálogo y usuarios.</summary>
+        public async Task<IActionResult> Buscar(string? q)
+        {
+            var modelo = new BusquedaViewModel { Consulta = q };
+
+            if (!string.IsNullOrWhiteSpace(q))
+            {
+                var catalogo = await _catalogoRepository.ObtenerTodoAsync();
+
+                modelo.Titulos = catalogo
+                    .Where(c => c.Nombre.Contains(q, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+                modelo.Usuarios = await _usuarioRepository.BuscarPorNombreAsync(q.Trim());
+            }
+
+            return View(modelo);
         }
 
         /// <summary>
