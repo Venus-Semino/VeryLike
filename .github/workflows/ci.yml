@@ -1,0 +1,29 @@
+name: CI VeryLike
+
+on:
+  push:
+    branches: [ "main", "pipeline-ci" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout del código
+      uses: actions/checkout@v4
+
+    - name: Configurar .NET 10
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Restaurar dependencias
+      run: dotnet restore VeryLike.slnx
+
+    - name: Compilar solución
+      run: dotnet build VeryLike.slnx --no-restore
+
+    - name: Correr pruebas automatizadas
+      run: dotnet test VeryLike.Tests/VeryLike.Tests.csproj --no-build --verbosity normal
