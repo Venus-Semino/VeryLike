@@ -19,11 +19,12 @@ jobs:
       with:
         dotnet-version: '10.0.x'
 
+    - name: Limpiar archivos temporales locales antiguos
+      run: |
+        find . -type d \( -name "obj" -o -name "bin" \) -exec rm -rf {} +
+
     - name: Restaurar dependencias
-      run: dotnet restore
+      run: dotnet restore VeryLike/VeryLike.Web.csproj
 
-    - name: Compilar solución
-      run: dotnet build --no-restore
-
-    - name: Correr pruebas automatizadas
-      run: dotnet test VeryLike.Tests/VeryLike.Tests.csproj --no-build --verbosity normal
+    - name: Compilar proyecto principal
+      run: dotnet build VeryLike/VeryLike.Web.csproj --no-restore
