@@ -143,10 +143,30 @@ namespace VeryLike.Infrastructure.Data
 
         private static void ConfigurarForo(ModelBuilder modelBuilder)
         {
+            var hashtagsComparer = new ValueComparer<List<string>>(
+                (a, b) => (a ?? new()).SequenceEqual(b ?? new()),
+                v => v.Aggregate(0, (hash, s) => HashCode.Combine(hash, s.GetHashCode())),
+                v => v.ToList());
+
             modelBuilder.Entity<MensajeForo>(entity =>
             {
                 entity.HasKey(m => m.Id);
                 entity.Property(m => m.FechaPublicacion).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(m => m.Hashtags)
+                    .HasConversion(
+                        v => string.Join('|', v),
+                        v => v.Length == 0
+                            ? new List<string>()
+                            : v.Split('|', StringSplitOptions.RemoveEmptyEntries).ToList())
+                    .Metadata.SetValueComparer(hashtagsComparer);
+
+                // Los comentarios son mensajes hijos del mismo tipo; se borran
+                // con su publicación raíz sin ciclos de cascada en SQL Server.
+                entity.HasMany(m => m.Comentarios)
+                    .WithOne(m => m.MensajePadre)
+                    .HasForeignKey(m => m.MensajePadreId)
+                    .OnDelete(DeleteBehavior.ClientCascade);
             });
         }
 

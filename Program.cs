@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using VeryLike.Domain.Factories;
 using VeryLike.Domain.Interfaces;
 using VeryLike.Domain.Recomendaciones;
+using VeryLike.Domain.Servicios;
 using VeryLike.Infrastructure.ExternalServices;
 using VeryLike.Infrastructure.Data;
 using VeryLike.Infrastructure.Repositories;
@@ -33,6 +34,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<ICalificacionRepository, CalificacionRepository>();
 builder.Services.AddScoped<ICatalogoRepository, CatalogoRepository>();
+builder.Services.AddScoped<IMensajeForoRepository, MensajeForoRepository>();
+builder.Services.AddSingleton<GeneradorHashtags>();
 builder.Services.AddSingleton<IPasswordHasher, Sha256PasswordHasher>();
 
 // 4. Patrón Strategy: se registran ambas estrategias concretas; el
