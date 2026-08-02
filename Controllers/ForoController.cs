@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using VeryLike.Domain.Interfaces;
 using VeryLike.Domain.Models;
 using VeryLike.Domain.Servicios;
+using VeryLike.Web.Models;
 using VeryLike.Web.Services;
 
 namespace VeryLike.Web.Controllers
@@ -13,14 +14,17 @@ namespace VeryLike.Web.Controllers
         private readonly IForoApiClient _foroApiClient;
         private readonly IMensajeForoRepository _foroRepository;
         private readonly ICatalogoRepository _catalogoRepository;
+        private readonly ICalificacionRepository _calificacionRepository;
         private readonly GeneradorHashtags _generadorHashtags;
 
         public ForoController(
             IForoApiClient foroApiClient,
             IMensajeForoRepository foroRepository,
             ICatalogoRepository catalogoRepository,
+            ICalificacionRepository calificacionRepository,
             GeneradorHashtags generadorHashtags)
         {
+            _calificacionRepository = calificacionRepository;
             _foroApiClient = foroApiClient;
             _foroRepository = foroRepository;
             _catalogoRepository = catalogoRepository;
@@ -29,12 +33,16 @@ namespace VeryLike.Web.Controllers
 
         public async Task<IActionResult> Index(string? hashtag)
         {
-            var mensajes = string.IsNullOrWhiteSpace(hashtag)
-                ? await _foroApiClient.ObtenerTodosAsync()
-                : await _foroApiClient.ObtenerPorHashtagAsync(hashtag);
+            var modelo = new ForoViewModel
+            {
+                Mensajes = string.IsNullOrWhiteSpace(hashtag)
+                    ? await _foroApiClient.ObtenerTodosAsync()
+                    : await _foroApiClient.ObtenerPorHashtagAsync(hashtag),
+                ResenasRecientes = await _calificacionRepository.ObtenerResenasRecientesAsync(5),
+                HashtagActivo = hashtag
+            };
 
-            ViewData["HashtagActivo"] = hashtag;
-            return View(mensajes);
+            return View(modelo);
         }
 
         [HttpPost]
@@ -52,7 +60,7 @@ namespace VeryLike.Web.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View("Index", await _foroApiClient.ObtenerTodosAsync());
+                return RedirectToAction(nameof(Index));
             }
 
             nuevoMensaje.Hashtags = await GenerarHashtagsAsync(nuevoMensaje.Contenido);
@@ -92,6 +100,53 @@ namespace VeryLike.Web.Controllers
             await _foroRepository.GuardarCambiosAsync();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Editar(int id, string contenido)
+        {
+            var mensaje = await ObtenerPropioAsync(id);
+            if (mensaje is null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (!string.IsNullOrWhiteSpace(contenido))
+            {
+                mensaje.Contenido = contenido.Trim();
+                mensaje.Hashtags = await GenerarHashtagsAsync(mensaje.Contenido);
+                await _foroRepository.GuardarCambiosAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Eliminar(int id)
+        {
+            var mensaje = await ObtenerPropioAsync(id);
+            if (mensaje is not null)
+            {
+                await _foroRepository.EliminarAsync(mensaje);
+                await _foroRepository.GuardarCambiosAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        /// <summary>Devuelve el mensaje solo si lo escribió el usuario de la sesión.</summary>
+        private async Task<MensajeForo?> ObtenerPropioAsync(int id)
+        {
+            var autor = HttpContext.Session.GetString(ClaveSesion);
+            if (string.IsNullOrEmpty(autor))
+            {
+                return null;
+            }
+
+            var mensaje = await _foroRepository.ObtenerPorIdAsync(id);
+            return mensaje is not null && mensaje.NombreUsuario == autor ? mensaje : null;
         }
 
         private async Task<List<string>> GenerarHashtagsAsync(string contenido)

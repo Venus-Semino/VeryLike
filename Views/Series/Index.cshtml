@@ -87,12 +87,7 @@
                                 Ver en @(string.IsNullOrWhiteSpace(item.PlataformaStreaming) ? "streaming" : item.PlataformaStreaming)
                             </a>
 
-                            <form asp-controller="Pizarron" asp-action="AgregarAParaVer" method="post" class="mt-2" onclick="event.stopPropagation();">
-                                <input type="hidden" name="contenidoId" value="@item.Id" />
-                                <button type="submit" class="btn btn-sm w-100" style="border: 1px solid var(--border-glass); color: var(--text-main);">
-                                    + Agregar a Para Ver
-                                </button>
-                            </form>
+                            @await Html.PartialAsync("_BotonParaVer", item.Id)
                         </div>
                     </div>
                 </div>

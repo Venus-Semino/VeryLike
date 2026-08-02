@@ -12,6 +12,9 @@ namespace VeryLike.Domain.Interfaces
         /// <summary>Reseñas públicas de un contenido, de la más reciente a la más antigua.</summary>
         Task<List<Calificacion>> ObtenerResenasPublicasAsync(int contenidoId);
 
+        /// <summary>Últimas reseñas públicas de cualquier título, para el foro.</summary>
+        Task<List<Calificacion>> ObtenerResenasRecientesAsync(int cantidad);
+
         /// <summary>Promedio y cantidad de calificaciones de la comunidad.</summary>
         Task<(double Promedio, int Total)> ObtenerResumenAsync(int contenidoId);
 

@@ -38,6 +38,17 @@ namespace VeryLike.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public Task<List<Calificacion>> ObtenerResenasRecientesAsync(int cantidad)
+        {
+            return _context.Calificaciones
+                .Include(c => c.Usuario)
+                .Include(c => c.Contenido)
+                .Where(c => c.ResenaPublica != null && c.ResenaPublica != "")
+                .OrderByDescending(c => c.FechaActualizacion)
+                .Take(cantidad)
+                .ToListAsync();
+        }
+
         public async Task<(double Promedio, int Total)> ObtenerResumenAsync(int contenidoId)
         {
             var resumen = await _context.Calificaciones

@@ -6,7 +6,7 @@ using VeryLike.Web.Services;
 
 namespace VeryLike.Web.Controllers
 {
-    public class CatalogoController : Controller
+    public class CatalogoController : ControladorConParaVer
     {
         private readonly SincronizadorCatalogoService _sincronizador;
         private readonly ICatalogoRepository _catalogoRepository;
@@ -16,6 +16,7 @@ namespace VeryLike.Web.Controllers
             SincronizadorCatalogoService sincronizador,
             ICatalogoRepository catalogoRepository,
             IUsuarioRepository usuarioRepository)
+            : base(usuarioRepository)
         {
             _sincronizador = sincronizador;
             _catalogoRepository = catalogoRepository;
@@ -26,6 +27,7 @@ namespace VeryLike.Web.Controllers
         public async Task<IActionResult> Cinema()
         {
             var catalogo = await _catalogoRepository.ObtenerTodoAsync();
+            await CargarParaVerIdsAsync();
 
             var modelo = new CinemaViewModel
             {
@@ -64,6 +66,7 @@ namespace VeryLike.Web.Controllers
         public async Task<IActionResult> Buscar(string? q)
         {
             var modelo = new BusquedaViewModel { Consulta = q };
+            await CargarParaVerIdsAsync();
 
             if (!string.IsNullOrWhiteSpace(q))
             {

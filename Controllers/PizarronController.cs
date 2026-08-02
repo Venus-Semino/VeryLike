@@ -68,6 +68,7 @@ namespace VeryLike.Web.Controllers
 
             var motor = new MotorDeRecomendacion(estrategia);
             var paraVerIds = modelo.ParaVer.Select(p => p.Id).ToHashSet();
+            ViewData["ParaVerIds"] = paraVerIds;
 
             modelo.Recomendadas = motor.Recomendar(usuario, catalogo)
                 .Where(c => !paraVerIds.Contains(c.Id))
@@ -92,7 +93,7 @@ namespace VeryLike.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AgregarAParaVer(int contenidoId)
+        public async Task<IActionResult> AgregarAParaVer(int contenidoId, string? retorno = null)
         {
             var nombreSesion = HttpContext.Session.GetString("UsuarioNombre");
             if (nombreSesion is null) return RedirectToAction("Login", "Auth");
@@ -104,12 +105,12 @@ namespace VeryLike.Web.Controllers
                 await _usuarioRepository.GuardarCambiosAsync();
             }
 
-            return RedirectToAction(nameof(Index));
+            return Volver(retorno, nameof(Index));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> QuitarDeParaVer(int contenidoId)
+        public async Task<IActionResult> QuitarDeParaVer(int contenidoId, string? retorno = null)
         {
             var nombreSesion = HttpContext.Session.GetString("UsuarioNombre");
             if (nombreSesion is null) return RedirectToAction("Login", "Auth");
@@ -121,7 +122,15 @@ namespace VeryLike.Web.Controllers
                 await _usuarioRepository.GuardarCambiosAsync();
             }
 
-            return RedirectToAction(nameof(ParaVer));
+            return Volver(retorno, nameof(ParaVer));
+        }
+
+        /// <summary>Vuelve a la página desde la que se tocó el botón, si es una ruta local.</summary>
+        private IActionResult Volver(string? retorno, string accionPorDefecto)
+        {
+            return !string.IsNullOrWhiteSpace(retorno) && Url.IsLocalUrl(retorno)
+                ? Redirect(retorno)
+                : RedirectToAction(accionPorDefecto);
         }
     }
 }

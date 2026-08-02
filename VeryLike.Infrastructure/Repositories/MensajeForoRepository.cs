@@ -55,6 +55,13 @@ namespace VeryLike.Infrastructure.Repositories
             await _context.MensajesForo.AddAsync(mensaje);
         }
 
+        public Task EliminarAsync(MensajeForo mensaje)
+        {
+            _context.MensajesForo.RemoveRange(mensaje.Comentarios);
+            _context.MensajesForo.Remove(mensaje);
+            return Task.CompletedTask;
+        }
+
         public Task GuardarCambiosAsync()
         {
             return _context.SaveChangesAsync();

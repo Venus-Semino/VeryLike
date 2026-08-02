@@ -16,6 +16,9 @@ namespace VeryLike.Domain.Interfaces
         Task<MensajeForo?> ObtenerPorIdAsync(int id);
 
         Task AgregarAsync(MensajeForo mensaje);
+
+        /// <summary>Borra el mensaje y, si es una publicación, sus comentarios.</summary>
+        Task EliminarAsync(MensajeForo mensaje);
         Task GuardarCambiosAsync();
     }
 }

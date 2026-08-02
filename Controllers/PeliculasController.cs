@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using VeryLike.Domain.Interfaces;
 using VeryLike.Web.Services;
 
 namespace VeryLike.Web.Controllers
 {
-    public class PeliculasController : Controller
+    public class PeliculasController : ControladorConParaVer
     {
         private readonly ICatalogoApiClient _catalogoApiClient;
 
-        public PeliculasController(ICatalogoApiClient catalogoApiClient)
+        public PeliculasController(ICatalogoApiClient catalogoApiClient, IUsuarioRepository usuarioRepositorio)
+            : base(usuarioRepositorio)
         {
             _catalogoApiClient = catalogoApiClient;
         }
@@ -15,6 +17,7 @@ namespace VeryLike.Web.Controllers
         public async Task<IActionResult> Index(string? genero)
         {
             var peliculas = await _catalogoApiClient.ObtenerPeliculasAsync();
+            await CargarParaVerIdsAsync();
 
             ViewData["Generos"] = peliculas.SelectMany(p => p.Genero)
                 .Distinct(StringComparer.OrdinalIgnoreCase)

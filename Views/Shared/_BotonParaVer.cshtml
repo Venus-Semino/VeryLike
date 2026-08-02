@@ -1,0 +1,35 @@
+@model int
+
+@{
+    var paraVerIds = ViewData["ParaVerIds"] as HashSet<int> ?? new HashSet<int>();
+    var enLista = paraVerIds.Contains(Model);
+    var autenticado = !string.IsNullOrEmpty(Context.Session.GetString("UsuarioNombre"));
+    var retorno = $"{Context.Request.Path}{Context.Request.QueryString}";
+}
+
+@if (autenticado)
+{
+    <form asp-controller="Pizarron"
+          asp-action="@(enLista ? "QuitarDeParaVer" : "AgregarAParaVer")"
+          method="post"
+          class="mt-2"
+          onclick="event.stopPropagation();">
+        <input type="hidden" name="contenidoId" value="@Model" />
+        <input type="hidden" name="retorno" value="@retorno" />
+        @if (enLista)
+        {
+            <button type="submit" class="btn btn-sm w-100"
+                    style="border: 1px solid var(--accent-color); color: var(--accent-color);"
+                    title="Quitar de tu lista">
+                &#10003; En tu lista
+            </button>
+        }
+        else
+        {
+            <button type="submit" class="btn btn-sm w-100"
+                    style="border: 1px solid var(--border-glass); color: var(--text-main);">
+                + Agregar a Para Ver
+            </button>
+        }
+    </form>
+}
