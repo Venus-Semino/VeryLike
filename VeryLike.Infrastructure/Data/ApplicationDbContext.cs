@@ -20,6 +20,7 @@ namespace VeryLike.Infrastructure.Data
         public DbSet<Serie> Series => Set<Serie>();
         public DbSet<Usuario> Usuarios => Set<Usuario>();
         public DbSet<MensajeForo> MensajesForo => Set<MensajeForo>();
+        public DbSet<Calificacion> Calificaciones => Set<Calificacion>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,6 +29,7 @@ namespace VeryLike.Infrastructure.Data
             ConfigurarCatalogo(modelBuilder);
             ConfigurarUsuarios(modelBuilder);
             ConfigurarForo(modelBuilder);
+            ConfigurarCalificaciones(modelBuilder);
             SembrarCatalogoDeEjemplo(modelBuilder);
         }
 
@@ -145,6 +147,25 @@ namespace VeryLike.Infrastructure.Data
             {
                 entity.HasKey(m => m.Id);
                 entity.Property(m => m.FechaPublicacion).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            });
+        }
+
+        private static void ConfigurarCalificaciones(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Calificacion>(entity =>
+            {
+                entity.HasKey(c => c.Id);
+                entity.HasIndex(c => new { c.UsuarioId, c.ContenidoId }).IsUnique();
+
+                entity.HasOne(c => c.Usuario)
+                      .WithMany()
+                      .HasForeignKey(c => c.UsuarioId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(c => c.Contenido)
+                      .WithMany()
+                      .HasForeignKey(c => c.ContenidoId)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }

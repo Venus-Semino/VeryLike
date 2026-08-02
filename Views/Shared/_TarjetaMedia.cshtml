@@ -1,0 +1,34 @@
+@model VeryLike.Domain.Models.ContenidoAudiovisual
+@{
+    var esPelicula = Model is VeryLike.Domain.Models.Pelicula;
+    var pelicula = Model as VeryLike.Domain.Models.Pelicula;
+    var serie = Model as VeryLike.Domain.Models.Serie;
+}
+
+<div class="glass-card media-card @(esPelicula ? "movie-type" : "series-type") d-flex flex-column"
+     data-bs-toggle="modal" data-bs-target="#modalDetalleMedia"
+     style="cursor: pointer;"
+     data-id="@Model.Id"
+     data-tipo="@Model.Tipo.ToLowerInvariant()"
+     data-titulo="@Model.Nombre"
+     data-duracion="@(pelicula?.Duracion)"
+     data-temporadas="@(serie?.Temporadas.ToString())"
+     data-sinopsis="@Model.Sinopsis"
+     data-estudio="@Model.Studio"
+     data-calificacion="@Model.Calificacion"
+     data-poster="@Model.PosterUrl"
+     data-enlace="@Model.EnlaceStreaming"
+     data-plataformas="@Model.PlataformaStreaming">
+    @if (!string.IsNullOrWhiteSpace(Model.PosterUrl))
+    {
+        <img src="@Model.PosterUrl" alt="Póster de @Model.Nombre" class="media-poster w-100" style="object-fit: cover;" loading="lazy" />
+    }
+    else
+    {
+        <div class="media-poster text-muted small">Sin Portada</div>
+    }
+    <div class="p-3 text-center">
+        <h6 class="mb-1 text-truncate">@Model.Nombre</h6>
+        <span class="small" style="color: @(esPelicula ? "var(--accent-color)" : "var(--text-muted)");">@(esPelicula ? "Película" : "Serie")</span>
+    </div>
+</div>

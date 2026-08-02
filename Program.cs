@@ -29,6 +29,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<ICalificacionRepository, CalificacionRepository>();
 builder.Services.AddSingleton<IPasswordHasher, Sha256PasswordHasher>();
 
 // 4. Patrón Strategy: se registran ambas estrategias concretas; el

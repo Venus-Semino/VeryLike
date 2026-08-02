@@ -21,6 +21,7 @@
                     <div class="glass-card h-100 d-flex flex-column"
                          data-bs-toggle="modal" data-bs-target="#modalDetalleMedia"
                          style="cursor: pointer;"
+                         data-id="@item.Id"
                          data-tipo="@item.Tipo.ToLowerInvariant()"
                          data-titulo="@item.Nombre"
                          data-duracion="@(item is VeryLike.Domain.Models.Pelicula p ? p.Duracion : null)"

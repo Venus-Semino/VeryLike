@@ -30,37 +30,17 @@
                 </div>
 
                 <div class="horizontal-scroll-container">
-
-                    <div class="glass-card media-card movie-type d-flex flex-column"
-                         data-bs-toggle="modal" data-bs-target="#modalDetalleMedia"
-                         data-tipo="pelicula"
-                         data-titulo="Drive My Car"
-                         data-duracion="2h 59m"
-                         data-sinopsis="Un actor y director de teatro lidia con la muerte de su esposa mientras dirige una producción de Tío Vania en Hiroshima."
-                         data-estudio="Bitters End"
-                         data-plataformas="MUBI, Apple TV">
-                        <div class="media-poster text-muted small">Sin Portada</div>
-                        <div class="p-3 text-center">
-                            <h6 class="mb-1 text-truncate">Drive My Car</h6>
-                            <span class="small" style="color: var(--accent-color);">Película</span>
-                        </div>
-                    </div>
-
-                    <div class="glass-card media-card series-type d-flex flex-column"
-                         data-bs-toggle="modal" data-bs-target="#modalDetalleMedia"
-                         data-tipo="serie"
-                         data-titulo="Mr. Robot"
-                         data-temporadas="4"
-                         data-episodios="45"
-                         data-sinopsis="Elliot, un brillante pero inestable ingeniero de ciberseguridad, es reclutado por un líder misterioso para derrocar a la corporación que le pagan por proteger."
-                         data-estudio="USA Network"
-                         data-plataformas="Prime Video">
-                        <div class="media-poster text-muted small">Sin Portada</div>
-                        <div class="p-3 text-center">
-                            <h6 class="mb-1 text-truncate">Mr. Robot</h6>
-                            <span class="small text-info">Serie</span>
-                        </div>
-                    </div>
+                    @if (Model.ParaVer.Any())
+                    {
+                        @foreach (var item in Model.ParaVer)
+                        {
+                            @await Html.PartialAsync("_TarjetaMedia", item)
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted small m-0">Tu lista "Para Ver" está vacía.</p>
+                    }
                 </div>
             </div>
 
@@ -74,21 +54,10 @@
                 </div>
 
                 <div class="horizontal-scroll-container">
-
-                    <div class="glass-card media-card movie-type d-flex flex-column"
-                         data-bs-toggle="modal" data-bs-target="#modalDetalleMedia"
-                         data-tipo="pelicula"
-                         data-titulo="Perfect Blue"
-                         data-duracion="1h 21m"
-                         data-sinopsis="Una cantante pop que decide dejar la música para convertirse en actriz se enfrenta a eventos perturbadores y a un fanático obsesionado que distorsionan su realidad."
-                         data-estudio="Madhouse"
-                         data-plataformas="Crunchyroll">
-                        <div class="media-poster text-muted small">Sin Portada</div>
-                        <div class="p-3 text-center">
-                            <h6 class="mb-1 text-truncate">Perfect Blue</h6>
-                            <span class="small text-muted">+ Agregar a Para Ver</span>
-                        </div>
-                    </div>
+                    @foreach (var item in Model.Recomendadas)
+                    {
+                        @await Html.PartialAsync("_TarjetaMedia", item)
+                    }
                 </div>
             </div>
 

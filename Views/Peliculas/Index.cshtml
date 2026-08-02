@@ -1,14 +1,14 @@
-﻿@model IEnumerable<VeryLike.Domain.Models.Serie>
+@model IEnumerable<VeryLike.Domain.Models.Pelicula>
 @{
-    ViewData["Title"] = "Series";
+    ViewData["Title"] = "Catálogo VeryLike";
     var generos = ViewData["Generos"] as List<string> ?? new List<string>();
     var generoSeleccionado = ViewData["GeneroSeleccionado"] as string;
 }
 
 <div class="container mt-5">
     <div class="text-center mb-4">
-        <h1 class="display-6 fw-light text-uppercase" style="letter-spacing: 4px;">Series</h1>
-        <p class="text-muted small">Catálogo de producciones por temporadas</p>
+        <h1 class="display-6 fw-light text-uppercase tracking-widest" style="letter-spacing: 4px;">PELÍCULAS</h1>
+        <p class="text-muted small">Registra todas las películas que viste o vas a ver</p>
     </div>
 
     <form method="get" asp-action="Index" class="d-flex justify-content-center align-items-center gap-3 mb-5 flex-wrap">
@@ -39,14 +39,26 @@
             @foreach (var item in Model)
             {
                 <div class="col-md-4">
-                    <div class="glass-card h-100 d-flex flex-column">
+                    <div class="glass-card h-100 d-flex flex-column"
+                         data-bs-toggle="modal" data-bs-target="#modalDetalleMedia"
+                         style="cursor: pointer;"
+                         data-id="@item.Id"
+                         data-tipo="pelicula"
+                         data-titulo="@item.Nombre"
+                         data-duracion="@item.Duracion"
+                         data-sinopsis="@item.Sinopsis"
+                         data-estudio="@item.Studio"
+                         data-calificacion="@item.Calificacion"
+                         data-poster="@item.PosterUrl"
+                         data-enlace="@item.EnlaceStreaming"
+                         data-plataformas="@item.PlataformaStreaming">
                         @if (!string.IsNullOrWhiteSpace(item.PosterUrl))
                         {
                             <img src="@item.PosterUrl" alt="Póster de @item.Nombre" class="cover-placeholder-img" loading="lazy" />
                         }
                         else
                         {
-                            <div class="cover-placeholder">Sin Imagen de Portada</div>
+                            <div class="cover-placeholder">Sin Portada Asignada</div>
                         }
 
                         <div class="p-4 d-flex flex-column flex-grow-1">
@@ -57,15 +69,15 @@
                             <p class="text-muted small flex-grow-1" style="line-height: 1.6;">@item.Sinopsis</p>
 
                             <div class="d-flex justify-content-between align-items-center mt-3 pt-3" style="border-top: 1px solid var(--border-glass);">
-                                <span class="small text-muted">Temporadas: @item.Temporadas • @item.Studio</span>
+                                <span class="small text-muted">@item.Duracion</span>
                                 <span class="fw-bold" style="color: var(--accent-color);">@item.Calificacion / 5</span>
                             </div>
 
-                            <a href="@item.EnlaceStreaming" target="_blank" rel="noopener" class="btn btn-streaming w-100 mt-3">
+                            <a href="@item.EnlaceStreaming" target="_blank" rel="noopener" class="btn btn-streaming w-100 mt-3" onclick="event.stopPropagation();">
                                 Ver en @(string.IsNullOrWhiteSpace(item.PlataformaStreaming) ? "streaming" : item.PlataformaStreaming)
                             </a>
 
-                            <form asp-controller="Pizarron" asp-action="AgregarAParaVer" method="post" class="mt-2">
+                            <form asp-controller="Pizarron" asp-action="AgregarAParaVer" method="post" class="mt-2" onclick="event.stopPropagation();">
                                 <input type="hidden" name="contenidoId" value="@item.Id" />
                                 <button type="submit" class="btn btn-sm w-100" style="border: 1px solid var(--border-glass); color: var(--text-main);">
                                     + Agregar a Para Ver
@@ -79,8 +91,14 @@
         else
         {
             <div class="col-12 text-center py-5">
-                <div class="text-muted fw-light">NO HAY SERIES QUE COINCIDAN CON ESE FILTRO.</div>
+                <div class="text-muted fw-light">NO HAY PELÍCULAS QUE COINCIDAN CON ESE FILTRO.</div>
             </div>
         }
     </div>
+
+    @await Html.PartialAsync("_ModalDetalles")
+
+    @section Scripts {
+        <script src="~/js/pizarron.js" asp-append-version="true"></script>
+    }
 </div>
