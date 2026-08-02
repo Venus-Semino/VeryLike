@@ -2,12 +2,11 @@ name: CI VeryLike
 
 on:
   push:
-    branches: [ "main", "pipeline-ci" ]
+    branches: [ "main", "master", "pipeline-ci" ]
   pull_request:
-    branches: [ "main" ]
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,12 +18,8 @@ jobs:
       with:
         dotnet-version: '10.0.x'
 
-    - name: Limpiar archivos temporales locales antiguos
-      run: |
-        find . -type d \( -name "obj" -o -name "bin" \) -exec rm -rf {} +
-
     - name: Restaurar dependencias
       run: dotnet restore VeryLike.Web.csproj
 
-    - name: Compilar proyecto principal
-      run: dotnet build VeryLike.Web.csproj --no-restore
+    - name: Compilar solución
+      run: dotnet build VeryLike.Web.csproj --no-restore --configuration Release
