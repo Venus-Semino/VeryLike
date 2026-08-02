@@ -5,6 +5,9 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>aspnet-VeryLike-220d0dfd-dd49-49a0-b7ba-a8558ceca625</UserSecretsId>
+		<!-- Web vive en la raíz del repo: sin esto, sus subcarpetas de proyecto
+		     (Domain/Infrastructure) se compilarían también dentro de Web. -->
+		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -12,8 +15,13 @@
 		     por HTTP (ver Services/), no referencia sus ensamblados. Solo
 		     depende de Domain (modelos/DTOs compartidos) e Infrastructure
 		     (EF Core, para Usuario/Auth, que sí vive en este proceso). -->
-		<ProjectReference Include="..\VeryLike.Domain\VeryLike.Domain.csproj" />
-		<ProjectReference Include="..\VeryLike.Infrastructure\VeryLike.Infrastructure.csproj" />
+		<ProjectReference Include="VeryLike.Domain/VeryLike.Domain.csproj" />
+		<ProjectReference Include="VeryLike.Infrastructure/VeryLike.Infrastructure.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="**/*.cs"
+		         Exclude="VeryLike.Domain/**/*.cs;VeryLike.Infrastructure/**/*.cs;bin/**/*.cs;obj/**/*.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
