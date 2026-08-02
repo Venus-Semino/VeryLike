@@ -44,7 +44,8 @@ namespace VeryLike.Domain.Servicios
 
             foreach (Match coincidencia in HashtagExplicito.Matches(contenido))
             {
-                Agregar(etiquetas, AFormatoEtiqueta(coincidencia.Groups[1].Value));
+                // Los escritos por el autor se respetan tal cual.
+                Agregar(etiquetas, coincidencia.Groups[1].Value);
             }
 
             foreach (var titulo in titulosCatalogo)

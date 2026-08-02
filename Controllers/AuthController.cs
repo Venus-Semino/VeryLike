@@ -42,6 +42,7 @@ namespace VeryLike.Web.Controllers
 
             nuevoUsuario.Contrasena = _passwordHasher.Hash(nuevoUsuario.Contrasena);
             await _usuarioRepository.AgregarAsync(nuevoUsuario);
+            await _usuarioRepository.GuardarCambiosAsync();
 
             HttpContext.Session.SetString(ClaveSesion, nuevoUsuario.NombreUsuario);
             return RedirectToAction("Index", "Pizarron");

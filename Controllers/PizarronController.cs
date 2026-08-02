@@ -87,6 +87,7 @@ namespace VeryLike.Web.Controllers
             if (usuario != null)
             {
                 await _usuarioRepository.AgregarAParaVerAsync(usuario.Id, contenidoId);
+                await _usuarioRepository.GuardarCambiosAsync();
             }
 
             return RedirectToAction(nameof(Index));
@@ -103,6 +104,7 @@ namespace VeryLike.Web.Controllers
             if (usuario != null)
             {
                 await _usuarioRepository.QuitarDeParaVerAsync(usuario.Id, contenidoId);
+                await _usuarioRepository.GuardarCambiosAsync();
             }
 
             return RedirectToAction(nameof(ParaVer));
