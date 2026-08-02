@@ -21,7 +21,7 @@
 
 	<ItemGroup>
 		<Compile Include="**/*.cs"
-		         Exclude="VeryLike.Domain/**/*.cs;VeryLike.Infrastructure/**/*.cs;bin/**/*.cs;obj/**/*.cs" />
+		         Exclude="VeryLike.Domain/**/*.cs;VeryLike.Infrastructure/**/*.cs;VeryLike.Catalog.API/**/*.cs;VeryLike.Forum.API/**/*.cs;bin/**/*.cs;obj/**/*.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

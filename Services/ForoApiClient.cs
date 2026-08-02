@@ -44,10 +44,18 @@ namespace VeryLike.Web.Services
             }
         }
 
-        /// <summary>El filtrado por etiqueta todavía no existe en Forum.API: se resuelve en local.</summary>
-        public Task<List<MensajeForo>> ObtenerPorHashtagAsync(string hashtag)
+        public async Task<List<MensajeForo>> ObtenerPorHashtagAsync(string hashtag)
         {
-            return _foroLocal.ObtenerPorHashtagAsync(hashtag);
+            try
+            {
+                var ruta = $"api/foro/hashtag/{Uri.EscapeDataString(hashtag)}";
+                return await _http.GetFromJsonAsync<List<MensajeForo>>(ruta, _opciones) ?? new();
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogWarning(ex, "No se pudo contactar a Forum.API; se filtra en el foro local.");
+                return await _foroLocal.ObtenerPorHashtagAsync(hashtag);
+            }
         }
 
         public async Task<bool> PublicarAsync(MensajeForo nuevoMensaje)
