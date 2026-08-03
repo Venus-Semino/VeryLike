@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="VeryLike.Domain/VeryLike.Domain.csproj" />
+  <Project Path="VeryLike.Infrastructure/VeryLike.Infrastructure.csproj" />
+  <Project Path="VeryLike.Catalog.API/VeryLike.Catalog.API.csproj" />
+  <Project Path="VeryLike.Forum.API/VeryLike.Forum.API.csproj" />
+  <Project Path="VeryLike.Web.csproj" />
+</Solution>
