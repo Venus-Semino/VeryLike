@@ -36,7 +36,7 @@ docker compose up --build
 - Catalog.API (Swagger): <http://localhost:8081/swagger>
 - Forum.API (Swagger): <http://localhost:8082/swagger>
 
-Para que la sincronización con TMDB funcione, exporta tu API key antes de levantar los contenedores:
+Para que la sincronización con TMDB funcione, exporta tu API key antes de levantar los contenedores: 
 
 ```bash
 export TMDB_API_KEY=tu_api_key_de_tmdb
