@@ -1,0 +1,40 @@
+services:
+  catalog-api:
+    build:
+      context: .
+      dockerfile: VeryLike.Catalog.API/Dockerfile
+    ports:
+      - "8081:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: ${CONNECTION_STRING}
+      Cors__OrigenesPermitidos__0: http://localhost:8080
+      Tmdb__ApiKey: ${TMDB_API_KEY}
+
+  forum-api:
+    build:
+      context: .
+      dockerfile: VeryLike.Forum.API/Dockerfile
+    ports:
+      - "8082:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: ${CONNECTION_STRING}
+      Cors__OrigenesPermitidos__0: http://localhost:8080
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: ${CONNECTION_STRING}
+      ServiceUrls__CatalogApi: http://catalog-api:8080/
+      ServiceUrls__ForumApi: http://forum-api:8080/
+      Tmdb__ApiKey: ${TMDB_API_KEY}
+      Database__ApplyMigrations: "false"
+    depends_on:
+      - catalog-api
+      - forum-api

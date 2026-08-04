@@ -1,5 +1,8 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using VeryLike.Infrastructure.Data;
 
 #nullable disable
 
@@ -8,6 +11,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace VeryLike.Infrastructure.Migrations
 {
     /// <inheritdoc />
+    [DbContext(typeof(ApplicationDbContext))]
+    [Migration("20260801202645_InicialVeryLike")]
     public partial class InicialVeryLike : Migration
     {
         /// <inheritdoc />
@@ -18,19 +23,19 @@ namespace VeryLike.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Genero = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AnioPublicacion = table.Column<int>(type: "int", nullable: false),
-                    PlataformaStreaming = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Sinopsis = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
-                    Studio = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Calificacion = table.Column<double>(type: "float", nullable: false),
-                    PosterUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IdExterno = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    TipoDiscriminador = table.Column<string>(type: "nvarchar(21)", maxLength: 21, nullable: false),
-                    Duracion = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Temporadas = table.Column<int>(type: "int", nullable: true)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nombre = table.Column<string>(maxLength: 200, nullable: false),
+                    Genero = table.Column<string>(nullable: false),
+                    AnioPublicacion = table.Column<int>(nullable: false),
+                    PlataformaStreaming = table.Column<string>(maxLength: 100, nullable: false),
+                    Sinopsis = table.Column<string>(maxLength: 2000, nullable: false),
+                    Studio = table.Column<string>(maxLength: 150, nullable: false),
+                    Calificacion = table.Column<double>(nullable: false),
+                    PosterUrl = table.Column<string>(nullable: true),
+                    IdExterno = table.Column<string>(maxLength: 50, nullable: true),
+                    TipoDiscriminador = table.Column<string>(maxLength: 21, nullable: false),
+                    Duracion = table.Column<string>(nullable: true),
+                    Temporadas = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -42,10 +47,10 @@ namespace VeryLike.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NombreUsuario = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Contenido = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
-                    FechaPublicacion = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    NombreUsuario = table.Column<string>(maxLength: 50, nullable: false),
+                    Contenido = table.Column<string>(maxLength: 2000, nullable: false),
+                    FechaPublicacion = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
                 },
                 constraints: table =>
                 {
@@ -57,10 +62,10 @@ namespace VeryLike.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Correo = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    NombreUsuario = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    Contrasena = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Correo = table.Column<string>(maxLength: 150, nullable: false),
+                    NombreUsuario = table.Column<string>(maxLength: 30, nullable: false),
+                    Contrasena = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -71,8 +76,8 @@ namespace VeryLike.Infrastructure.Migrations
                 name: "UsuariosParaVer",
                 columns: table => new
                 {
-                    ListaParaVerId = table.Column<int>(type: "int", nullable: false),
-                    UsuarioId = table.Column<int>(type: "int", nullable: false)
+                    ListaParaVerId = table.Column<int>(nullable: false),
+                    UsuarioId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -94,6 +99,7 @@ namespace VeryLike.Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "Contenidos",
                 columns: new[] { "Id", "AnioPublicacion", "Calificacion", "Duracion", "Genero", "IdExterno", "Nombre", "PlataformaStreaming", "PosterUrl", "Sinopsis", "Studio", "TipoDiscriminador" },
+                columnTypes: new[] { "integer", "integer", "double precision", "text", "text", "text", "character varying(200)", "character varying(100)", "text", "character varying(2000)", "character varying(150)", "character varying(21)" },
                 values: new object[,]
                 {
                     { 1, 1997, 4.0, "1h 21m", "Psicológico|Animación", null, "Perfect Blue", "Crunchyroll", null, "Una cantante pop convertida en actriz ve cómo su sentido de la realidad se desmorona al ser acosada por un fan obsesivo.", "Madhouse", "Pelicula" },
@@ -103,6 +109,7 @@ namespace VeryLike.Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "Contenidos",
                 columns: new[] { "Id", "AnioPublicacion", "Calificacion", "Genero", "IdExterno", "Nombre", "PlataformaStreaming", "PosterUrl", "Sinopsis", "Studio", "Temporadas", "TipoDiscriminador" },
+                columnTypes: new[] { "integer", "integer", "double precision", "text", "text", "character varying(200)", "character varying(100)", "text", "character varying(2000)", "character varying(150)", "integer", "character varying(21)" },
                 values: new object[,]
                 {
                     { 3, 2024, 5.0, "Drama histórico", null, "Shōgun", "Disney+", null, "Un señor feudal japonés y un navegante inglés cambian el rumbo del Japón del siglo XVII.", "FX Productions", 1, "Serie" },

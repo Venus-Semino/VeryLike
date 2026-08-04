@@ -1,5 +1,8 @@
 using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using VeryLike.Infrastructure.Data;
 
 #nullable disable
 
@@ -8,6 +11,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace VeryLike.Infrastructure.Migrations
 {
     /// <inheritdoc />
+    [DbContext(typeof(ApplicationDbContext))]
+    [Migration("20260802052219_AgregarCalificaciones")]
     public partial class AgregarCalificaciones : Migration
     {
         /// <inheritdoc />
@@ -18,13 +23,13 @@ namespace VeryLike.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UsuarioId = table.Column<int>(type: "int", nullable: false),
-                    ContenidoId = table.Column<int>(type: "int", nullable: false),
-                    Puntaje = table.Column<double>(type: "float", nullable: false),
-                    ResenaPublica = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
-                    ResenaPrivada = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
-                    FechaActualizacion = table.Column<DateTime>(type: "datetime2", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UsuarioId = table.Column<int>(nullable: false),
+                    ContenidoId = table.Column<int>(nullable: false),
+                    Puntaje = table.Column<double>(nullable: false),
+                    ResenaPublica = table.Column<string>(maxLength: 2000, nullable: true),
+                    ResenaPrivada = table.Column<string>(maxLength: 2000, nullable: true),
+                    FechaActualizacion = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {

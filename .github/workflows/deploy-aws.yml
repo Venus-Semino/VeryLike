@@ -1,0 +1,105 @@
+name: Deploy VeryLike to ECS
+
+on:
+  push:
+    branches: [pipeline-ci]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  ECR_REGISTRY: ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
+  ECS_CLUSTER: ${{ vars.ECS_CLUSTER }}
+  ECS_EXECUTION_ROLE_ARN: ${{ vars.ECS_EXECUTION_ROLE_ARN }}
+  ECS_TASK_ROLE_ARN: ${{ vars.ECS_TASK_ROLE_ARN }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore and build
+        run: dotnet build VeryLike.slnx --configuration Release
+
+      - name: Configure AWS credentials with OIDC
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Log in to ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push images
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/verylike-web:$IMAGE_TAG -f Dockerfile .
+          docker build -t $ECR_REGISTRY/verylike-catalog-api:$IMAGE_TAG -f VeryLike.Catalog.API/Dockerfile .
+          docker build -t $ECR_REGISTRY/verylike-forum-api:$IMAGE_TAG -f VeryLike.Forum.API/Dockerfile .
+          docker push $ECR_REGISTRY/verylike-web:$IMAGE_TAG
+          docker push $ECR_REGISTRY/verylike-catalog-api:$IMAGE_TAG
+          docker push $ECR_REGISTRY/verylike-forum-api:$IMAGE_TAG
+
+      - name: Fill AWS-specific task definition values
+        run: |
+          sed -i "s|REPLACE_WITH_ECS_EXECUTION_ROLE_ARN|$ECS_EXECUTION_ROLE_ARN|g" .aws/ecs/*.json
+          sed -i "s|REPLACE_WITH_ECS_TASK_ROLE_ARN|$ECS_TASK_ROLE_ARN|g" .aws/ecs/*.json
+          sed -i "s|REPLACE_WITH_AWS_REGION|$AWS_REGION|g" .aws/ecs/*.json
+
+      - name: Render web task definition
+        id: web-task
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: .aws/ecs/web.json
+          container-name: web
+          image: ${{ env.ECR_REGISTRY }}/verylike-web:${{ github.sha }}
+
+      - name: Deploy web
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.web-task.outputs.task-definition }}
+          service: ${{ vars.ECS_SERVICE_WEB }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
+
+      - name: Render catalog task definition
+        id: catalog-task
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: .aws/ecs/catalog-api.json
+          container-name: catalog-api
+          image: ${{ env.ECR_REGISTRY }}/verylike-catalog-api:${{ github.sha }}
+
+      - name: Deploy catalog API
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.catalog-task.outputs.task-definition }}
+          service: ${{ vars.ECS_SERVICE_CATALOG }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
+
+      - name: Render forum task definition
+        id: forum-task
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: .aws/ecs/forum-api.json
+          container-name: forum-api
+          image: ${{ env.ECR_REGISTRY }}/verylike-forum-api:${{ github.sha }}
+
+      - name: Deploy forum API
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.forum-task.outputs.task-definition }}
+          service: ${{ vars.ECS_SERVICE_FORUM }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true

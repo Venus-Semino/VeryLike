@@ -1,10 +1,10 @@
 # syntax=docker/dockerfile:1
 # Build de VeryLike.Web (frontend MVC).
-# IMPORTANTE: este Dockerfile se construye con el contexto en la RAÍZ de la
-# solución (junto a VeryLike.slnx), porque VeryLike.Web referencia proyectos
-# hermanos (Domain, Infrastructure):
+# IMPORTANTE: este Dockerfile se construye con el contexto en la raíz del
+# repositorio (junto a VeryLike.slnx), porque VeryLike.Web referencia
+# proyectos hermanos (Domain, Infrastructure):
 #
-#   docker build -f VeryLike/Dockerfile -t verylike-web:latest .
+#   docker build -f Dockerfile -t verylike-web:latest .
 #
 # ---------- Etapa 1: restaurar y compilar ----------
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
@@ -14,14 +14,14 @@ WORKDIR /src
 # si el código cambia pero las dependencias no, este paso no se repite.
 COPY VeryLike.Domain/VeryLike.Domain.csproj VeryLike.Domain/
 COPY VeryLike.Infrastructure/VeryLike.Infrastructure.csproj VeryLike.Infrastructure/
-COPY VeryLike/VeryLike.Web.csproj VeryLike/
-RUN dotnet restore VeryLike/VeryLike.Web.csproj
+COPY VeryLike.Web.csproj ./
+RUN dotnet restore VeryLike.Web.csproj
 
 # Ahora sí copiamos el resto del código fuente y publicamos.
 COPY VeryLike.Domain/ VeryLike.Domain/
 COPY VeryLike.Infrastructure/ VeryLike.Infrastructure/
-COPY VeryLike/ VeryLike/
-RUN dotnet publish VeryLike/VeryLike.Web.csproj -c Release -o /app/publish --no-restore
+COPY . ./
+RUN dotnet publish VeryLike.Web.csproj -c Release -o /app/publish --no-restore
 
 # ---------- Etapa 2: imagen de ejecución (runtime) ----------
 # La imagen final NO trae el SDK completo, solo el runtime de ASP.NET Core:

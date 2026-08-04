@@ -2,9 +2,14 @@
 
 #nullable disable
 
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using VeryLike.Infrastructure.Data;
+
 namespace VeryLike.Infrastructure.Migrations
 {
     /// <inheritdoc />
+    [DbContext(typeof(ApplicationDbContext))]
+    [Migration("20260802132939_ForoConComentariosYHashtags")]
     public partial class ForoConComentariosYHashtags : Migration
     {
         /// <inheritdoc />
@@ -13,14 +18,12 @@ namespace VeryLike.Infrastructure.Migrations
             migrationBuilder.AddColumn<string>(
                 name: "Hashtags",
                 table: "MensajesForo",
-                type: "nvarchar(max)",
                 nullable: false,
                 defaultValue: "");
 
             migrationBuilder.AddColumn<int>(
                 name: "MensajePadreId",
                 table: "MensajesForo",
-                type: "int",
                 nullable: true);
 
             migrationBuilder.CreateIndex(
