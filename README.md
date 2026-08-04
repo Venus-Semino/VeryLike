@@ -1,4 +1,4 @@
-# VeryLike
+# VERYLIKE
 
 Ecosistema cinematográfico social (estilo Letterboxd/Instagram) para cinéfilos, organizado como **arquitectura de microservicios en .NET 10** con integración real a TMDB, EF Core y despliegue automatizado a AWS.
 
