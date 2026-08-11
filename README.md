@@ -1,5 +1,12 @@
 # VERYLIKE  
 
+![.NET](https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white)
+![ASP.NET MVC](https://img.shields.io/badge/ASP.NET%20MVC-0058e6?style=for-the-badge&logo=asp.net&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
+
 Ecosistema cinematográfico social (estilo Letterboxd/Instagram) para cinéfilos, organizado como **arquitectura de microservicios en .NET 10** con integración real a TMDB, EF Core y despliegue automatizado a AWS. 
 
 ## Arquitectura de la solución
